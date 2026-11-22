@@ -68,26 +68,34 @@ node test/engine_test.js
 
 Kết quả chuẩn: `ALL TESTS PASSED ✓` (200 games, 0 timeout).
 
+## 🎴 Trọn bộ 722 lá FM gốc & Cơ chế mới
+
+- **Đầy đủ 722 lá bài chuẩn FM PS1**: 621 quái vật, 67 phép & trang bị, 10 bẫy, 24 nghi thức (Ritual) và **24.956 công thức fusion thật** trích xuất từ database gốc.
+- **Guardian Star (Ngôi sao Hộ mệnh)**: 10 chòm sao chia làm 2 chu kỳ tương khắc chuẩn FM:
+  - Chu kỳ 1: *Sun ☀️ > Moon 🌙 > Venus ♀ > Mercury ☿ > Sun ☀️*
+  - Chu kỳ 2: *Mars ♂ > Jupiter ♃ > Saturn ♄ > Uranus ♅ > Pluto ♇ > Neptune ♆ > Mars ♂*
+  - Quái vật mang Guardian Star khắc chế đối thủ được **+500 ATK/DEF** ngay trong giao tranh! Có thể chủ động chuyển đổi giữa 2 sao của quái trên sân.
+- **Triệu hồi Nghi thức (Ritual Summon)**: Hi sinh đúng 3 nguyên liệu (trên tay hoặc trên sân) để triệu hồi các quái thú tối thượng (Gate Guardian, Black Luster Soldier, Magician of Black Chaos...).
+- **Bẫy & Hiệu ứng đặc biệt**: Bẫy phản đòn (Bear Trap, Acid Trap Hole, Widespread Ruin, Just Desserts, Bad Reaction to Simochi phản hồi máu thành sát thương...).
+
 ## 📂 Cấu trúc
 
 ```
 yugioh-fm-clone/
-├── index.html          # khung trang
-├── serve.py            # server no-cache (khuyến nghị)
-├── css/style.css       # giao diện PS1-dark, thẻ CSS-drawn, arena themes, FX overlays
+├── index.html          # Khung trang game
+├── serve.py            # Server no-cache (khuyến nghị khi chạy local)
+├── css/style.css       # Giao diện PS1-dark, thẻ CSS-drawn, arena themes, FX overlays
 ├── js/
-│   ├── cards.js        # ~100 quái (ATK/DEF/hệ/attribute) + 15 phép + 5 bẫy + bảng fusion + deck
-│   ├── engine.js       # state machine trận đấu: summon/fusion/magic/trap/battle/LP (headless)
-│   ├── ai.js           # AI theo độ khó, trả 1 action/lần để UI animate từng bước
-│   ├── fx.js           # canvas FX engine: particle, lightning, vortex, arena/terrain ambience, shake
-│   ├── ui.js           # render, click-flow (fusion 2 bước, chọn ô), animation, âm thanh, save/restore
-│   └── main.js         # wiring menu + nút
+│   ├── cards_full.js   # Database 722 lá FM gốc + 24.956 fusion (sinh tự động)
+│   ├── cards.js        # Loader DB + Guardian Star + deck presets + tương khắc
+│   ├── engine.js       # State machine trận đấu: Guardian Star, Ritual, Spell/Trap dispatch, Battle
+│   ├── ai.js           # AI đối thủ tối ưu cho 722 lá + Ritual + Equip + Trap
+│   ├── fx.js           # Canvas FX engine: particle, lightning, vortex, arena/terrain ambience, shake
+│   ├── ui.js           # Render UI, chọn Guardian Star, xác nhận Ritual, Fusion modal, âm thanh
+│   └── main.js         # Wiring menu + khởi tạo
+├── scripts/
+│   └── build_cards.js  # Script sinh cards_full.js từ raw database
 └── test/
-    ├── engine_test.js  # test tự động (node)
-    └── debug_flow.js   # script debug lượt đấu
+    ├── engine_test.js  # Test tự động: DB verification, 200 ván AI vs AI, Ritual smoke, Star battle
+    └── debug_flow.js   # Script debug flow trận đấu
 ```
-
-## 📝 Ghi chú thiết kế
-
-- Bảng fusion là **bản xấp xỉ**: giữ các công thức nổi tiếng thật + rule "cùng hệ nâng bậc" để gameplay mượt; không sao chép đủ 719 entry gốc.
-- Số liệu thẻ dựa trên bộ nhớ về thẻ cổ điển thời FM — có thể lệch vài trăm điểm so với bản gốc, đủ để chơi chiến thuật thật.

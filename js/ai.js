@@ -76,34 +76,71 @@
     const enemyMonsters = E.monsterCount(e);
     const myBestFieldAtk = Math.max(0, ...p.field.map(sl => (sl && sl.kind === 'MONSTER' && !sl.faceDown && sl.pos === 'ATK') ? E.effAtk(s, pIdx, sl) : 0));
 
-    // --- 1. Magic tấn công ---
-    for (let i = 0; i < hand.length; i++) {
-      const c = hand[i];
+    // --- 1. Magic/Equip/Ritual (dispatch theo fx.kind) ---
+    var enemyFaceDown = 0, enemyFaceUpAtkMax = 0, enemyTraps = 0;
+    var raceCount = {};
+    for (var ei = 0; ei < 9; ei++) {
+      var es = e.field[ei];
+      if (!es || es.kind !== 'MONSTER') { if (es && es.kind === 'TRAP') enemyTraps++; continue; }
+      if (es.faceDown) enemyFaceDown++;
+      else {
+        var ea = E.effAtk(s, enemyIdx, es);
+        if (ea > enemyFaceUpAtkMax) enemyFaceUpAtkMax = ea;
+        var rn = E.mdata(es.card).race;
+        raceCount[rn] = (raceCount[rn] || 0) + 1;
+      }
+    }
+    for (var mi = 0; mi < hand.length; mi++) {
+      var c = hand[mi];
       if (c.kind !== 'MAGIC') continue;
-      const md = C.magics[c.mid];
-      if (md.id === 'raigeki' && enemyMonsters >= (diff >= 2 ? 1 : 2)) return { type: 'MAGIC', handIdx: i };
-      if (md.id === 'darkHole' && (enemyMonsters >= 2 || (enemyMonsters >= 1 && diff >= 3 && emptySlots(p).length === 0))) {
-        const theirPower = e.field.reduce((a, sl) => a + (sl && sl.kind === 'MONSTER' && !sl.faceDown ? E.effAtk(s, enemyIdx, sl) : 0), 0);
-        const myPower = p.field.reduce((a, sl) => a + (sl && sl.kind === 'MONSTER' && !sl.faceDown && sl.pos === 'ATK' ? E.effAtk(s, pIdx, sl) : 0), 0);
-        if (diff === 0 || theirPower > myPower + 500 || enemyMonsters >= 3) return { type: 'MAGIC', handIdx: i };
+      var md = C.magics[c.mid];
+      if (!md) continue;
+      var mfx = md.fx || {};
+      var usable = false;
+      // Ritual: đủ 3 nguyên liệu trong tay+sân?
+      if (mfx.kind === 'ritual') {
+        var pool = {};
+        for (var hi = 0; hi < hand.length; hi++) { var hc = hand[hi]; if (E.isMon(hc)) pool[hc.id] = (pool[hc.id] || 0) + 1; }
+        for (var fi = 0; fi < 9; fi++) { var fs = p.field[fi]; if (fs && fs.kind === 'MONSTER') pool[fs.card.id] = (pool[fs.card.id] || 0) + 1; }
+        usable = (md.offerings || []).every(function (oid) { return (pool[oid] || 0) >= 1; });
       }
-      if (md.id === 'fissure' && enemyMonsters > 0 && diff >= 1) {
-        // có quái ngửa ATK thấp thì dùng
-        const hasWeak = e.field.some(sl => sl && sl.kind === 'MONSTER' && !sl.faceDown && E.effAtk(s, enemyIdx, sl) <= 1500);
-        if (hasWeak) return { type: 'MAGIC', handIdx: i };
+      else if (mfx.kind === 'equip') usable = p.field.some(function (sl) { return sl && sl.kind === 'MONSTER' && !sl.faceDown && (typeof md.match === 'function' ? md.match(E.mdata(sl.card)) : (md.races || md.compat || []).indexOf(E.mdata(sl.card).race) >= 0); });
+      else if (mfx.kind === 'terrain') usable = s.turnNo <= 3 && !s.players.some(function (pl) { return pl.terrains.indexOf(md.id) >= 0; });
+      else if (mfx.kind === 'heal') usable = p.lp <= 4000;
+      else if (mfx.kind === 'damage') usable = e.lp <= mfx.amount || e.lp <= 2500;
+      else if (mfx.kind === 'destroyEnemyAll') usable = enemyMonsters >= 3;
+      else if (mfx.kind === 'destroyAll') {
+        var tp = e.field.reduce(function (acc, sl) { return acc + (sl && sl.kind === 'MONSTER' && !sl.faceDown ? E.effAtk(s, enemyIdx, sl) : 0); }, 0);
+        var mp = p.field.reduce(function (acc, sl) { return acc + (sl && sl.kind === 'MONSTER' && !sl.faceDown && sl.pos === 'ATK' ? E.effAtk(s, pIdx, sl) : 0); }, 0);
+        usable = enemyMonsters >= 3 || tp > mp + 800;
       }
-      if (md.id === 'dianKeto' && p.lp <= 3500) return { type: 'MAGIC', handIdx: i };
-      // Equip
-      if (md.atk && diff >= 1) {
-        for (let si = 0; si < 9; si++) {
-          const sl = p.field[si];
-          if (sl && sl.kind === 'MONSTER' && !sl.faceDown && md.match(E.mdata(sl.card))) return { type: 'MAGIC', handIdx: i, targetSlot: si };
+      else if (mfx.kind === 'destroyRace') usable = (mfx.races || []).some(function (r) { return (raceCount[r] || 0) >= 2; });
+      else if (mfx.kind === 'flipAllEnemyDef') usable = enemyFaceDown >= 2;
+      else if (mfx.kind === 'clearTraps') usable = enemyTraps >= 1;
+      else if (mfx.kind === 'forceDef') usable = enemyFaceUpAtkMax >= 1800;
+      else if (mfx.kind === 'dragonsToDef') usable = raceCount['Dragon'] >= 1;
+      if (!usable) continue;
+      if (mfx.kind === 'equip') {
+        for (var si2 = 0; si2 < 9; si2++) {
+          var es2 = p.field[si2];
+          if (es2 && es2.kind === 'MONSTER' && !es2.faceDown && (typeof md.match === 'function' ? md.match(E.mdata(es2.card)) : (md.races || md.compat || []).indexOf(E.mdata(es2.card).race) >= 0)) return { type: 'MAGIC', handIdx: mi, targetSlot: si2 };
         }
+        continue;
       }
-      // Terrain
-      if (md.terrain && diff >= 1 && s.turnNo <= 3 && emptySlots(p).length >= 2) {
-        if (!s.players.some(pl => pl.terrains.includes(md.id))) return { type: 'MAGIC', handIdx: i };
+      if (mfx.kind === 'forceDef') {
+        for (var si3 = 0; si3 < 9; si3++) {
+          var es3 = e.field[si3];
+          if (es3 && es3.kind === 'MONSTER' && !es3.faceDown && E.effAtk(s, enemyIdx, es3) === enemyFaceUpAtkMax) return { type: 'MAGIC', handIdx: mi, targetSlot: si3 };
+        }
+        continue;
       }
+      if (mfx.kind === 'ritual') {
+        var emptySlot = -1;
+        for (var si4 = 0; si4 < 9; si4++) if (!p.field[si4]) { emptySlot = si4; break; }
+        if (emptySlot >= 0) return { type: 'MAGIC', handIdx: mi, targetSlot: emptySlot };
+        continue;
+      }
+      return { type: 'MAGIC', handIdx: mi };
     }
 
     // --- 2. SET bẫy ---

@@ -57,8 +57,8 @@
   }
   function iconOf(card) {
     if (card.kind === 'MONSTER') return C.raceIcon(C.monsters[card.id].race);
-    if (card.kind === 'MAGIC') return C.magics[card.mid].icon;
-    return C.traps[card.tid].icon;
+    if (card.kind === 'MAGIC') return C.magics[card.mid] ? C.magics[card.mid].icon : '✨';
+    return C.traps[card.tid] ? C.traps[card.tid].icon : '🪤';
   }
   function cardEl(card, faceDown, trapFaceDown) {
     const el = document.createElement('div');
@@ -74,7 +74,7 @@
     el.innerHTML =
       `<div class="cname">${m ? m.name : md ? md.name : td.name}</div>` +
       `<div class="cart" style="${m ? `background: radial-gradient(circle at 50% 35%, rgba(255,255,255,.8), ${C.attrColor(m.attr)}66)` : ''}">${m ? C.raceIcon(m.race) : md ? md.icon : td.icon}</div>` +
-      `<div class="cstats">${m ? `<span class="catk">ATK ${m.atk}</span><span class="cdef">DEF ${m.def}</span>` : `<span>${card.kind === 'MAGIC' ? '✨ PHÉP' : '🪤 BẪY'}</span><span></span>`}</div>` +
+      `<div class="cstats">${m ? `<span class="catk">ATK ${m.atk}</span><span class="cdef">DEF ${m.def}</span>` : `<span>${card.kind === 'MAGIC' ? '✨ PHÉP' : card.kind === 'TRAP' ? '🪤 BẪY' : '👁 RITUAL'}</span><span></span>`}${m && m.stars ? `<span class="cstar">${C.starIcon(C.starName(m.stars[0]))}</span>` : ''}</div>` +
       `<div class="cbadge" style="background:${attrBg}">${m ? m.attr : card.kind === 'MAGIC' ? 'MAGIC' : 'TRAP'}</div>`;
     return el;
   }
@@ -181,6 +181,7 @@
           if (mode === 'fieldSel' && selField === i) el.classList.add('selected');
         }
         if (myTurnBattle() && E.canAttack(S, 0, i)) el.classList.add('attackable');
+        if (mode === 'enemyTarget' && pIdx === 1 && sl.kind === 'MONSTER' && !sl.faceDown) el.classList.add('targetable');
       } else if (myTurnMain() && (mode === 'trapSlot' || mode === 'summonSlot' || mode === 'fuseSlot')) {
         cell.classList.add('empty-target');
       }
@@ -249,9 +250,16 @@
         addBtn('🧪 Fusion với thẻ khác…', () => enterFusing({ src: 'HAND', idx: selHand }));
       } else if (card.kind === 'MAGIC') {
         const md = C.magics[card.mid];
-        if (md.atk) addBtn('✨ Gắn Trang Bị…', () => { mode = 'equipTarget'; pending = { handIdx: selHand }; renderAll(); });
+        const mfx = md ? (md.fx || {}) : {};
+        if (md && md.kind === 'ritual') {
+          addBtn('👁 Triệu Hồi Ritual', () => confirmRitual(selHand), 'primary');
+          hint(md.desc);
+        } else if (mfx.kind === 'forceDef') {
+          addBtn('🎯 Ép Phòng Thủ…', () => { mode = 'enemyTarget'; pending = { handIdx: selHand }; renderAll(); }, 'primary');
+          hint(md.desc);
+        } else if (md.atk) addBtn('✨ Gắn Trang Bị…', () => { mode = 'equipTarget'; pending = { handIdx: selHand }; renderAll(); });
         else addBtn('🪄 Kích Hoạt', () => doMagic(selHand, null), 'primary');
-        hint(md.desc || (md.terrain ? 'Địa hình toàn trận: ' + md.ttext : md.etext));
+        hint(md ? md.desc : '');
       } else if (card.kind === 'TRAP') {
         addBtn('🪤 Set Bẫy…', () => { mode = 'trapSlot'; pending = { handIdx: selHand }; renderAll(); });
         hint(C.traps[card.tid].desc);
@@ -276,6 +284,7 @@
       const sl = S.players[0].field[selField];
       if (sl && sl.kind === 'MONSTER') {
         hint('Quái: ' + E.mdata(sl.card).name + (sl.faceDown ? ' (úp)' : sl.pos === 'ATK' ? ' (ATK)' : ' (DEF)'));
+        if (!sl.faceDown && E.mdata(sl.card).stars && E.mdata(sl.card).stars[1]) addBtn('⭐ Đổi Guardian Star (hiện: ' + C.starName(E.mdata(sl.card).stars[sl.star || 0]) + ')', () => { E.perform(S, { type: 'SET_STAR', slotIdx: selField }); postAction(); }, 'primary');
         if (!sl.faceDown) addBtn('🧪 Fusion quái này + bài tay…', () => enterFusing({ src: 'FIELD', idx: selField }));
         if (!sl.posChanged) addBtn('🔄 Đổi Tư Thế', () => { E.perform(S, { type: 'CHANGE_POS', slotIdx: selField }); resetMode(); postAction(); }, 'primary');
       }
@@ -299,7 +308,7 @@
     let desc = '';
     if (sel.card.kind === 'MONSTER') {
       const m = C.monsters[sel.card.id];
-      desc = `${m.race} · ${m.attr}`;
+      desc = `${m.race} · ${m.attr} · ⭐ ${C.starName(m.stars ? m.stars[0] : 0)} / ${C.starName(m.stars ? m.stars[1] : 0)}`;
       // gợi ý công thức có mốc monster này
       const recipes = [];
       for (const key in C.fusions) {
@@ -314,9 +323,13 @@
       }
     } else if (sel.card.kind === 'MAGIC') {
       const md = C.magics[sel.card.mid];
-      desc = md.desc || (md.terrain ? 'Địa hình toàn trận: ' + md.ttext : md.etext);
+      desc = md ? (md.desc || '') : '';
+      if (md && md.kind === 'ritual') {
+        const offerNames = (md.offerings || []).map(oid => (C.monsters[oid] || { name: '?' }).name);
+        desc = 'Nguyên liệu: ' + offerNames.join(' + ') + ' → ' + (C.monsters[md.result] || { name: '?' }).name + '. ' + desc;
+      }
     } else {
-      desc = C.traps[sel.card.tid].desc;
+      desc = C.traps[sel.card.tid] ? C.traps[sel.card.tid].desc : '';
     }
     const d = document.createElement('div'); d.className = 'pdesc'; d.textContent = (sel.note ? sel.note + ' — ' : '') + desc;
     wrap.appendChild(d);
@@ -404,10 +417,26 @@
     if (card.kind === 'MONSTER') return hasEmpty;
     if (card.kind === 'TRAP') return hasEmpty;
     const md = C.magics[card.mid];
-    if (md.atk) return p.field.some(sl => sl && sl.kind === 'MONSTER' && !sl.faceDown && md.match(E.mdata(sl.card)));
-    if (md.terrain) return !s.players.some(pl => pl.terrains.includes(md.id));
-    if (md.id === 'fissure') return E.monsterCount(s.players[1]) > 0 && s.players[1].field.some(sl => sl && sl.kind === 'MONSTER' && !sl.faceDown);
-    return true; // darkHole/raigeki/dianKeto
+    if (!md) return false;
+    const mfx = md.fx || {};
+    if (mfx.kind === 'equip') {
+      const allowed = md.races || md.compat || [];
+      return p.field.some(sl => sl && sl.kind === 'MONSTER' && !sl.faceDown && (typeof md.match === 'function' ? md.match(E.mdata(sl.card)) : allowed.includes(E.mdata(sl.card).race)));
+    }
+    if (mfx.kind === 'terrain') return !S.players.some(pl => pl.terrains.includes(md.id));
+    if (mfx.kind === 'ritual') {
+      const need = (md.offerings || []).slice();
+      const pool = {};
+      p.hand.forEach(c => { if (E.isMon(c)) pool[c.id] = (pool[c.id] || 0) + 1; });
+      p.field.forEach(sl => { if (sl && sl.kind === 'MONSTER') pool[sl.card.id] = (pool[sl.card.id] || 0) + 1; });
+      return hasEmpty && need.every(oid => (pool[oid] || 0) >= 1);
+    }
+    if (mfx.kind === 'forceDef' || mfx.kind === 'dragonsToDef') return S.players[1].field.some(sl => sl && sl.kind === 'MONSTER' && !sl.faceDown);
+    if (mfx.kind === 'flipAllEnemyDef' || mfx.kind === 'flipAllEnemyAtk') return S.players[1].field.some(sl => sl && sl.kind === 'MONSTER' && sl.faceDown);
+    if (mfx.kind === 'clearTraps') return S.players[1].field.some(sl => sl && sl.kind === 'TRAP');
+    if (mfx.kind === 'destroyRace') return S.players[1].field.some(sl => sl && sl.kind === 'MONSTER' && !sl.faceDown && (mfx.races || []).includes(E.mdata(sl.card).race));
+    if (mfx.kind === 'destroyEnemyAll') return E.monsterCount(S.players[1]) > 0;
+    return true; // heal/damage/destroyAll
   }
 
   function resetMode() { mode = 'idle'; selHand = -1; selField = -1; pending = {}; previewSel = null; renderAll(); }
@@ -465,6 +494,15 @@
     }
     if (pIdx === 1) {
       const es = S.players[1].field[i];
+      if (mode === 'enemyTarget') {
+        if (es && es.kind === 'MONSTER' && !es.faceDown) {
+          E.perform(S, { type: 'MAGIC', handIdx: pending.handIdx, targetSlot: i });
+          resetMode(); postAction();
+          return;
+        }
+        toast('🎯 Chọn quái NGỦA của đối thủ làm mục tiêu');
+        return;
+      }
       if (es && es.kind === 'MONSTER' && !es.faceDown) showPreview(es.card, 'Quái của đối thủ');
       else if (es && es.kind === 'TRAP') toast('🂠 Bẫy đã SET (ẩn)');
       return;
@@ -567,10 +605,41 @@
     return src.src === 'HAND' ? S.players[0].hand[src.idx] : S.players[0].field[src.idx].card;
   }
 
-  function doMagic(handIdx, targetSlot) {
+  function confirmRitual(handIdx) {
     const card = S.players[0].hand[handIdx];
     const md = C.magics[card.mid];
-    // equip cần chọn đích — đã qua mode equipTarget
+    if (!md || md.kind !== 'ritual') return;
+    const pool = {};
+    S.players[0].hand.forEach(c => { if (E.isMon(c)) pool[c.id] = (pool[c.id] || 0) + 1; });
+    S.players[0].field.forEach(sl => { if (sl && sl.kind === 'MONSTER') pool[sl.card.id] = (pool[sl.card.id] || 0) + 1; });
+    const rows = (md.offerings || []).map(oid => {
+      const m = C.monsters[oid];
+      const ok = (pool[oid] || 0) >= 1;
+      return `<div style='font-size:13px;padding:2px'>${ok ? '✅' : '❌'} ${m ? m.name : '?'} (${m ? m.atk + '/' + m.def : ''})</div>`;
+    }).join('');
+    const result = C.monsters[md.result];
+    const empty = S.players[0].field.some(x => !x);
+    openModal(`
+      <h1 style='font-size:24px'>👁 RITUAL</h1>
+      <div class='msub'>${md.name}</div>
+      <div>${rows}</div>
+      <div class='msub'>→ Triệu hồi <b>${result.name}</b> (${result.atk}/${result.def}) · ${empty ? 'còn ô trống ✅' : 'KHÔNG còn ô trống ❌'}</div>
+      <div class='mbtns'>
+        <button class='primary' id='rit-ok' ${empty ? '' : 'disabled'}>✔ Xác Nhận</button>
+        <button id='rit-no'>✖ Huỷ</button>
+      </div>
+    `, true);
+    $('rit-ok').onclick = () => {
+      closeModal();
+      doMagic(handIdx, null);
+    };
+    $('rit-no').onclick = () => { closeModal(); renderAll(); };
+  }
+
+  function doMagic(handIdx, targetSlot) {
+    const card = S.players[0].hand[handIdx];
+    if (!card) return;
+    const md = C.magics[card.mid];
     const r = E.perform(S, { type: 'MAGIC', handIdx, targetSlot });
     if (!r.ok) { toast('❌ ' + (r.msg || 'Không dùng được')); return; }
     resetMode();

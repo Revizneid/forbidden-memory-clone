@@ -66,7 +66,7 @@
     let bonus = 0;
     for (const pl of s.players) for (const t of pl.terrains) {
       const md = C.magics[t];
-      if (md.terrain.includes(m.race)) bonus += 500;
+      if (md && md.terrain && md.terrain.includes(m.race)) bonus += 500;
     }
     return bonus;
   }
@@ -126,6 +126,21 @@
   }
   function healLP(s, pIdx, amount, why) {
     const p = s.players[pIdx];
+    // Bad Reaction to Simochi: đối thủ có bẫy fm688 set -> hồi máu trở thành mất máu, bẫy bị tiêu tốn
+    const opp = s.players[1 - pIdx];
+    for (let ti = 0; ti < opp.field.length; ti++) {
+      const ts = opp.field[ti];
+      if (ts && ts.kind === 'TRAP' && ts.tid === 'fm688') {
+        pushLog(s, '🍭 Bad Reaction to Simochi! ' + p.name + ' hồi ' + amount + ' LP -> MẤT ' + amount + ' LP!', 'trap');
+        fx(s, { type: 'trap', pIdx: 1 - pIdx, slotIdx: ti, name: 'Bad Reaction to Simochi', tid: 'fm688' });
+        toGraveyard(s, 1 - pIdx, ts);
+        opp.field[ti] = null;
+        p.lp = Math.max(0, p.lp - amount);
+        if (why) pushLog(s, '(nguồn: ' + why + ')', 'damage');
+        checkWin(s);
+        return;
+      }
+    }
     p.lp += amount;
     pushLog(s, `💚 ${p.name} hồi ${amount} LP${why ? ' (' + why + ')' : ''} → lên ${p.lp}.`, 'heal');
     fx(s, { type: 'heal', pIdx, amount, lp: p.lp });
@@ -159,19 +174,16 @@
     if (!isMon(card)) return { ok: false, msg: 'Chỉ summon quái vật.' };
     if (p.field[slotIdx]) return { ok: false, msg: 'Ô đã có bài.' };
     p.hand.splice(handIdx, 1);
-    const slot = { kind: 'MONSTER', card, pos: faceDown ? 'DEF' : 'ATK', faceDown: !!faceDown, attacked: false, posChanged: false, buffs: [] };
+    const slot = { kind: 'MONSTER', card, pos: faceDown ? 'DEF' : 'ATK', faceDown: !!faceDown, attacked: false, posChanged: false, star: 0, buffs: [] };
     p.field[slotIdx] = slot;
     const m = mdata(card);
     if (faceDown) {
       pushLog(s, `🂠 ${p.name} SET 1 quái úp xuống.`, 'act');
       fx(s, { type: 'set', pIdx, slotIdx });
     } else {
-      pushLog(s, `⬆ ${p.name} triệu hồi ${m.name} (${effAtk(s, pIdx, slot)}/${m.def}) ATK!`, 'act');
+      const starName = C.starName(m.stars ? m.stars[0] : 0);
+      pushLog(s, `⬆ ${p.name} triệu hồi ${m.name} (${effAtk(s, pIdx, slot)}/${m.def}) ATK — ⭐${starName}!`, 'act');
       fx(s, { type: 'summon', pIdx, slotIdx, name: m.name, mid: m.id, atk: m.atk });
-      // Trap Hole của đối thủ: triệu hồi ATK >= 1000 => phá hủy
-      const enemy = 1 - pIdx;
-      const trap = triggerTraps(s, enemy, t => t.id === 'trapHole' && effAtk(s, pIdx, slot) >= 1000, 'summon');
-      if (trap) destroyMonster(s, pIdx, slotIdx, 'Trap Hole');
     }
     return { ok: true };
   }
@@ -238,78 +250,154 @@
     const card = p.hand[handIdx];
     if (!card || card.kind !== 'MAGIC') return { ok: false, msg: 'Không phải thẻ Phép.' };
     const md = C.magics[card.mid];
+    if (!md) return { ok: false, msg: 'Thẻ phép không xác định.' };
     const enemy = 1 - pIdx;
-    if (md.atk) { // Equip
+    const mfx = md.fx || {};
+
+    // ---- EQUIP: match theo compat/races (race của quái) ----
+    if (mfx.kind === 'equip') {
       const slot = p.field[targetSlot];
       if (!slot || slot.kind !== 'MONSTER' || slot.faceDown) return { ok: false, msg: 'Chọn quái ngửa để gắn trang bị.' };
-      if (!md.match(mdata(slot.card))) return { ok: false, msg: `${md.etext} — không khớp quái này.` };
+      const mRace = mdata(slot.card).race;
+      const allowed = md.races || md.compat || [];
+      if (!allowed.includes(mRace) && !(typeof md.match === 'function' && md.match(mdata(slot.card)))) {
+        return { ok: false, msg: md.name + ' không dùng được cho quái ' + mRace + '.' };
+      }
       p.hand.splice(handIdx, 1);
       slot.buffs = slot.buffs || [];
       slot.buffs.push({ mid: md.id, atk: md.atk, name: md.name });
-      pushLog(s, `✨ ${p.name} gắn ${md.name} (+${md.atk} ATK) lên ${mdata(slot.card).name}.`, 'magic');
+      pushLog(s, '⚒️ ' + p.name + ' gắn ' + md.name + ' (+' + md.atk + ' ATK) lên ' + mdata(slot.card).name + '.', 'magic');
       fx(s, { type: 'magic', pIdx, slotIdx: targetSlot, name: md.name, mid: md.id, icon: md.icon });
       return { ok: true };
     }
-    if (md.terrain) {
-      if (s.players.some(pl => pl.terrains.includes(md.id))) return { ok: false, msg: 'Địa hình này đã có trên sân.' };
-      p.hand.splice(handIdx, 1);
-      p.terrains.push(md.id);
-      pushLog(s, `🏞️ ${p.name} kích hoạt địa hình ${md.name} (${md.ttext}).`, 'magic');
-      fx(s, { type: 'terrain', pIdx, name: md.name, mid: md.id, icon: md.icon });
-      return { ok: true };
-    }
-    switch (md.id) {
-      case 'darkHole': {
-        const trap = triggerTraps(s, enemy, t => t.id === 'antiRaigeki', 'darkHole');
-        if (trap) { // Anti Raigeki phản công
-          pushLog(s, `🛡️ Anti Raigeki phản hồi! Toàn bộ quái của ${p.name} bị phá hủy!`, 'trap');
-          for (let i = 0; i < p.field.length; i++) destroyMonster(s, pIdx, i, 'Anti Raigeki');
-          p.hand.splice(handIdx, 1);
-          return { ok: true };
+
+    // ---- RITUAL: hi sinh 3 nguyên liệu đúng -> triệu hồi ----
+    if (mfx.kind === 'ritual') {
+      const need = (md.offerings || []).slice();
+      const usedField = [], usedHand = [];
+      for (const oid of need) {
+        let found = null;
+        for (let si = 0; si < 9 && !found; si++) {
+          const sl = p.field[si];
+          if (sl && sl.kind === 'MONSTER' && sl.card.id === oid && !usedField.includes(si)) found = { src: 'F', i: si };
         }
-        p.hand.splice(handIdx, 1);
-        pushLog(s, `🕳️ ${p.name} dùng Dark Hole — TẤT CẢ quái bị phá hủy!`, 'magic');
-        fx(s, { type: 'magic', pIdx, name: 'Dark Hole', mid: 'darkHole', all: true });
-        for (let i = 0; i < 9; i++) { destroyMonster(s, pIdx, i, 'Dark Hole'); destroyMonster(s, enemy, i, 'Dark Hole'); }
-        return { ok: true };
-      }
-      case 'raigeki': {
-        const trap = triggerTraps(s, enemy, t => t.id === 'antiRaigeki', 'raigeki');
-        if (trap) {
-          pushLog(s, `🛡️ Anti Raigeki phản hồi! Toàn bộ quái của ${p.name} bị phá hủy!`, 'trap');
-          for (let i = 0; i < p.field.length; i++) destroyMonster(s, pIdx, i, 'Anti Raigeki');
-          p.hand.splice(handIdx, 1);
-          return { ok: true };
-        }
-        p.hand.splice(handIdx, 1);
-        pushLog(s, `⚡ ${p.name} dùng Raigeki — sấm sét nghiền nát phòng thủ đối thủ!`, 'magic');
-        fx(s, { type: 'magic', pIdx, name: 'Raigeki', mid: 'raigeki', all: true });
-        for (let i = 0; i < 9; i++) destroyMonster(s, enemy, i, 'Raigeki');
-        return { ok: true };
-      }
-      case 'fissure': {
-        let best = -1, bestAtk = Infinity;
-        const e = s.players[enemy];
-        for (let i = 0; i < 9; i++) {
-          const sl = e.field[i];
-          if (sl && sl.kind === 'MONSTER' && !sl.faceDown) {
-            const a = effAtk(s, enemy, sl);
-            if (a < bestAtk) { bestAtk = a; best = i; }
+        if (!found) {
+          for (let hi = 0; hi < p.hand.length && !found; hi++) {
+            const c = p.hand[hi];
+            if (isMon(c) && c.id === oid && !usedHand.includes(hi)) found = { src: 'H', i: hi };
           }
         }
-        p.hand.splice(handIdx, 1);
-        if (best < 0) { pushLog(s, `🌋 ${p.name} dùng Fissure — không có quái ngửa nào để phá.`, 'magic'); return { ok: true, fizzled: true }; }
-        pushLog(s, `🌋 ${p.name} dùng Fissure — mặt đất nứt toác!`, 'magic');
-        fx(s, { type: 'magic', pIdx, name: 'Fissure', mid: 'fissure', all: true });
-        destroyMonster(s, enemy, best, 'Fissure');
+        if (!found) return { ok: false, msg: 'Thiếu nguyên liệu ritual: ' + (C.monsters[oid] || { name: '#' + oid }).name + '.' };
+        (found.src === 'F' ? usedField : usedHand).push(found.i);
+      }
+      for (const si of usedField) { toGraveyard(s, pIdx, p.field[si]); p.field[si] = null; }
+      for (const hi of usedHand.slice().sort(function (a, b) { return b - a; })) {
+        const c = p.hand.splice(hi, 1)[0]; p.graveyard.push(c);
+      }
+      const empty = (targetSlot != null && !p.field[targetSlot]) ? targetSlot : p.field.findIndex(function (x) { return !x; });
+      if (empty < 0) return { ok: false, msg: 'Không có ô trống để triệu hồi ritual!' };
+      p.hand.splice(handIdx, 1);
+      p.graveyard.push(card);
+      const result = C.monsters[md.result];
+      p.field[empty] = { kind: 'MONSTER', card: { kind: 'MONSTER', id: result.id, uid: s._uid++ }, pos: 'ATK', faceDown: false, attacked: false, posChanged: false, star: 0, buffs: [] };
+      pushLog(s, '👁️ RITUAL — ' + p.name + ' hi sinh 3 nguyên liệu, triệu hồi ' + result.name + ' (' + result.atk + '/' + result.def + ')!', 'fusion');
+      fx(s, { type: 'fusion', pIdx, slotIdx: empty, name: result.name, mid: result.id, atk: result.atk });
+      return { ok: true, result: result };
+    }
+
+    p.hand.splice(handIdx, 1);
+
+    switch (mfx.kind) {
+      case 'heal': {
+        healLP(s, pIdx, mfx.amount, md.name);
         return { ok: true };
       }
-      case 'dianKeto':
-        p.hand.splice(handIdx, 1);
-        healLP(s, pIdx, 1000, 'Dian Keto');
+      case 'damage': {
+        damageLP(s, enemy, mfx.amount, md.name);
+        checkWin(s);
         return { ok: true };
+      }
+      case 'destroyAll': {
+        pushLog(s, '🕳️ ' + p.name + ' dùng ' + md.name + ' — TẤT CẢ quái bị phá hủy!', 'magic');
+        fx(s, { type: 'magic', pIdx, name: md.name, mid: md.id, all: true });
+        for (let i = 0; i < 9; i++) { destroyMonster(s, pIdx, i, md.name); destroyMonster(s, enemy, i, md.name); }
+        checkWin(s);
+        return { ok: true };
+      }
+      case 'destroyEnemyAll': {
+        pushLog(s, '⚡ ' + p.name + ' dùng ' + md.name + ' — phòng thủ đối thủ bị nghiền nát!', 'magic');
+        fx(s, { type: 'magic', pIdx, name: md.name, mid: md.id, all: true });
+        for (let i = 0; i < 9; i++) destroyMonster(s, enemy, i, md.name);
+        checkWin(s);
+        return { ok: true };
+      }
+      case 'destroyRace': {
+        const races = mfx.races || [];
+        let n = 0;
+        for (let i = 0; i < 9; i++) {
+          const sl = s.players[enemy].field[i];
+          if (sl && sl.kind === 'MONSTER' && races.includes(mdata(sl.card).race)) { destroyMonster(s, enemy, i, md.name); n++; }
+        }
+        pushLog(s, '☠️ ' + md.name + ' — phá hủy ' + n + ' quái ' + races.join('/') + ' của đối thủ.', 'magic');
+        fx(s, { type: 'magic', pIdx, name: md.name, mid: md.id, all: true });
+        checkWin(s);
+        return { ok: true };
+      }
+      case 'flipAllEnemyDef': {
+        let cnt = 0;
+        for (let i = 0; i < 9; i++) {
+          const sl = s.players[enemy].field[i];
+          if (sl && sl.kind === 'MONSTER' && sl.faceDown) { sl.faceDown = false; fx(s, { type: 'flip', pIdx: enemy, slotIdx: i, name: mdata(sl.card).name }); cnt++; }
+        }
+        pushLog(s, '👁 ' + md.name + ' — lật ' + cnt + ' quái úp của đối thủ.', 'magic');
+        fx(s, { type: 'magic', pIdx, name: md.name, mid: md.id });
+        return { ok: true };
+      }
+      case 'flipAllEnemyAtk': {
+        for (let i = 0; i < 9; i++) {
+          const sl = s.players[enemy].field[i];
+          if (sl && sl.kind === 'MONSTER' && sl.faceDown) { sl.faceDown = false; sl.pos = 'ATK'; fx(s, { type: 'flip', pIdx: enemy, slotIdx: i, name: mdata(sl.card).name }); }
+        }
+        pushLog(s, '👁 ' + md.name + ' — ép quái úp của đối thủ ra mặt + tấn công!', 'magic');
+        fx(s, { type: 'magic', pIdx, name: md.name, mid: md.id });
+        return { ok: true };
+      }
+      case 'forceDef': {
+        const sl = s.players[enemy].field[targetSlot];
+        if (!sl || sl.kind !== 'MONSTER' || sl.faceDown) return { ok: false, msg: 'Chọn quái ngửa của đối thủ làm mục tiêu.' };
+        sl.pos = 'DEF';
+        pushLog(s, '🎯 ' + md.name + ' — ' + mdata(sl.card).name + ' bị ép về phòng thủ!', 'magic');
+        fx(s, { type: 'magic', pIdx, slotIdx: targetSlot, name: md.name, mid: md.id, icon: md.icon });
+        return { ok: true };
+      }
+      case 'dragonsToDef': {
+        for (let i = 0; i < 9; i++) {
+          const sl = s.players[enemy].field[i];
+          if (sl && sl.kind === 'MONSTER' && !sl.faceDown && mdata(sl.card).race === 'Dragon') { sl.pos = 'DEF'; fx(s, { type: 'flip', pIdx: enemy, slotIdx: i, name: mdata(sl.card).name }); }
+        }
+        pushLog(s, '🏺 ' + md.name + ' — toàn bộ Dragon của đối thủ bị ép về phòng thủ!', 'magic');
+        fx(s, { type: 'magic', pIdx, name: md.name, mid: md.id });
+        return { ok: true };
+      }
+      case 'clearTraps': {
+        let n = 0;
+        for (let i = 0; i < 9; i++) {
+          const sl = s.players[enemy].field[i];
+          if (sl && sl.kind === 'TRAP') { toGraveyard(s, enemy, sl); s.players[enemy].field[i] = null; n++; }
+        }
+        pushLog(s, '🧹 ' + md.name + ' — phá ' + n + ' bẫy của đối thủ!', 'magic');
+        fx(s, { type: 'magic', pIdx, name: md.name, mid: md.id });
+        return { ok: true };
+      }
+      case 'terrain': {
+        if (s.players.some(pl => pl.terrains.includes(md.id))) return { ok: false, msg: 'Địa hình này đã có trên sân.' };
+        p.terrains.push(md.id);
+        pushLog(s, '🏞️ ' + p.name + ' kích hoạt địa hình ' + md.name + ' (' + (md.terrain || []).join('/') + ' +500).', 'magic');
+        fx(s, { type: 'terrain', pIdx, name: md.name, mid: md.id, icon: md.icon });
+        return { ok: true };
+      }
       default:
-        return { ok: false, msg: 'Thẻ phép chưa hỗ trợ.' };
+        return { ok: false, msg: 'Hiệu ứng thẻ chưa hỗ trợ (' + md.name + ').' };
     }
   }
 
@@ -323,6 +411,19 @@
     if (slot.faceDown) { slot.faceDown = false; slot.pos = 'DEF'; pushLog(s, `🔄 ${p.name} lật ${mdata(slot.card).name} sang phòng thủ ngửa (${effDef(s, pIdx, slot)} DEF).`, 'act'); fx(s, { type: 'flip', pIdx, slotIdx, name: mdata(slot.card).name }); }
     else if (slot.pos === 'ATK') { slot.pos = 'DEF'; pushLog(s, `🛡️ ${mdata(slot.card).name} của ${p.name} về phòng thủ.`, 'act'); fx(s, { type: 'flip', pIdx, slotIdx, name: mdata(slot.card).name }); }
     else { slot.pos = 'ATK'; pushLog(s, `⚔️ ${mdata(slot.card).name} của ${p.name} lên tấn công.`, 'act'); fx(s, { type: 'flip', pIdx, slotIdx, name: mdata(slot.card).name }); }
+    return { ok: true };
+  }
+
+  function setStar(s, pIdx, slotIdx, starIdx) {
+    if (s.phase !== 'MAIN' || s.winner != null) return { ok: false, msg: 'Chỉ làm được ở Main Phase.' };
+    const p = s.players[pIdx];
+    const slot = p.field[slotIdx];
+    if (!slot || slot.kind !== 'MONSTER') return { ok: false, msg: 'Chọn ô quái vật.' };
+    const stars = mdata(slot.card).stars || [];
+    if (!stars[1] || stars[0] === stars[1]) return { ok: false, msg: 'Quái này chỉ có 1 Guardian Star.' };
+    const target = starIdx != null ? starIdx : (slot.star ? 0 : 1);
+    slot.star = target;
+    pushLog(s, '⭐ ' + mdata(slot.card).name + ' hướng tới Guardian Star ' + C.starName(stars[target]) + '.', 'act');
     return { ok: true };
   }
 
@@ -355,30 +456,49 @@
     const p = s.players[pIdx], enemyIdx = 1 - pIdx, e = s.players[enemyIdx];
     const aslot = p.field[slotIdx];
     const aName = mdata(aslot.card).name;
-    const aAtk = effAtk(s, pIdx, aslot);
+    var aAtk = effAtk(s, pIdx, aslot);
     aslot.attacked = true;
     pushLog(s, `⚔️ ${aName} của ${p.name} tấn công (${aAtk})!`, 'battle');
     fx(s, { type: 'attack', pIdx, slotIdx, targetIdx: t.target, name: aName, atk: aAtk, mid: mdata(aslot.card).id });
 
-    // Bẫy phòng thủ kích hoạt trước khi va chạm
-    const trap = triggerTraps(s, enemyIdx, tr => {
-      if (tr.id === 'widespread') return true;
-      if (tr.id === 'captureJar') return mdata(aslot.card).race === 'Dragon';
-      if (tr.id === 'desserts') return true;
-      return false;
-    });
-    if (trap) {
-      if (trap.id === 'widespread') { destroyMonster(s, pIdx, slotIdx, 'Widespread Ruin'); return { ok: true, negated: true }; }
-      if (trap.id === 'captureJar') {
-        pushLog(s, `🏺 ${aName} bị Dragon Capture Jar hủy đòn tấn công, bị ép về phòng thủ!`, 'trap');
-        aslot.pos = 'DEF';
+    // Bẫy phòng thủ kích hoạt trước khi va chạm (dispatch theo fx.kind — FM gốc)
+    var trapDone = false;
+    for (var ti2 = 0; ti2 < e.field.length && !trapDone; ti2++) {
+      var tsl = e.field[ti2];
+      if (!tsl || tsl.kind !== 'TRAP') continue;
+      var tfx = (C.traps[tsl.tid] || {}).fx || {};
+      var fire = false;
+      if (tfx.kind === 'destroyAttacker') fire = true;                                   // Widespread Ruin
+      else if (tfx.kind === 'destroyBelow') fire = aAtk < tfx.atk;                       // House/Eatgaboon/Bear/Wire/Acid
+      else if (tfx.kind === 'negateDirect') fire = t.direct;                             // Goblin Fan
+      else if (tfx.kind === 'stripEquips') fire = (aslot.buffs || []).length > 0;        // Reverse Trap
+      if (!fire) continue;
+      var tname = C.traps[tsl.tid].name;
+      pushLog(s, '🪤 Bẫy kích hoạt: ' + e.name + ' — ' + tname + '!', 'trap');
+      fx(s, { type: 'trap', pIdx: enemyIdx, slotIdx: ti2, name: tname, tid: tsl.tid });
+      toGraveyard(s, enemyIdx, tsl);
+      e.field[ti2] = null;
+      if (tfx.kind === 'destroyAttacker' || tfx.kind === 'destroyBelow') {
+        destroyMonster(s, pIdx, slotIdx, tname);
         return { ok: true, negated: true };
       }
-      if (trap.id === 'desserts') {
-        const n = monsterCount(p);
-        damageLP(s, pIdx, 300 * n, 'Just Desserts');
-        // đòn tấn công vẫn tiếp diễn
+      if (tfx.kind === 'negateDirect' && t.direct) {
+        pushLog(s, '🪤 Đòn đánh trực tiếp bị hủy — ' + p.name + ' mất 500 LP!', 'trap');
+        damageLP(s, pIdx, 500, 'Goblin Fan');
+        checkWin(s);
+        return { ok: true, negated: true };
       }
+      if (tfx.kind === 'stripEquips') {
+        for (var bi = 0; bi < 9; bi++) {
+          var bsl = p.field[bi];
+          if (bsl && bsl.kind === 'MONSTER' && (bsl.buffs || []).length) {
+            for (var bk = 0; bk < bsl.buffs.length; bk++) p.graveyard.push({ kind: 'MAGIC', mid: bsl.buffs[bk].mid, used: true });
+            bsl.buffs = [];
+          }
+        }
+        pushLog(s, '🔄 Reverse Trap — toàn bộ trang bị của ' + p.name + ' mất tác dụng!', 'trap');
+      }
+      trapDone = true;
     }
     if (s.winner != null) return { ok: true };
 
@@ -397,7 +517,12 @@
     }
     const dName = mdata(dslot.card).name;
     const dAtkPos = dslot.pos === 'ATK';
-    const dPower = dAtkPos ? effAtk(s, enemyIdx, dslot) : effDef(s, enemyIdx, dslot);
+    var dPower = dAtkPos ? effAtk(s, enemyIdx, dslot) : effDef(s, enemyIdx, dslot);
+    // Guardian Star: ngôi sao mạnh hơn được +500 trong trận đánh này (luật FM gốc)
+    var aStar = mdata(aslot.card).stars ? mdata(aslot.card).stars[aslot.star || 0] : null;
+    var dStar = mdata(dslot.card).stars ? mdata(dslot.card).stars[dslot.star || 0] : null;
+    if (C.starBeats(aStar, dStar)) { aAtk += 500; pushLog(s, '⭐' + C.starName(aStar) + ' thắng ⭐' + C.starName(dStar) + ' — ' + aName + ' +500!', 'battle'); }
+    else if (C.starBeats(dStar, aStar)) { dPower += 500; pushLog(s, '⭐' + C.starName(dStar) + ' chiếm ưu thế — ' + dName + ' +500!', 'battle'); }
     pushLog(s, `🛡 ${dName} (${dAtkPos ? 'ATK ' : 'DEF '}${dPower}) chặn đường!`, 'battle');
     fx(s, { type: 'defender', pIdx: enemyIdx, slotIdx: t.target, name: dName, power: dPower, atkPos: dAtkPos });
 
@@ -498,6 +623,7 @@
       case 'MAGIC': return playMagic(s, pIdx, action.handIdx, action.targetSlot);
       case 'FUSION': return fuse(s, pIdx, action.a, action.b, action.targetSlot);
       case 'CHANGE_POS': return changePos(s, pIdx, action.slotIdx);
+      case 'SET_STAR': return setStar(s, pIdx, action.slotIdx, action.starIdx);
       case 'ATTACK': return doAttack(s, pIdx, action.slotIdx);
       case 'BATTLE_PHASE': return { ok: startBattlePhase(s) };
       case 'END': return { ok: endTurn(s) };
@@ -510,7 +636,7 @@
     newDuel, perform, drainFx,
     effAtk, effDef, isMon, mdata, monsterCount,
     canAttack, attackTargets, peekFusion,
-    summon, setTrapCard, playMagic, fuse, changePos, doAttack,
+    summon, setTrapCard, playMagic, fuse, changePos, setStar, doAttack,
     startBattlePhase, endTurn,
     slotRow, slotCol,
     // tiện cho test

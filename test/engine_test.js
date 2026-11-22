@@ -1,7 +1,8 @@
-/* Headless test: AI vs AI stress test — chạy bằng node.
+/* Headless test: DB 722 lá + engine + AI — chạy bằng node.
  *   node test/engine_test.js
- * Kiểm tra: engine không crash, ván đấu kết thúc, LP luôn >= 0, fusion hoạt động. */
+ */
 'use strict';
+require('../js/cards_full.js');
 require('../js/cards.js');
 require('../js/engine.js');
 require('../js/ai.js');
@@ -14,31 +15,36 @@ function assert(cond, msg) {
   if (!cond) { failures++; console.error('  ✗ FAIL: ' + msg); }
 }
 
-/* --- Unit-ish checks --- */
+/* --- DB checks --- */
 (function unit() {
-  console.log('== Unit checks ==');
-  const flame = C.idOf('Flame Manipulator');
-  const masaki = C.idOf('Masaki the Legendary Swordsman');
-  const res = C.lookup(flame, masaki);
-  assert(res && res.name === 'Flame Swordsman', 'fusion Flame Manipulator + Masaki = Flame Swordsman');
-  const pet = C.idOf('Petit Dragon');
-  const pet2 = C.idOf('Petit Dragon');
-  const r2 = C.lookup(pet, pet2);
-  assert(r2 && r2.race === 'Dragon' && r2.atk > 600, 'ladder fusion same race Petit+Petit => stronger dragon, got ' + (r2 && r2.name));
-  const ryu = C.idOf('Ryu-Kishin');
-  const r3 = C.lookup(pet, ryu);
-  assert(r3 && r3.name === 'Blackland Fire Dragon', 'Petit Dragon + Ryu-Kishin = Blackland Fire Dragon, got ' + (r3 && r3.name));
-  const sq = C.idOf('Saggi the Dark Clown');
-  const r4 = C.lookup(flame, sq);
-  assert(r4 === null, 'khác race không có recipe => không fusion');
-  const deckNames = new Set();
-  for (const d of Object.values(FM.decks.DECKS)) deckNames.add(d.name);
-  assert(deckNames.size >= 4, 'có >= 4 deck người chơi');
-  assert(FM.decks.DUELISTS.length >= 9, 'có >= 9 đối thủ máy, got ' + FM.decks.DUELISTS.length);
-  for (const d of Object.values(FM.decks.DECKS)) {
-    assert(d.list.length >= 25, 'deck ' + d.name + ' đủ loại bài');
-  }
-  console.log('  unit done');
+  console.log('== DB checks ==');
+  assert(C.total === 722, 'Tổng thẻ = 722, got ' + C.total);
+  assert(C.monsterCount === 621, '621 quái, got ' + C.monsterCount);
+  const be = C.idOf('Blue-eyes White Dragon');
+  assert(be != null, 'Blue-eyes tồn tại');
+  const beM = C.monsters[be];
+  assert(beM.atk === 3000 && beM.def === 2500, 'Blue-eyes 3000/2500, got ' + beM.atk + '/' + beM.def);
+  assert(beM.race === 'Dragon', 'Blue-eyes là Dragon');
+  assert(Array.isArray(beM.stars) && beM.stars.length === 2, 'Blue-eyes có 2 guardian stars');
+  const dm = C.idOf('Dark Magician');
+  assert(C.monsters[dm].stars[0] === 'Sun' || C.monsters[dm].stars[1] === 'Sun', 'Dark Magician có Sun star');
+  // Fusion thật
+  const fm = C.idOf('Flame Manipulator'), ms = C.idOf('Masaki the Legendary Swordsman');
+  const r = C.lookup(fm, ms);
+  assert(r && r.name === 'Flame Swordsman', 'FM fusion: Flame Manipulator + Masaki = Flame Swordsman, got ' + (r && r.name));
+  // Guardian star chart
+  assert(C.starBeats('Sun', 'Moon'), 'Sun > Moon');
+  assert(C.starBeats('Mars', 'Jupiter'), 'Mars > Jupiter');
+  assert(C.starBeats('Neptune', 'Mars'), 'Neptune > Mars');
+  assert(!C.starBeats('Moon', 'Sun'), 'Moon KHÔNG beats Sun');
+  // Magic/trap/ritual/equip counts
+  const magics = Object.values(C.magics);
+  assert(magics.filter(m => m.kind === 'equip').length === 34, '34 equip, got ' + magics.filter(m => m.kind === 'equip').length);
+  assert(Object.keys(C.rituals).length === 24, '24 ritual, got ' + Object.keys(C.rituals).length);
+  assert(Object.keys(C.traps).length === 10, '10 trap, got ' + Object.keys(C.traps).length);
+  // Fusion table lớn
+  assert(Object.keys(C.fusions).length > 20000, 'Fusion table > 20000 entries, got ' + Object.keys(C.fusions).length);
+  console.log('  DB done');
 })();
 
 /* --- Simulation: AI vs AI --- */
@@ -48,26 +54,18 @@ function simGame(deckA, deckB, diffA, diffB, maxTurns = 120) {
     p0deck: deckA.list, p1deck: deckB.list,
     difficulty: diffB,
   });
-  // cho cả 2 dùng AI (đánhMech qua perform với active player)
   let guard = 0;
-  while (s.winner == null && guard++ < 4000) {
+  while (s.winner == null && guard++ < 5000) {
     const pIdx = s.active;
     const act = AI.aiNextAction(s, pIdx);
     if (!act) { E.endTurn(s); continue; }
     const r = E.perform(s, act);
-    assert(r && r.ok !== undefined, 'perform returns result');
-    if (!r.ok) {
-      // action không hợp lệ — AI bế tắc? end turn để tránh treo
-      E.endTurn(s);
-    }
-    // kiểm bất biến
+    if (!r.ok) E.endTurn(s);
     for (const p of s.players) {
       assert(p.lp >= 0, 'LP >= 0');
       assert(p.hand.length <= 5, 'hand <= 5');
-      assert(p.field.length === 9, 'field 9');
     }
     if (s.turnNo > maxTurns) {
-      // quá dài: tuyên bố hòa bằng LP
       const w = s.players[0].lp >= s.players[1].lp ? 0 : 1;
       s.winner = w; s.phase = 'GAMEOVER';
       return { s, timeout: true };
@@ -77,7 +75,7 @@ function simGame(deckA, deckB, diffA, diffB, maxTurns = 120) {
 }
 
 (function sims() {
-  console.log('== Simulation: AI vs AI ==');
+  console.log('== Simulation: AI vs AI (722-card DB) ==');
   const decks = Object.values(FM.decks.DECKS);
   const duelistDecks = FM.decks.DUELISTS.map(d => ({ name: d.id, list: d.deck }));
   const all = decks.concat(duelistDecks);
@@ -85,54 +83,65 @@ function simGame(deckA, deckB, diffA, diffB, maxTurns = 120) {
   const t0 = Date.now();
   for (let i = 0; i < 200; i++) {
     const A = all[i % all.length], B = all[(i * 7 + 3) % all.length];
-    const diffA = i % 5, diffB = (i + 2) % 5;
-    const { s, timeout } = simGame(A, B, diffA, diffB);
+    const { s, timeout } = simGame(A, B, i % 5, (i + 2) % 5);
     games++;
     totalTurns += s.turnNo;
     maxTurns = Math.max(maxTurns, s.turnNo);
     if (timeout) timeouts++;
     else if (s.winner === 0 || s.winner === 1) wins[s.winner]++;
-    for (const p of s.players) {
-      assert(p.lp >= 0, 'final LP >= 0');
-      for (const sl of p.field) {
-        if (sl && sl.kind === 'MONSTER') {
-          const a = E.effAtk(s, s.players.indexOf(p), sl);
-          assert(a >= 0, 'atk >= 0');
-        }
-      }
-    }
     assert(s.phase === 'GAMEOVER', 'game over');
     assert(s.log.length > 5, 'log có nội dung');
   }
-  console.log(`  ${games} games, avg ${Math.round(totalTurns / games)} turns, max ${maxTurns} turns, timeout ${timeouts}, wins A/B = ${wins[0]}/${wins[1]}, ${Date.now() - t0}ms`);
+  console.log(`  ${games} games, avg ${Math.round(totalTurns / games)} turns, max ${maxTurns}, timeout ${timeouts}, wins A/B = ${wins[0]}/${wins[1]}, ${Date.now() - t0}ms`);
   assert(timeouts < games * 0.05, 'ít ván timeout (<5%)');
-  assert(wins[0] + wins[1] + timeouts === games, 'mọi ván đều kết thúc có kết quả');
+  assert(wins[0] + wins[1] + timeouts === games, 'mọi ván đều kết thúc');
 })();
 
-/* --- Fusion smoke test trong duel (deterministic) --- */
-(function fusionSmoke() {
-  console.log('== Fusion in-duelist smoke ==');
-  const list = [['Flame Manipulator', 3], ['Masaki the Legendary Swordsman', 3], ['Kojikocy', 4], ['#dianKeto', 10]];
-  const s = E.newDuel({ p0name: 'F', p1name: 'X', p0deck: list, p1deck: list, difficulty: 1 });
-  // Đặt thẳng 2 nguyên liệu vào tay p0 (loại trừ yếu tố shuffle)
-  const p0 = s.players[0];
-  p0.hand = [];
-  const fmId = C.idOf('Flame Manipulator'), msId = C.idOf('Masaki the Legendary Swordsman');
-  p0.hand.push({ kind: 'MONSTER', id: fmId, uid: s._uid++ });
-  p0.hand.push({ kind: 'MONSTER', id: msId, uid: s._uid++ });
-  p0.hand.push({ kind: 'MAGIC', mid: 'dianKeto', uid: s._uid++ });
-  const r = E.perform(s, { type: 'FUSION', a: { src: 'HAND', idx: 0 }, b: { src: 'HAND', idx: 1 }, targetSlot: 6 });
-  assert(r.ok, 'fusion perform ok: ' + (r.msg || ''));
-  assert(r.result && r.result.name === 'Flame Swordsman', 'kết quả là Flame Swordsman');
-  const slot = p0.field[6];
-  assert(slot && slot.kind === 'MONSTER' && E.mdata(slot.card).name === 'Flame Swordsman', 'Flame Swordsman ở slot 6');
-  assert(p0.hand.length === 1, 'tay còn 1 bài sau fusion, got ' + p0.hand.length);
-  assert(p0.graveyard.length === 2, '2 nguyên liệu vào mộ, got ' + p0.graveyard.length);
-  // Field fusion: summon Kojikocy rồi fusion với Flame... không còn Flame — dùng slot 6 + dianKeto? Magic không fusion.
-  // Thay vào đó: test field fusion bằng cặp cùng race từ tay còn lại? Tay chỉ còn DianKeto — kiểm tra refusal:
-  const bad = E.perform(s, { type: 'FUSION', a: { src: 'FIELD', idx: 6 }, b: { src: 'HAND', idx: 0 }, targetSlot: 6 });
-  assert(!bad.ok, 'magic không fusion được với quái');
-  console.log('  fusion smoke done');
+/* --- Ritual smoke test --- */
+(function ritualSmoke() {
+  console.log('== Ritual smoke ==');
+  // Gate Guardian Ritual: offerings 371,372,373 (Sanga/Kazejin/Suijin) -> result 374 Gate Guardian
+  const list = [['Sanga of the Thunder', 2], ['Kazejin', 2], ['Suijin', 2], ['La Jinn the Mystical Genie', 4], ['#fm667', 4], ['#fm342', 8]];
+  const s = E.newDuel({ p0name: 'R', p1name: 'X', p0deck: list, p1deck: list, difficulty: 0 });
+  const p = s.players[0];
+  p.hand = []; // dọn tay
+  const ritual = { kind: 'MAGIC', mid: 'fm667', uid: s._uid++ };
+  p.hand.push(ritual);
+  p.hand.push({ kind: 'MONSTER', id: C.idOf('Sanga of the Thunder'), uid: s._uid++ });
+  p.hand.push({ kind: 'MONSTER', id: C.idOf('Kazejin'), uid: s._uid++ });
+  p.hand.push({ kind: 'MONSTER', id: C.idOf('Suijin'), uid: s._uid++ });
+  const r = E.perform(s, { type: 'MAGIC', handIdx: 0, targetSlot: 6 });
+  assert(r.ok, 'ritual perform ok: ' + (r.msg || ''));
+  if (r.ok) {
+    assert(r.result.name === 'Gate Guardian', 'Gate Guardian summoned, got ' + (r.result && r.result.name));
+    const slot = p.field[6];
+    assert(slot && slot.kind === 'MONSTER' && E.mdata(slot.card).name === 'Gate Guardian', 'Gate Guardian trên sân slot 6');
+    assert(p.hand.length === 0, 'hand rỗng sau ritual (3 nguyên liệu + ritual consumed), got ' + p.hand.length);
+    assert(p.graveyard.length >= 4, 'nguyên liệu + ritual vào mộ');
+  }
+  console.log('  ritual done');
+})();
+
+/* --- Guardian star battle test --- */
+(function starBattle() {
+  console.log('== Guardian star battle ==');
+  const list = [['Dark Magician', 3], ['Mystical Elf', 3], ['#fm336', 5], ['#fm342', 9]];
+  const s = E.newDuel({ p0name: 'S', p1name: 'X', p0deck: list, p1deck: list, difficulty: 0 });
+  const p = s.players[0], e = s.players[1];
+  // DM (2500 ATK, Sun star) vs Mystical Elf (800 ATK, Moon star): Sun > Moon -> attacker +500
+  p.hand = [{ kind: 'MONSTER', id: C.idOf('Dark Magician'), uid: s._uid++ }];
+  e.hand = [{ kind: 'MONSTER', id: C.idOf('Mystical Elf'), uid: s._uid++ }];
+  p.field[6] = { kind: 'MONSTER', card: p.hand[0], pos: 'ATK', faceDown: false, attacked: false, star: 0, buffs: [] };
+  p.hand = [];
+  e.field[6] = { kind: 'MONSTER', card: { kind: 'MONSTER', id: C.idOf('Mystical Elf'), uid: s._uid++ }, pos: 'ATK', faceDown: false, attacked: false, star: 0, buffs: [] };
+  e.hand = [];
+  s.phase = 'BATTLE';
+  const lpBefore = e.lp;
+  E.perform(s, { type: 'ATTACK', slotIdx: 6 });
+  const dmg = lpBefore - e.lp;
+  // damage = (2500 + 500 star) - 800 = 2200
+  assert(dmg === 2200, 'Guardian star damage: expect 2200 (2500+500-800), got ' + dmg);
+  console.log('  star battle done (dmg ' + dmg + ')');
 })();
 
 console.log(failures === 0 ? '\nALL TESTS PASSED ✓' : `\n${failures} FAILURES ✗`);

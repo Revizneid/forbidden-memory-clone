@@ -1,6 +1,6 @@
 /* Debug script: xem flow AI vs AI */
 'use strict';
-require('../js/cards.js'); require('../js/engine.js'); require('../js/ai.js');
+require('../js/cards_full.js'); require('../js/cards.js'); require('../js/engine.js'); require('../js/ai.js');
 const FM = globalThis.FM, E = FM.engine, AI = FM.ai, C = FM.cards;
 const all = Object.values(FM.decks.DECKS);
 const s = E.newDuel({ p0name: 'A', p1name: 'B', p0deck: all[0].list, p1deck: all[1].list, difficulty: 2 });
