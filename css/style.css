@@ -13,7 +13,7 @@
   --purple: #8e44ad;
   --text: #d8d4e8;
   --dim: #8b86a0;
-  --slot: 88px;
+  --slot: clamp(52px, 7.5vh, 84px);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -131,19 +131,27 @@ button.big { font-size: 18px; padding: 12px 30px; }
 .phase-battle { background: #5e2323; color: #ffb0a0; animation: pulse .8s infinite; }
 .topbtns { display: flex; gap: 6px; }
 
-#enemy-handrow { display: flex; justify-content: center; gap: 4px; height: 26px; margin: 2px 0; }
+#enemy-handrow { display: flex; justify-content: center; gap: 4px; height: 22px; margin: 2px 0; }
 .handrow .mini-back {
-  width: 30px; height: 24px; border-radius: 4px; border: 1px solid #7a4fa8;
+  width: 30px; height: 20px; border-radius: 4px; border: 1px solid #7a4fa8;
   background: repeating-linear-gradient(45deg, #4a2a6a, #4a2a6a 4px, #3a2055 4px, #3a2055 8px);
 }
 
-#board-area { flex: 1; display: flex; gap: 12px; min-height: 0; }
-.gridwrap { display: flex; flex-direction: column; align-items: center; justify-content: center; }
-.gridlabel { font-size: 11px; letter-spacing: 3px; color: var(--dim); font-weight: 800; padding: 2px 0; }
+/* Layout FM gốc: 2 lưới 3x3 xếp thẳng hàng DỌC giữa màn hình, divider mỏng ở giữa */
+#board-area { flex: 1; display: flex; gap: 10px; min-height: 0; justify-content: center; align-items: center; position: relative; }
+#field-column {
+  flex: 0 0 auto; width: fit-content; display: flex; flex-direction: column; align-items: center; gap: 4px;
+  background: linear-gradient(160deg, #1c1830, #12101f);
+  border: 2px solid #3a3355; border-radius: 16px;
+  padding: 10px 14px; box-shadow: 0 6px 30px rgba(0,0,0,.45), inset 0 0 40px rgba(0,0,0,.35);
+}
+#enemy-handrow { margin-bottom: 4px; }
+.gridwrap { display: flex; flex-direction: column; align-items: center; }
+.gridlabel { font-size: 10px; letter-spacing: 3px; color: var(--dim); font-weight: 800; padding: 1px 0; }
 .grid {
   display: grid; grid-template-columns: repeat(3, var(--slot));
   grid-auto-rows: calc(var(--slot) * 1.38);
-  gap: 5px; padding: 6px; border-radius: 12px;
+  gap: 5px; padding: 6px; border-radius: 10px;
   background: linear-gradient(160deg, #241f38, #191530);
   border: 1px solid #3a3355;
 }
@@ -158,20 +166,27 @@ button.big { font-size: 18px; padding: 12px 30px; }
 .slotcell .slotcard { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
 .slotcell .slotcard .card { width: calc(var(--slot) - 10px); height: calc(var(--slot) * 1.38 - 10px); }
 
-#center-strip { flex: 1; display: flex; flex-direction: column; gap: 6px; justify-content: center; min-width: 130px; max-width: 260px; }
+/* Divider giữa 2 lưới — mỏng, rộng đúng bằng lưới */
+#center-strip {
+  display: flex; flex-direction: row; align-items: center; gap: 8px;
+  width: calc(var(--slot) * 3 + 24px); padding: 0 2px;
+}
 #log-ticker {
-  background: rgba(0,0,0,.4); border: 1px solid #3a3355; border-radius: 8px;
-  padding: 8px; font-size: 11.5px; line-height: 1.5; max-height: 150px; overflow: hidden;
+  flex: 1; background: rgba(0,0,0,.45); border: 1px solid #3a3355; border-radius: 8px;
+  padding: 4px 8px; font-size: 10.5px; line-height: 1.45; height: calc(var(--slot) * 0.62);
+  overflow: hidden;
   display: flex; flex-direction: column; justify-content: flex-end;
 }
-#log-ticker .lt { color: var(--dim); }
+#log-ticker .lt { color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 #log-ticker .lt:last-child { color: #fff; }
-#terrain-strip { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
-.terrain-chip { font-size: 10.5px; background: #1d3a2f; border: 1px solid var(--green); border-radius: 10px; padding: 2px 8px; }
+#terrain-strip { display: flex; flex-direction: column; gap: 2px; align-items: flex-start; max-width: 42%; }
+.terrain-chip { font-size: 9.5px; background: #1d3a2f; border: 1px solid var(--green); border-radius: 8px; padding: 1px 6px; white-space: nowrap; }
 
 #sidebar {
-  width: 218px; display: flex; flex-direction: column; gap: 8px; padding: 8px;
-  background: rgba(20,16,35,.7); border: 1px solid #3a3355; border-radius: 12px; overflow: auto;
+  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+  width: 216px; max-height: 97%; display: flex; flex-direction: column; gap: 8px; padding: 8px;
+  background: rgba(20,16,35,.82); border: 1px solid #3a3355; border-radius: 12px; overflow: auto;
+  box-shadow: 0 4px 24px rgba(0,0,0,.5);
 }
 #preview { flex: 1; }
 .preview-card { display: flex; flex-direction: column; gap: 6px; align-items: center; }
@@ -183,16 +198,18 @@ button.big { font-size: 18px; padding: 12px 30px; }
 #actionbar { display: flex; flex-direction: column; gap: 6px; }
 #actionbar button { width: 100%; }
 
-#hand-area { display: flex; align-items: flex-end; gap: 12px; padding: 4px 0 2px; }
-#player-info { min-width: 240px; max-width: 260px; padding-bottom: 8px; }
-#player-info .portrait { width: 44px; height: 44px; font-size: 24px; }
-#player-info .dname { font-size: 13px; }
-#player-info .lpbar { height: 16px; }
-#player-info .lptext { font-size: 11px; }
-#player-info .dmini { font-size: 11px; gap: 8px; }
-.fan { display: flex; gap: 6px; flex: 1; justify-content: center; align-items: flex-end; min-height: 150px; }
-.fan .card { width: 104px; height: 144px; margin-bottom: 0; }
-.fan .card .cart { font-size: 34px; }
+#hand-area { display: flex; align-items: flex-end; gap: 12px; padding: 2px 0 2px; }
+#player-info { min-width: 220px; max-width: 240px; padding-bottom: 6px; }
+#player-info .portrait { width: 40px; height: 40px; font-size: 22px; }
+#player-info .dname { font-size: 12.5px; }
+#player-info .lpbar { height: 15px; }
+#player-info .lptext { font-size: 10.5px; }
+#player-info .dmini { font-size: 10.5px; gap: 8px; }
+.fan { display: flex; gap: 6px; flex: 1; justify-content: center; align-items: flex-end; min-height: 118px; }
+.fan .card { width: 88px; height: 122px; margin-bottom: 0; }
+.fan .card .cart { font-size: 28px; }
+.fan .card .cname { font-size: 8.5px; min-height: 19px; }
+.fan .card .cstats { font-size: 8.5px; }
 .fan .card:hover { transform: translateY(-14px); }
 #phasebar { display: flex; flex-direction: column; gap: 6px; width: 190px; }
 

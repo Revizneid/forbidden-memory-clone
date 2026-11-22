@@ -49,6 +49,8 @@
       _uid: 1,
     };
     for (const p of s.players) { for (let i = 0; i < 5; i++) drawCard(s, s.players.indexOf(p), true); }
+    // Tổng số bài của mỗi người (deck + tay) — dùng kiểm tra bảo toàn bài khi restore
+    for (const p of s.players) p._total = p.deck.length + p.hand.length;
     pushLog(s, `⚔️ Đấu giữa ${s.players[0].name} (LP ${LP_START}) và ${s.players[1].name} (LP ${LP_START})!`);
     pushLog(s, `▶ Lượt 1 — ${s.players[0].name} bắt đầu (không rút bài ở lượt đầu).`);
     return s;

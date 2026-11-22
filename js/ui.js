@@ -351,6 +351,14 @@
     let saved = null;
     try { saved = JSON.parse(localStorage.getItem('fm_duel_v1') || 'null'); } catch (e) { return false; }
     if (!saved || !saved.s || saved.s.winner != null) return false;
+    // Kiểm tra hợp lệ: đủ 2 người chơi + bảo toàn bài (deck+tay+sân+mộ == tổng đầu trận)
+    const s0 = saved.s;
+    if (!Array.isArray(s0.players) || s0.players.length !== 2) return false;
+    for (const p of s0.players) {
+      if (!Array.isArray(p.deck) || !Array.isArray(p.hand) || !Array.isArray(p.field) || p.field.length !== 9 || !Array.isArray(p.graveyard) || typeof p._total !== 'number') return false;
+      const onField = p.field.filter(Boolean).length;
+      if (p.deck.length + p.hand.length + onField + p.graveyard.length !== p._total) return false;
+    }
     cfg = { duelist: FM.decks.DUELISTS.find(d => d.id === saved.duelistId) || FM.decks.DUELISTS[0], deckId: saved.deckId, difficulty: saved.difficulty != null ? saved.difficulty : 1, campaign: true };
     session += 1;
     mode = 'idle'; selHand = -1; selField = -1; pending = {}; previewSel = null; bannerKey = '';
