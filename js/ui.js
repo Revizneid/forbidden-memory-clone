@@ -846,6 +846,13 @@
         if (c3) c3.classList.remove('newfx');
         break;
       }
+      case 'draw':
+        // Rút bài diễn ra ở ĐẦU lượt (Draw Phase). Nếu bỏ rút do tay đầy -> giải thích rõ.
+        if (ev.pIdx === 0 && !ev.drew) {
+          toast('✋ Tay đầy ' + ev.hand + '/' + E.HAND_MAX + ' — chơi bớt bài để rút được lượt sau.');
+          await sleep(350);
+        }
+        break;
       case 'gameover':
         await sleep(500);
         break;
@@ -950,7 +957,7 @@
         <ul>
           <li><b>Main Phase:</b> triệu hồi quái (không giới hạn số lần), SET úp, fusion, dùng phép, set bẫy, đổi tư thế.</li>
           <li><b>Battle Phase:</b> mỗi quái ATK ngửa được tấn công 1 lần.</li>
-          <li>Tay tối đa <b>5 bài</b>, rút 1 bài mỗi lượt.</li>
+          <li><b>Draw Phase:</b> rút 1 bài ở ĐẦU mỗi lượt. Tay tối đa <b>5 bài</b> — nếu tay đầy 5/5 thì <b>bỏ lượt rút</b> (luật FM gốc), hãy chơi bớt bài.</li>
         </ul>
         <h3>🗺 Sân 3×3 &amp; tấn công</h3>
         <ul>

@@ -36,7 +36,7 @@ Cách 3 — mở thẳng `index.html` trong trình duyệt (không cần build).
 
 ## 🎮 Luật chơi (tóm tắt)
 
-- Mỗi bên **LP 8000**, lưới quái **3×3**, tay tối đa **5 bài**, rút 1 bài/lượt.
+- Mỗi bên **LP 8000**, lưới quái **3×3**, tay tối đa **5 bài**. **Draw Phase** rút 1 bài ở ĐẦU mỗi lượt — tay đầy 5/5 thì bỏ lượt rút (luật FM gốc: chơi bớt bài mới rút được).
 - **Main Phase**: triệu hồi quái (không giới hạn số lần/lượt), set úp (phòng thủ), fusion, dùng phép, set bẫy, đổi tư thế.
 - **Battle Phase**: mỗi quái ATK ngửa đánh 1 lần. Quái đánh **quái cùng cột phía đối diện** (ưu tiên gần nhất) — cột trống thì **đánh thẳng LP**. Quái úp là tường chắn cột.
 - Sát thương kiểu cũ: ATK vs ATK — bên thua bị phá + mất chênh lệch LP; ATK vs DEF — xuyên được thì phá tường, không xuyên thì attacker mất (DEF − ATK) LP.

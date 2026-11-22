@@ -459,7 +459,16 @@
       pushLog(s, `📚 ${s.players[nextIdx].name} đã hết deck!`);
       finish(s, 1 - nextIdx, 'deck-out');
     } else {
-      drawCard(s, nextIdx);
+      // Draw Phase tường minh: rút đầu lượt; tay đầy 5/5 thì bỏ lượt rút (luật FM gốc)
+      const p = s.players[nextIdx];
+      const full = p.hand.length >= HAND_MAX;
+      if (full) {
+        pushLog(s, `🎴 Draw Phase — tay ${p.name} đầy (${HAND_MAX}/${HAND_MAX}), bỏ lượt rút.`, 'turn');
+        fx(s, { type: 'draw', pIdx: nextIdx, drew: false, hand: HAND_MAX });
+      } else if (drawCard(s, nextIdx, true)) {
+        pushLog(s, `🎴 Draw Phase — ${p.name} rút 1 bài (tay ${p.hand.length}/${HAND_MAX}).`, 'turn');
+        fx(s, { type: 'draw', pIdx: nextIdx, drew: true, hand: p.hand.length });
+      }
     }
     return true;
   }
