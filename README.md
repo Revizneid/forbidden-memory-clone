@@ -2,7 +2,7 @@
 
 Clone web game lấy cảm hứng từ **Yu-Gi-Oh! Forbidden Memories (PS1, 1999)**: đấu bài 3×3, LP 8000, và hệ thống **FUSION** huyền thoại — chơi trực tiếp với **máy (AI)** trong trình duyệt.
 
-> 🎮 **Chơi online:** [https://forbidden-memory-clone.vercel.app](https://forbidden-memory-clone.vercel.app)
+> 🎮 **Chơi online:** [https://forbidden-memory.vercel.app](https://forbidden-memory.vercel.app)
 > 📦 **Source:** [github.com/Revizneid/forbidden-memory-clone](https://github.com/Revizneid/forbidden-memory-clone) — push lên `main` tự động deploy lại Vercel.
 
 > Fan-made, không dùng ảnh/tài nguyên gốc — toàn bộ vẽ bằng CSS + emoji, âm thanh sinh bằng WebAudio.
@@ -11,7 +11,7 @@ Clone web game lấy cảm hứng từ **Yu-Gi-Oh! Forbidden Memories (PS1, 1999
 
 ## ▶ Cách chạy
 
-Cách 1 — chơi bản online (không cần cài gì): mở https://forbidden-memory-clone.vercel.app
+Cách 1 — chơi bản online (không cần cài gì): mở https://forbidden-memory.vercel.app
 
 Cách 2 — server local kèm game (gửi `no-cache` nên luôn mới nhất):
 
