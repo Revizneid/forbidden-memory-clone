@@ -1,0 +1,11 @@
+# runtime junk
+server.log
+server2.log
+*.log
+# vercel local state
+.vercel/
+# deps
+node_modules/
+# OS
+Thumbs.db
+.DS_Store

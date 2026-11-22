@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forbidden Memory — Web Clone</title>
+<link rel="stylesheet" href="css/style.css?v=ux2">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐉</text></svg>">
+</head>
+<body>
+  <div id="app">
+    <!-- ======================= SÀN ĐẤU ======================= -->
+    <div id="battle" class="hidden">
+      <div id="weather-tint"></div>
+      <div id="turn-banner" class="hidden"><span id="turn-banner-text"></span></div>
+      <header id="topbar">
+        <div id="enemy-info" class="duelist-info enemy">
+          <div class="portrait" id="enemy-portrait">👹</div>
+          <div class="dstat">
+            <div class="dname" id="enemy-name">Máy</div>
+            <div class="lpbar"><div class="lpfill" id="enemy-lpfill"></div><div class="lptext" id="enemy-lp">8000</div></div>
+            <div class="dmini"><span id="enemy-deck">🂠 40</span><span id="enemy-hand">✋ 5</span><span id="enemy-grave">⚰️ 0</span></div>
+          </div>
+        </div>
+        <div id="turnbox">
+          <div id="turn-num">Lượt 1</div>
+          <div id="phase-ind" class="phase-main">Main Phase</div>
+        </div>
+        <div class="topbtns">
+          <button id="btn-fusionlist" title="Bảng Fusion">🧪 Fusion</button>
+          <button id="btn-help" title="Luật chơi">❔</button>
+          <button id="btn-mute" title="Âm thanh">🔊</button>
+          <button id="btn-quit" title="Về menu">🚪</button>
+        </div>
+      </header>
+
+      <div id="enemy-handrow" class="handrow"></div>
+
+      <div id="board-area">
+        <div id="enemy-grid-wrap" class="gridwrap">
+          <div class="gridlabel" id="enemy-gridlabel">ĐỐI THỦ</div>
+          <div id="enemy-grid" class="grid"></div>
+        </div>
+        <div id="center-strip">
+          <div id="log-ticker"></div>
+          <div id="terrain-strip"></div>
+        </div>
+        <div id="player-grid-wrap" class="gridwrap">
+          <div id="player-grid" class="grid"></div>
+          <div class="gridlabel" id="player-gridlabel">BẠN</div>
+        </div>
+        <aside id="sidebar">
+          <div id="preview"></div>
+          <div id="actionbar"></div>
+        </aside>
+      </div>
+
+      <div id="hand-area">
+        <div id="player-info" class="duelist-info player">
+          <div class="portrait" id="player-portrait">🙂</div>
+          <div class="dstat">
+            <div class="dname" id="player-name">Bạn</div>
+            <div class="lpbar"><div class="lpfill" id="player-lpfill"></div><div class="lptext" id="player-lp">8000</div></div>
+            <div class="dmini"><span id="player-deck">🂠 40</span><span id="player-handcount">✋ 5</span><span id="player-grave">⚰️ 0</span></div>
+          </div>
+        </div>
+        <div id="player-hand" class="handrow fan"></div>
+        <div id="phasebar">
+          <button id="btn-battle" class="primary">⚔ Battle Phase</button>
+          <button id="btn-endturn" class="primary">⏭ Kết Thúc Lượt</button>
+        </div>
+      </div>
+
+      <div id="log-panel"><div id="log-list"></div></div>
+      <button id="btn-togglelog" title="Nhật ký">📜</button>
+    </div>
+
+    <!-- ======================= MENU ======================= -->
+    <div id="menu">
+      <div class="menu-inner">
+        <h1 class="game-title">FORBIDDEN <span>MEMORY</span></h1>
+        <div class="game-sub">— Web Clone · Đấu với máy · Fusion theo lối PS1 1999 —</div>
+
+        <section class="menu-sec">
+          <h2>1. Chọn đối thủ</h2>
+          <div id="duelist-list" class="duelist-list"></div>
+        </section>
+
+        <section class="menu-sec">
+          <h2>2. Chọn deck của bạn</h2>
+          <div id="deck-list" class="deck-list"></div>
+        </section>
+
+        <section class="menu-sec">
+          <h2>3. Độ khó của máy</h2>
+          <div id="diff-list" class="diff-list"></div>
+        </section>
+
+        <div class="menu-actions">
+          <button id="btn-start" class="primary big">⚔ VÀO TRẬN (LP 8000)</button>
+          <button id="btn-menu-help" class="secondary">❔ Luật chơi</button>
+        </div>
+        <div id="menu-progress" class="menu-progress"></div>
+      </div>
+    </div>
+
+    <!-- ======================= OVERLAYS ======================= -->
+    <div id="overlay" class="overlay hidden"></div>
+    <div id="toast" class="hidden"></div>
+  </div>
+
+  <script src="js/cards.js?v=ux2"></script>
+  <script src="js/engine.js?v=ux2"></script>
+  <script src="js/ai.js?v=ux2"></script>
+  <script src="js/fx.js?v=ux2"></script>
+  <script src="js/ui.js?v=ux2"></script>
+  <script src="js/main.js?v=ux2"></script>
+</body>
+</html>
