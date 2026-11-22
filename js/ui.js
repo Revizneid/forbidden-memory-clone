@@ -342,7 +342,7 @@
     try {
       const duelistId = cfg && cfg.duelist ? cfg.duelist.id : null;
       localStorage.setItem('fm_duel_v1', JSON.stringify({
-        s: S, duelistId, deckId: cfg && cfg.deckId, difficulty: cfg && cfg.difficulty,
+        s: Object.assign({}, S, { fx: [] }), duelistId, deckId: cfg && cfg.deckId, difficulty: cfg && cfg.difficulty,
       }));
     } catch (e) { /* storage đầy: bỏ qua */ }
   }
@@ -372,6 +372,7 @@
   };
 
   let previewSel = null;
+  let previewTimer = 0;
   function previewCard() {
     if (previewSel) return previewSel;
     if (mode === 'handSel' && selHand >= 0) { const c = S.players[0].hand[selHand]; return c ? { card: c } : null; }
@@ -379,7 +380,13 @@
     return null;
   }
 
-  function showPreview(card, note) { previewSel = { card, note }; renderPreview(previewSel); setTimeout(() => { previewSel = null; renderPreview(null); }, 4000); }
+  function showPreview(card, note) {
+    // Mỗi preview mới huỷ timer của preview cũ — tránh preview mới bị preview cũ xoá mất
+    previewSel = { card, note };
+    renderPreview(previewSel);
+    clearTimeout(previewTimer);
+    previewTimer = setTimeout(() => { previewSel = null; renderPreview(null); }, 4000);
+  }
 
   /* ---------------- Mode helpers ---------------- */
   function isPlayable(card) {
@@ -395,7 +402,7 @@
     return true; // darkHole/raigeki/dianKeto
   }
 
-  function resetMode() { mode = 'idle'; selHand = -1; selField = -1; pending = {}; renderAll(); }
+  function resetMode() { mode = 'idle'; selHand = -1; selField = -1; pending = {}; previewSel = null; renderAll(); }
   function myTurnMain() { return S && S.winner == null && S.phase === 'MAIN' && S.active === 0 && !aiRunning; }
   function myTurnBattle() { return S && S.winner == null && S.phase === 'BATTLE' && S.active === 0 && !aiRunning; }
   function equipMatch(handIdx, pIdx, slotIdx) {
@@ -418,6 +425,10 @@
   /* ---------------- Human actions ---------------- */
   function onHandClick(i) {
     if (!myTurnMain()) return;
+    if (mode === 'summonSlot' || mode === 'trapSlot' || mode === 'fuseSlot' || mode === 'equipTarget') {
+      toast('↩ Huỷ thao tác đang chọn ô');
+      resetMode();
+    }
     if (mode === 'fusing' && pending.a && pending.a.src !== 'HAND2' && (pending.a.src === 'FIELD' || pending.a.src === 'HAND')) {
       // chọn nguyên liệu B từ tay
       if (i === pending.a.idx && pending.a.src === 'HAND') { resetMode(); return; }
@@ -437,13 +448,19 @@
     if (!myTurnMain() && !myTurnBattle()) {
       // xem bài đối thủ (ngửa)
       const sl = S.players[pIdx].field[i];
-      if (sl && (sl.kind !== 'MONSTER' || !sl.faceDown)) {
-        const card = sl.kind === 'MONSTER' ? sl.card : (sl.kind === 'TRAP' ? { kind: 'TRAP', tid: sl.tid } : { kind: 'MAGIC', mid: sl.mid });
-        showPreview(card, 'Thẻ của đối thủ');
+      if (sl && sl.kind === 'MONSTER' && !sl.faceDown) {
+        showPreview(sl.card, 'Thẻ của đối thủ');
+      } else if (sl && sl.kind === 'TRAP') {
+        toast('🂠 Bẫy đã SET (ẩn)');
       }
       return;
     }
-    if (pIdx === 1) return; // lượt mình thì không click sân đối thủ
+    if (pIdx === 1) {
+      const es = S.players[1].field[i];
+      if (es && es.kind === 'MONSTER' && !es.faceDown) showPreview(es.card, 'Quái của đối thủ');
+      else if (es && es.kind === 'TRAP') toast('🂠 Bẫy đã SET (ẩn)');
+      return;
+    }
     const p = S.players[0];
     const sl = p.field[i];
 
@@ -497,11 +514,12 @@
         showPreview({ kind: 'TRAP', tid: sl.tid }, 'Bẫy đã SET (ẩn cho đối thủ)');
       }
     } else {
+      if (mode === 'fusing') toast('↩ Đã huỷ fusion');
       resetMode();
     }
   }
 
-  function showPreviewInstant(card) { previewSel = { card }; }
+  function showPreviewInstant(card) { showPreview(card, "Trên sân"); }
 
   function confirmFusion(a, b, result) {
     // field fusion (A hoặc B trên sân): đích cố định tại ô nguyên liệu sân
