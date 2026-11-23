@@ -282,13 +282,13 @@
           addBtn('👁 Triệu Hồi Ritual', () => confirmRitual(selHand), 'primary');
           hint(md.desc);
         } else if (mfx.kind === 'forceDef') {
-          addBtn('🎯 Ép Phòng Thủ…', () => { mode = 'enemyTarget'; pending = { handIdx: selHand }; renderAll(); }, 'primary');
+          addBtn('🎯 Ép Phòng Thủ…', () => { mode = 'enemyTarget'; pending = { handIdx: selHand }; closeSidebarMobile(); toast('👉 Chọn quái đối thủ'); renderAll(); }, 'primary');
           hint(md.desc);
-        } else if (md.atk) addBtn('✨ Gắn Trang Bị…', () => { mode = 'equipTarget'; pending = { handIdx: selHand }; renderAll(); });
-        else addBtn('🪄 Kích Hoạt', () => doMagic(selHand, null), 'primary');
+        } else if (md.atk) addBtn('✨ Gắn Trang Bị…', () => { mode = 'equipTarget'; pending = { handIdx: selHand }; closeSidebarMobile(); toast('👉 Chọn quái ngửa để gắn trang bị'); renderAll(); });
+        else addBtn('🪄 Kích Hoạt', () => { closeSidebarMobile(); doMagic(selHand, null); }, 'primary');
         hint(md ? md.desc : '');
       } else if (card.kind === 'TRAP') {
-        addBtn('🪤 Set Bẫy…', () => { mode = 'trapSlot'; pending = { handIdx: selHand }; renderAll(); });
+        addBtn('🪤 Set Bẫy…', () => { mode = 'trapSlot'; pending = { handIdx: selHand }; closeSidebarMobile(); toast('👉 Chọn ô trống ở hàng Phép/Bẫy (dưới)'); renderAll(); });
         hint(C.traps[card.tid].desc);
       }
       addBtn('✖ Bỏ chọn', resetMode);
@@ -494,8 +494,8 @@
     if (pending.a.src === 'FIELD' && pending.a.idx === slotIdx) return false; // không tự fusing với chính mình
     return true;
   }
-  function enterSummonSlot(faceDown) { mode = 'summonSlot'; pending = { handIdx: selHand, faceDown }; renderAll(); }
-  function enterFusing(a) { mode = 'fusing'; pending = { a }; sfx.select(); renderAll(); }
+  function enterSummonSlot(faceDown) { mode = 'summonSlot'; pending = { handIdx: selHand, faceDown }; closeSidebarMobile(); toast('👉 Chọn một ô trống ở hàng Quái (trên)'); renderAll(); }
+  function enterFusing(a) { mode = 'fusing'; pending = { a }; sfx.select(); closeSidebarMobile(); toast('👉 Chọn nguyên liệu thứ hai (bài tay hoặc quái sân)'); renderAll(); }
 
   /* ---------------- Human actions ---------------- */
   function onHandClick(i) {
@@ -635,23 +635,6 @@
         mode = 'fieldSel'; selField = i; selHand = -1;
         if (!sl.faceDown) showPreviewInstant(sl.card);
         openSidebarMobile();
-        renderAll();
-      } else {
-        showPreview({ kind: 'TRAP', tid: sl.tid }, 'Bẫy đã SET (ẩn cho đối thủ)');
-      }
-    } else {
-      if (mode === 'fusing') toast('↩ Đã huỷ fusion');
-      resetMode();
-    }
-  }
-
-    // idle/other: chọn quái trên sân
-    if (sl) {
-      sfx.select();
-      if (sl.kind === 'MONSTER') {
-        if (!sl.faceDown) previewSel = null;
-        mode = 'fieldSel'; selField = i; selHand = -1;
-        if (!sl.faceDown) showPreviewInstant(sl.card);
         renderAll();
       } else {
         showPreview({ kind: 'TRAP', tid: sl.tid }, 'Bẫy đã SET (ẩn cho đối thủ)');
@@ -1220,12 +1203,14 @@
     // duelists
     const dl = $('duelist-list');
     dl.innerHTML = '';
+    if (!UI._selDuelist) UI._selDuelist = FM.decks.DUELISTS[0];
     FM.decks.DUELISTS.forEach((d, i) => {
       const el = document.createElement('div');
       const defeated = prog.includes(d.id);
       const unlocked = i <= Math.max(3, prog.length);
-      el.className = 'duelist-card' + (defeated ? ' sel' : '') + (unlocked ? '' : ' locked');
-      el.innerHTML = `<div class="dp">${unlocked ? d.portrait : '🔒'}</div><div class="dn">${d.name}</div><div class="dd">${'⭐'.repeat(Math.min(5, d.diff + 1))}${defeated ? '<br>✅ Đã hạ' : ''}</div>`;
+      const isSel = UI._selDuelist.id === d.id;
+      el.className = 'duelist-card' + (isSel ? ' sel' : '') + (unlocked ? '' : ' locked');
+      el.innerHTML = `<div class="dp">${unlocked ? d.portrait : '🔒'}</div><div class="dn">${d.name}</div><div class="dd">${'⭐'.repeat(Math.min(5, d.diff + 1))}${defeated ? '<br><span style="color:#27ae60;font-weight:700">✅ Đã hạ</span>' : ''}</div>`;
       if (unlocked) el.onclick = () => {
         UI._selDuelist = d;
         document.querySelectorAll('.duelist-card').forEach(x => x.classList.remove('sel'));

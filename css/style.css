@@ -477,7 +477,7 @@ button.big { font-size: 18px; padding: 12px 30px; }
  * ========================================================= */
 @media (max-width: 768px) {
   :root {
-    --slot: clamp(44px, 17vw, 64px);
+    --slot: clamp(38px, min(15.5vw, 6vh), 60px);
   }
 
   body {
@@ -656,25 +656,30 @@ button.big { font-size: 18px; padding: 12px 30px; }
 
   /* Hand Area: fan vuốt ngang mượt mà + info & phasebar đặt cạnh nhau */
   #hand-area {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
     gap: 4px;
     padding: 2px 0 0;
+    width: 100%;
   }
   .fan {
+    grid-column: 1 / -1;
+    grid-row: 1;
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    min-height: 82px;
-    padding: 4px 6px;
+    min-height: 76px;
+    padding: 3px 4px;
     justify-content: flex-start;
     gap: 5px;
+    width: 100%;
   }
   .fan::-webkit-scrollbar { display: none; }
   .fan .card {
-    width: clamp(52px, 16vw, 68px);
-    height: calc(clamp(52px, 16vw, 68px) * 1.35);
+    width: clamp(48px, 15vw, 64px);
+    height: calc(clamp(48px, 15vw, 64px) * 1.35);
     flex-shrink: 0;
     margin-bottom: 0;
   }
@@ -682,32 +687,37 @@ button.big { font-size: 18px; padding: 12px 30px; }
   .fan .card .cname { font-size: 7px; min-height: 14px; }
   .fan .card .cstats { font-size: 7px; padding: 1px 2px; }
   .fan .card:hover { transform: none; }
-  .fan .card.selected { transform: translateY(-10px) scale(1.06); }
+  .fan .card.selected { transform: translateY(-8px) scale(1.05); }
 
   /* Đặt Player Info và Phasebar chung 1 hàng đáy */
   #player-info {
-    min-width: unset;
+    grid-column: 1;
+    grid-row: 2;
+    min-width: 0;
     max-width: unset;
-    flex: 1;
     padding-bottom: 0;
-  }
-  #player-info .portrait { width: 34px; height: 34px; font-size: 18px; }
-  #phasebar {
-    width: 100%;
-    flex-direction: row;
     gap: 6px;
+  }
+  #player-info .portrait { width: 32px; height: 32px; font-size: 17px; }
+  #player-info .dname { font-size: 11px; }
+  #player-info .lpbar { height: 13px; }
+  #player-info .lptext { font-size: 9.5px; }
+  #player-info .dmini { font-size: 9px; gap: 4px; }
+
+  #phasebar {
+    grid-column: 2;
+    grid-row: 2;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
   }
   #phasebar button {
     flex: 1;
-    min-height: 40px;
-    font-size: 12.5px;
-    padding: 6px;
-  }
-
-  #hand-area > div:not(.fan) {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    min-height: 36px;
+    font-size: 11.5px;
+    padding: 4px 6px;
+    white-space: nowrap;
   }
 
   /* Log popup trên mobile */
@@ -758,10 +768,23 @@ button.big { font-size: 18px; padding: 12px 30px; }
     font-size: 11.5px;
     padding: 6px 4px;
   }
+  .menu-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    margin: 16px 0 10px;
+  }
+  .menu-actions button {
+    width: 100%;
+  }
   button.big {
     font-size: 15px;
-    padding: 11px 18px;
-    width: 100%;
+    padding: 12px 18px;
+  }
+  #btn-menu-help {
+    font-size: 13px;
+    padding: 9px;
   }
 
   /* Modal trên mobile */
