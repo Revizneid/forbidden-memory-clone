@@ -136,12 +136,30 @@ function simGame(deckA, deckB, diffA, diffB, maxTurns = 120) {
   p.hand = [];
   e.field[2] = { kind: 'MONSTER', card: { kind: 'MONSTER', id: C.idOf('Mystical Elf'), uid: s._uid++ }, pos: 'ATK', faceDown: false, attacked: false, star: 0, buffs: [] };
   e.hand = [];
+  s.turnNo = 2; // Lượt 2 mới được tấn công (luật lượt 1 đi trước không thể tấn công)
   s.phase = 'BATTLE';
   const lpBefore = e.lp;
   E.perform(s, { type: 'ATTACK', slotIdx: 2, targetSlot: 2 });
   const dmg = lpBefore - e.lp;
   // damage = (2500 + 500 star) - 800 = 2200
   assert(dmg === 2200, 'Guardian star damage: expect 2200 (2500+500-800), got ' + dmg);
+
+  // Kiểm tra luật lượt 1 không được tấn công
+  const sT1 = E.newDuel({ p0name: 'S', p1name: 'X', p0deck: list, p1deck: list, difficulty: 0 });
+  assert(!E.canAttack(sT1, 0, 0), 'Lượt 1 không thể tấn công');
+  assert(!E.startBattlePhase(sT1), 'Lượt 1 không thể vào Battle Phase');
+
+  // Kiểm tra bài đang úp thủ trên sân vẫn có thể dung hợp (Fusion)
+  const babyId = C.idOf('Baby Dragon');
+  const wizId = C.idOf('Time Wizard');
+  sT1.players[0].field[0] = { kind: 'MONSTER', card: { kind: 'MONSTER', id: babyId, uid: sT1._uid++ }, pos: 'DEF', faceDown: true, attacked: false, buffs: [] };
+  sT1.players[0].hand = [{ kind: 'MONSTER', id: wizId, uid: sT1._uid++ }];
+  const fRes = E.peekFusion(sT1, 0, { src: 'FIELD', idx: 0 }, { src: 'HAND', idx: 0 });
+  assert(fRes && fRes.name === 'Thousand Dragon', 'Quái úp trên sân vẫn dung hợp được (Baby Dragon úp + Time Wizard -> Thousand Dragon)');
+  const fuseAction = E.perform(sT1, { type: 'FUSION', a: { src: 'FIELD', idx: 0 }, b: { src: 'HAND', idx: 0 } });
+  assert(fuseAction.ok, 'Thực hiện fusion với quái úp thành công');
+  assert(sT1.players[0].field[0].faceDown === false, 'Quái dung hợp ra sân ở thế ngửa');
+  assert(E.mdata(sT1.players[0].field[0].card).name === 'Thousand Dragon', 'Thousand Dragon trên sân');
   console.log('  star battle done (dmg ' + dmg + ')');
 })();
 
@@ -208,6 +226,21 @@ function simGame(deckA, deckB, diffA, diffB, maxTurns = 120) {
   assert(reward.rank === 'S', 'LP 7500 turn 8 -> Rank S');
   assert(reward.starsWon === 5, 'Rank S thưởng 5 Star Chips');
   assert(reward.dropCard != null, 'Ăn được 1 lá bài từ đối thủ');
+
+  // 5b. Profile & Account Info
+  assert(typeof P.getName() === 'string', 'P.getName hợp lệ');
+  P.setName('Atem');
+  assert(P.getName() === 'Atem', 'P.setName thành công');
+  P.setAvatar('🧙');
+  assert(P.getAvatar() === '🧙', 'P.setAvatar thành công');
+  assert(typeof P.getTitle() === 'string', 'P.getTitle trả về danh hiệu');
+  const cardCount = P.getUniqueCardCount();
+  assert(cardCount.count > 0 && cardCount.total === 722, 'P.getUniqueCardCount đếm bộ sưu tập đúng 722');
+  const backupStr = P.exportSaveData();
+  assert(typeof backupStr === 'string' && backupStr.includes('Atem'), 'P.exportSaveData xuất dữ liệu');
+  const importRes = P.importSaveData(backupStr);
+  assert(importRes.ok, 'P.importSaveData nhập dữ liệu thành công');
+
   console.log('  Player Features done (Rank ' + reward.rank + ', drop: ' + (reward.dropCard && reward.dropCard.data ? reward.dropCard.data.name : '?') + ')');
 
   // 6. 2-Player (PvP) & Duelist Unlock verification

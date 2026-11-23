@@ -191,7 +191,57 @@ button.big { font-size: 18px; padding: 12px 30px; }
 }
 .slotcell.empty-target { border-color: var(--gold); cursor: pointer; animation: pulse 1s infinite; }
 .slotcell .slotcard { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
-.slotcell .slotcard .card { width: calc(var(--slot) - 8px); height: calc(var(--slot) * 1.35 - 8px); }
+.slotcell .slotcard .card {
+  width: calc(var(--slot) - 6px);
+  height: calc(var(--slot) * 1.35 - 6px);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.slotcell .slotcard .card .cname {
+  font-size: 8px;
+  min-height: 14px;
+  max-height: 14px;
+  line-height: 1.1;
+  padding: 1px 3px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.slotcell .slotcard .card .cart {
+  font-size: 20px;
+  margin: 1px 2px;
+  min-height: 0;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.slotcell .slotcard .card .cstats {
+  font-size: 8px;
+  font-weight: 900;
+  padding: 1px 3px 2px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0,0,0,.65);
+  color: #fff;
+  border-radius: 0 0 5px 5px;
+}
+.slotcell .slotcard .card .cstats .catk { color: #ff6b6b; font-weight: 900; }
+.slotcell .slotcard .card .cstats .cdef { color: #70a1ff; font-weight: 900; }
+.slotcell .slotcard .card.face-down .cstats { visibility: hidden; }
+
+/* Phòng thủ: xoay ngang thẻ bài trực quan */
+.slotcell .slotcard .card.pos-def {
+  transform: rotate(90deg) scale(0.86);
+  border-color: #3498db;
+  box-shadow: 0 0 6px rgba(52, 152, 219, 0.6);
+}
+.slotcell .slotcard .card.pos-def:hover {
+  transform: rotate(90deg) scale(0.92);
+}
 
 /* Divider giữa 2 lưới — mỏng, rộng đúng bằng lưới */
 #center-strip {
@@ -337,20 +387,109 @@ button.big { font-size: 18px; padding: 12px 30px; }
   border: 1px solid var(--gold); border-radius: 12px;
   padding: 10px 18px; margin-bottom: 20px;
   box-shadow: 0 4px 16px rgba(0,0,0,.35), inset 0 0 16px rgba(212,175,55,.1);
+  gap: 12px;
+}
+.profile-player-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: .15s;
+}
+.profile-player-info:hover {
+  background: rgba(255,255,255,.07);
+}
+.player-avatar-badge {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3a2b58, #1d152e);
+  border: 2px solid var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  box-shadow: 0 0 10px rgba(212,175,55,.3);
+  flex-shrink: 0;
+}
+.player-text-group {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+.player-name-text {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--gold2);
+  line-height: 1.2;
+}
+.player-title-text {
+  font-size: 11px;
+  color: var(--dim);
+  font-weight: 600;
 }
 .profile-stars {
   font-size: 18px; font-weight: 800; color: var(--gold2);
   display: flex; align-items: center; gap: 6px;
 }
 .profile-stars .star-label { font-size: 13px; color: var(--dim); font-weight: 600; }
-.profile-actions { display: flex; gap: 10px; }
-.btn-deck-edit, .btn-shop {
-  font-size: 13px; font-weight: 700; padding: 7px 14px;
+.profile-actions { display: flex; gap: 8px; }
+.btn-deck-edit, .btn-shop, .btn-profile {
+  font-size: 13px; font-weight: 700; padding: 7px 12px;
 }
+.btn-profile { border-color: #9b59b6; color: #d7bde2; }
+.btn-profile:hover { background: #4a235a; border-color: #bb8fce; color: #fff; }
 .btn-deck-edit { border-color: #3498db; color: #85c1e9; }
 .btn-deck-edit:hover { background: #1a365d; border-color: #5dade2; color: #fff; }
 .btn-shop { border-color: var(--gold); color: var(--gold2); }
 .btn-shop:hover { background: #4a3d1e; border-color: #f5b041; color: #fff; }
+
+/* Floating Card Stat Pills on Field */
+.card-stat-pill {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  font-size: 10px;
+  font-weight: 900;
+  white-space: nowrap;
+  padding: 2px 7px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.85);
+  letter-spacing: 0.2px;
+  pointer-events: none;
+  line-height: 1.2;
+}
+.card-stat-pill.pill-atk {
+  background: linear-gradient(135deg, #a81c1c, #d35400);
+  color: #fff;
+  border: 1px solid #f1c40f;
+  text-shadow: 0 1px 2px #000;
+}
+.card-stat-pill.pill-def {
+  background: linear-gradient(135deg, #1b3a6b, #152238);
+  color: #e0f0ff;
+  border: 1px solid #3498db;
+  text-shadow: 0 1px 2px #000;
+}
+.card-stat-pill.pill-fdown-me {
+  background: linear-gradient(135deg, #4a256a, #231238);
+  color: #f5cba7;
+  border: 1px solid #a569bd;
+}
+.card-stat-pill.pill-fdown-opp {
+  background: linear-gradient(135deg, #2c1b3d, #140c1c);
+  color: #c9a86a;
+  border: 1px solid #5d4a7a;
+}
+.card-stat-pill.pill-trap {
+  background: linear-gradient(135deg, #881452, #4a0b2d);
+  color: #ffc4e1;
+  border: 1px solid #e84393;
+}
 
 .sec-header {
   display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
@@ -570,6 +709,169 @@ button.big { font-size: 18px; padding: 12px 30px; }
 .fusion-table .frow { display: flex; align-items: center; gap: 6px; font-size: 12px; padding: 3px 0; border-bottom: 1px dashed #33304a; }
 .fusion-table .fres { color: var(--gold2); font-weight: 700; margin-left: auto; }
 .fusion-table .farrow { color: var(--dim); }
+
+/* ================= ACCOUNT PROFILE MODAL ================= */
+.profile-modal {
+  max-width: 620px;
+  text-align: center;
+}
+.pm-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(255,255,255,.04);
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #3a3355;
+  margin-bottom: 16px;
+  text-align: left;
+}
+.pm-avatar-big {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #443266, #1f1435);
+  border: 3px solid var(--gold);
+  font-size: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 20px rgba(212,175,55,.4);
+  flex-shrink: 0;
+}
+.pm-info { flex: 1; }
+.pm-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pm-name-input {
+  background: #120e21;
+  border: 1px solid #5a4f7d;
+  color: var(--gold2);
+  font-size: 18px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 6px;
+  max-width: 220px;
+}
+.pm-title-badge {
+  display: inline-block;
+  background: linear-gradient(90deg, #9b59b6, #8e44ad);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 12px;
+  margin-top: 6px;
+  letter-spacing: 0.5px;
+}
+.pm-avatar-picker {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.pm-avatar-opt {
+  width: 36px;
+  height: 36px;
+  font-size: 20px;
+  background: #231c38;
+  border: 1px solid #4a3e6a;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: .15s;
+}
+.pm-avatar-opt:hover, .pm-avatar-opt.active {
+  border-color: var(--gold);
+  background: rgba(212,175,55,.2);
+  transform: scale(1.15);
+}
+.pm-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.pm-stat-card {
+  background: rgba(255,255,255,.03);
+  border: 1px solid #3a3355;
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.pm-stat-num {
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--gold2);
+}
+.pm-stat-lbl {
+  font-size: 11px;
+  color: var(--dim);
+}
+.pm-progress-box {
+  background: rgba(0,0,0,.25);
+  border: 1px solid #3a3355;
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 16px;
+  text-align: left;
+}
+.pm-progress-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--dim);
+  margin-bottom: 6px;
+}
+.pm-progress-bar {
+  height: 10px;
+  background: #17122b;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #4a3f6e;
+}
+.pm-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3498db, #2ecc71);
+  border-radius: 6px;
+  transition: width .4s ease;
+}
+.pm-rank-pills {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.pm-rank-badge {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(255,255,255,.05);
+  border: 1px solid #4a3f6e;
+}
+.pm-backup-box {
+  background: rgba(0,0,0,.2);
+  border: 1px dashed #4a3f6e;
+  border-radius: 10px;
+  padding: 12px;
+  margin-top: 10px;
+}
+.pm-backup-btns {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
 
 /* ================= VICTORY REWARDS & RANK STAMP ================= */
 .rank-container {

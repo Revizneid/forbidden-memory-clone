@@ -250,6 +250,7 @@
   }
 
   function battlePhaseWorth(s, pIdx) {
+    if (s.turnNo === 1) return false; // Lượt 1 không tấn công
     for (let si = 0; si < MONSTER_SLOTS; si++) {
       const r = bestAttackForMonster(s, pIdx, si, false);
       if (r && r.score > 0) return true;

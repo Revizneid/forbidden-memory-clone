@@ -210,13 +210,13 @@
     return { ok: true };
   }
 
-  /* Fusion: handIdxA (trên tay) + thứ hai là tay HOẶC slot trên sân (quái ngửa).
+  /* Fusion: handIdxA (trên tay hoặc trên sân) + thứ hai là tay HOẶC slot trên sân (kể cả quái úp).
      Trả về kết quả để UI hiển thị trước khi gọi placeFusion. */
   function peekFusion(s, pIdx, a, b) {
     // a/b: {src:'HAND'|'FIELD', idx}
     const p = s.players[pIdx];
-    const ca = a.src === 'HAND' ? p.hand[a.idx] : (p.field[a.idx] && p.field[a.idx].kind === 'MONSTER' && !p.field[a.idx].faceDown ? p.field[a.idx].card : null);
-    const cb = b.src === 'HAND' ? p.hand[b.idx] : (p.field[b.idx] && p.field[b.idx].kind === 'MONSTER' && !p.field[b.idx].faceDown ? p.field[b.idx].card : null);
+    const ca = a.src === 'HAND' ? p.hand[a.idx] : (p.field[a.idx] && p.field[a.idx].kind === 'MONSTER' ? p.field[a.idx].card : null);
+    const cb = b.src === 'HAND' ? p.hand[b.idx] : (p.field[b.idx] && p.field[b.idx].kind === 'MONSTER' ? p.field[b.idx].card : null);
     if (!isMon(ca) || !isMon(cb)) return null;
     return C.lookup(ca.id, cb.id);
   }
@@ -450,6 +450,7 @@
   /* ---------------- battle phase ---------------- */
   function canAttack(s, pIdx, slotIdx) {
     if (s.phase !== 'BATTLE' || s.winner != null) return false;
+    if (s.turnNo === 1) return false; // Lượt 1 người đi trước không thể tấn công
     if (!isMonsterSlot(slotIdx)) return false;
     const p = s.players[pIdx];
     const slot = p.field[slotIdx];
@@ -584,6 +585,10 @@
   /* ---------------- turn flow ---------------- */
   function startBattlePhase(s) {
     if (s.phase !== 'MAIN') return false;
+    if (s.turnNo === 1) {
+      pushLog(s, '⚠️ Lượt 1 người đi trước không thể tấn công!');
+      return false;
+    }
     s.phase = 'BATTLE';
     pushLog(s, `🗡 Battle Phase!`);
     return true;

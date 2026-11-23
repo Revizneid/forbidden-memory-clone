@@ -1,7 +1,7 @@
 /* =========================================================================
  * Forbidden Memory Web Clone — Player Profile & Duel Drop Engine
- * Quản lý: Trunk (Rương bài), Custom Deck (40 lá), Star Chips, Duel Drops.
- * Lưu trữ: localStorage ('fm_player_v1').
+ * Quản lý: Profile tài khoản, Avatar, Rank, Trunk (Rương bài), Custom Deck, Star Chips, Duel Drops.
+ * Lưu trữ: localStorage ('fm_player_v2').
  * ========================================================================= */
 (function (root) {
   'use strict';
@@ -29,11 +29,15 @@
 
     profile = {
       version: 2,
+      name: 'Yugi Muto',
+      avatar: '👑',
       starterDeckKey: chosenKey,
       stars: 50,
       deck: starterDeck,
       trunk: {}, // Khởi đầu Rương không có gì
       stats: { wins: 0, losses: 0, drops: 0 },
+      ranks: { S: 0, A: 0, B: 0, C: 0, D: 0 },
+      createdAt: Date.now(),
     };
     saveProfile();
     return profile;
@@ -51,7 +55,10 @@
           }
           if (!profile.trunk || typeof profile.trunk !== 'object') profile.trunk = {};
           if (profile.stars == null) profile.stars = 50;
+          if (!profile.name) profile.name = 'Yugi Muto';
+          if (!profile.avatar) profile.avatar = '👑';
           if (!profile.stats) profile.stats = { wins: 0, losses: 0, drops: 0 };
+          if (!profile.ranks) profile.ranks = { S: 0, A: 0, B: 0, C: 0, D: 0 };
           return profile;
         }
       }
@@ -75,6 +82,56 @@
   const Player = FM.player = {
     getProfile() {
       return loadProfile();
+    },
+
+    getName() {
+      return loadProfile().name || 'Yugi Muto';
+    },
+
+    setName(name) {
+      const p = loadProfile();
+      p.name = String(name || '').trim().slice(0, 20) || 'Yugi Muto';
+      saveProfile();
+      return p.name;
+    },
+
+    getAvatar() {
+      return loadProfile().avatar || '👑';
+    },
+
+    setAvatar(avatar) {
+      const p = loadProfile();
+      p.avatar = avatar || '👑';
+      saveProfile();
+      return p.avatar;
+    },
+
+    getTitle() {
+      const p = loadProfile();
+      const wins = p.stats ? p.stats.wins : 0;
+      if (wins >= 50) return 'Vua Trò Chơi (King of Games)';
+      if (wins >= 30) return 'Bậc Thầy Dung Hợp (Fusion Master)';
+      if (wins >= 15) return 'Chiến Binh Đấu Trường';
+      if (wins >= 5) return 'Bài Thủ Triển Vọng';
+      return 'Học Viên Bài Thủ (Rookie)';
+    },
+
+    getUniqueCardCount() {
+      const p = loadProfile();
+      const uniqueKeys = new Set();
+      // Quét trong deck
+      for (const c of p.deck) {
+        const k = cardKeyOf(c);
+        if (k) uniqueKeys.add(k);
+      }
+      // Quét trong trunk
+      for (const k in p.trunk) {
+        if (p.trunk[k] > 0) uniqueKeys.add(k);
+      }
+      const count = uniqueKeys.size;
+      const total = 722;
+      const percent = Math.min(100, Math.round((count / total) * 1000) / 10);
+      return { count, total, percent };
     },
 
     getStars() {
@@ -104,7 +161,6 @@
       return loadProfile().trunk;
     },
 
-    /* Đếm tổng số lượng 1 lá sở hữu (trong deck + trong trunk) */
     totalOwned(ref) {
       const key = cardKeyOf(ref);
       if (!key) return 0;
@@ -114,7 +170,6 @@
       return inTrunk + inDeck;
     },
 
-    /* Thêm lá bài vào Trunk (nhận thưởng hoặc mua) */
     addCardToTrunk(ref) {
       const key = cardKeyOf(ref);
       if (!key) return false;
@@ -124,13 +179,11 @@
       return true;
     },
 
-    /* Lưu bộ bài sau khi chỉnh sửa */
     saveDeck(newDeck, newTrunk) {
       const p = loadProfile();
       if (!Array.isArray(newDeck) || newDeck.length !== 40) {
         return { ok: false, msg: 'Bộ bài thi đấu phải có đúng 40 lá!' };
       }
-      // Kiểm tra tối đa 3 bản sao mỗi lá
       const counts = {};
       for (const card of newDeck) {
         const k = cardKeyOf(card);
@@ -147,16 +200,13 @@
       return { ok: true };
     },
 
-    /* Đặt lại bộ bài theo 1 trong các Deck mẫu có sẵn */
     resetDeckToPreset(presetKey) {
       const preset = FM.decks.DECKS[presetKey] || FM.decks.DECKS.flameSwordsman;
       const p = loadProfile();
-      // Thu hồi toàn bộ bài trong deck hiện tại về trunk
       for (const c of p.deck) {
         const k = cardKeyOf(c);
         p.trunk[k] = (p.trunk[k] || 0) + 1;
       }
-      // Trích xuất các lá của preset từ trunk (hoặc bổ sung nếu thiếu)
       const targetDeck = FM.decks.expandDeck(preset.list);
       for (const c of targetDeck) {
         const k = cardKeyOf(c);
@@ -169,7 +219,6 @@
       return { ok: true, deck: p.deck };
     },
 
-    /* Mua bài từ Card Shop */
     buyCard(ref) {
       const cd = C.cardData(ref);
       if (!cd || !cd.data) return { ok: false, msg: 'Thẻ không hợp lệ!' };
@@ -184,7 +233,21 @@
       return { ok: true, stars: p.stars, card: cd };
     },
 
-    /* Tính phần thưởng sau trận (Ăn bài đối thủ + Star Chips) */
+    /* Ghi nhận kết quả trận đấu (cả AI và Online) */
+    recordDuelMatch(won, rank, starsWon) {
+      const p = loadProfile();
+      if (won) {
+        p.stats.wins++;
+        if (rank && p.ranks) {
+          p.ranks[rank] = (p.ranks[rank] || 0) + 1;
+        }
+        if (starsWon) p.stars += starsWon;
+      } else {
+        p.stats.losses++;
+      }
+      saveProfile();
+    },
+
     calculateDuelReward(s, duelist) {
       const p = loadProfile();
       if (s.winner !== 0) {
@@ -216,11 +279,10 @@
         stars = 1;
       }
 
-      // 2. Ăn bài đối thủ (Drop 1 lá ngẫu nhiên từ Deck đối thủ vừa hạ gục)
+      // 2. Ăn bài đối thủ (Drop 1 lá ngẫu nhiên từ Deck đối thủ)
       let dropCard = null;
       if (duelist && Array.isArray(duelist.deck) && duelist.deck.length > 0) {
         const expandedEnemyDeck = FM.decks.expandDeck(duelist.deck);
-        // Ưu tiên chọn ngẫu nhiên bài trong deck đối thủ
         const pickIdx = Math.floor(Math.random() * expandedEnemyDeck.length);
         const rawDrop = expandedEnemyDeck[pickIdx];
         const cd = C.cardData(rawDrop);
@@ -235,6 +297,7 @@
       p.stars += stars;
       p.stats.wins++;
       p.stats.drops++;
+      if (p.ranks) p.ranks[rank] = (p.ranks[rank] || 0) + 1;
       saveProfile();
 
       return {
@@ -246,10 +309,58 @@
         duelistName: duelist ? duelist.name : 'Đối thủ',
       };
     },
+
+    /* Xuất dữ liệu sao lưu (JSON string) */
+    exportSaveData() {
+      const p = loadProfile();
+      let unlock = [];
+      try {
+        if (typeof localStorage !== 'undefined') {
+          const raw = localStorage.getItem('fm_unlock_v1');
+          if (raw) unlock = JSON.parse(raw);
+        }
+      } catch (e) {}
+      return JSON.stringify({
+        player: p,
+        unlock: unlock,
+        exportedAt: new Date().toISOString(),
+      });
+    },
+
+    /* Nhập dữ liệu sao lưu */
+    importSaveData(jsonStr) {
+      try {
+        const data = JSON.parse(jsonStr);
+        if (!data || !data.player || !Array.isArray(data.player.deck) || data.player.deck.length !== 40) {
+          return { ok: false, msg: 'Dữ liệu sao lưu không hợp lệ hoặc bị hỏng!' };
+        }
+        profile = data.player;
+        profile.version = 2;
+        saveProfile();
+        if (typeof localStorage !== 'undefined' && Array.isArray(data.unlock)) {
+          localStorage.setItem('fm_unlock_v1', JSON.stringify(data.unlock));
+        }
+        return { ok: true };
+      } catch (e) {
+        return { ok: false, msg: 'Lỗi đọc mã sao lưu: ' + e.message };
+      }
+    },
+
+    /* Reset toàn bộ tiến trình game */
+    resetProfile() {
+      try {
+        if (typeof localStorage !== 'undefined') {
+          localStorage.removeItem(STORAGE_KEY);
+          localStorage.removeItem('fm_unlock_v1');
+          localStorage.removeItem('fm_duel_v1');
+        }
+      } catch (e) {}
+      profile = null;
+      return initDefaultProfile();
+    },
   };
 
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = Player;
   }
 })(typeof window !== 'undefined' ? window : globalThis);
-

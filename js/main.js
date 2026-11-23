@@ -36,6 +36,10 @@
       };
     }
     $('btn-menu-help').onclick = () => UI.showHelp();
+    const btnMenuProfile = $('btn-menu-profile');
+    if (btnMenuProfile) btnMenuProfile.onclick = () => UI.showProfile();
+    const btnOpenProfileBox = $('btn-open-profile-box');
+    if (btnOpenProfileBox) btnOpenProfileBox.onclick = () => UI.showProfile();
     const btnMenuDeck = $('btn-menu-deck');
     if (btnMenuDeck) btnMenuDeck.onclick = () => UI.showDeckEditor();
     const btnMenuShop = $('btn-menu-shop');

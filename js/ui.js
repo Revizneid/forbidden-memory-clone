@@ -114,7 +114,7 @@
     $('enemy-name').textContent = pOpp.name;
     $('enemy-portrait').textContent = isOnline ? (opp === 0 ? '🧙' : '🧝') : (cfg && cfg.duelist ? cfg.duelist.portrait : '👹');
     $('player-name').textContent = pMe.name;
-    $('player-portrait').textContent = isOnline ? (me === 0 ? '🧙' : '🧝') : '🙂';
+    $('player-portrait').textContent = isOnline ? (me === 0 ? '🧙' : '🧝') : ((FM.player && FM.player.getAvatar()) || '👑');
 
     for (const [p, pre] of [[pOpp, 'enemy'], [pMe, 'player']]) {
       const pct = Math.max(0, Math.min(100, (p.lp / E.LP_START) * 100));
@@ -198,29 +198,60 @@
         const wrap = document.createElement('div');
         wrap.className = 'slotcard';
         const el = cardEl(sl.kind === 'TRAP' ? { kind: 'TRAP', tid: sl.tid } : sl.card, !!sl.faceDown, sl.kind === 'TRAP');
-        if (sl.kind === 'MONSTER' && !sl.faceDown) {
-          if ((sl.buffs || []).length) el.classList.add('equipped');
-          // ATK/DEF hiệu dụng hiện tại (equip + địa hình) đè lên stat gốc — thắng/thua nhìn là biết
-          const base = C.monsters[sl.card.id];
-          const curAtk = E.effAtk(S, pIdx, sl), curDef = E.effDef(S, pIdx, sl);
-          const catk = el.querySelector('.catk'), cdef = el.querySelector('.cdef');
-          if (sl.pos === 'ATK') {
-            catk.textContent = '⚔' + curAtk;
-            catk.classList.toggle('buffed', curAtk > base.atk);
-            catk.classList.toggle('nerfed', curAtk < base.atk);
-            cdef.style.opacity = '.4';
-          } else {
-            cdef.textContent = '🛡' + curDef;
-            cdef.classList.toggle('buffed', curDef > base.def);
-            cdef.classList.toggle('nerfed', curDef < base.def);
-            catk.style.opacity = '.4';
+        
+        // Huy hiệu chỉ số nổi bật trên sân (ATK / DEF)
+        const statPill = document.createElement('div');
+        statPill.className = 'card-stat-pill';
+
+        if (sl.kind === 'MONSTER') {
+          const curAtk = E.effAtk(S, pIdx, sl);
+          const curDef = E.effDef(S, pIdx, sl);
+          const base = C.monsters[sl.card.id] || { atk: curAtk, def: curDef };
+
+          if (sl.pos === 'DEF') {
+            el.classList.add('pos-def');
           }
-          const pos = document.createElement('div');
-          pos.className = 'posico ' + (sl.pos === 'ATK' ? 'atk' : 'def');
-          pos.textContent = sl.pos === 'ATK' ? '⚔ ATK' : '🛡 DEF';
-          el.appendChild(pos);
+
+          if (!sl.faceDown) {
+            if ((sl.buffs || []).length) el.classList.add('equipped');
+            const catk = el.querySelector('.catk'), cdef = el.querySelector('.cdef');
+            if (sl.pos === 'ATK') {
+              if (catk) {
+                catk.textContent = '⚔' + curAtk;
+                catk.classList.toggle('buffed', curAtk > base.atk);
+                catk.classList.toggle('nerfed', curAtk < base.atk);
+              }
+              if (cdef) cdef.style.opacity = '.4';
+              statPill.classList.add('pill-atk');
+              statPill.innerHTML = `⚔ <b>${curAtk}</b>`;
+            } else {
+              if (cdef) {
+                cdef.textContent = '🛡' + curDef;
+                cdef.classList.toggle('buffed', curDef > base.def);
+                cdef.classList.toggle('nerfed', curDef < base.def);
+              }
+              if (catk) catk.style.opacity = '.4';
+              statPill.classList.add('pill-def');
+              statPill.innerHTML = `🛡 <b>${curDef}</b>`;
+            }
+          } else {
+            // Quái đang úp thủ
+            if (vIdx === 0) {
+              // Là quái úp của chính mình: hiện chỉ số DEF để người chơi nhận biết
+              statPill.classList.add('pill-def', 'pill-fdown-me');
+              statPill.innerHTML = `🛡 <b>${curDef}</b> (Úp)`;
+            } else {
+              // Quái úp của đối thủ: ẩn chỉ số
+              statPill.classList.add('pill-fdown-opp');
+              statPill.innerHTML = `🛡 <b>ÚP THỦ</b>`;
+            }
+          }
+        } else if (sl.kind === 'TRAP') {
+          statPill.classList.add('pill-trap');
+          statPill.innerHTML = vIdx === 0 ? `🪤 <b>BẪY</b>` : `🂠 <b>BẪY</b>`;
         }
         wrap.appendChild(el);
+        wrap.appendChild(statPill);
         cell.appendChild(wrap);
         // highlight cho tương tác
         if (myTurnMain()) {
@@ -352,10 +383,14 @@
     } else if (mode === 'fieldSel' && selField >= 0) {
       const sl = S.players[me].field[selField];
       if (sl && sl.kind === 'MONSTER') {
-        hint('Quái: ' + E.mdata(sl.card).name + (sl.faceDown ? ' (úp)' : sl.pos === 'ATK' ? ' (ATK)' : ' (DEF)'));
+        hint('Quái: ' + E.mdata(sl.card).name + (sl.faceDown ? ' (Đang ÚP THỦ)' : sl.pos === 'ATK' ? ' (ATK)' : ' (DEF)'));
         if (!sl.faceDown && E.mdata(sl.card).stars && E.mdata(sl.card).stars[1]) addBtn('⭐ Đổi Guardian Star (hiện: ' + C.starName(E.mdata(sl.card).stars[sl.star || 0]) + ')', () => { E.perform(S, { type: 'SET_STAR', slotIdx: selField }); postAction(); }, 'primary');
-        if (!sl.faceDown) addBtn('🧪 Fusion quái này + bài tay…', () => enterFusing({ src: 'FIELD', idx: selField }));
-        if (!sl.posChanged) addBtn('🔄 Đổi Tư Thế', () => { E.perform(S, { type: 'CHANGE_POS', slotIdx: selField }); resetMode(); postAction(); }, 'primary');
+        addBtn('🧪 Fusion quái này + bài khác…', () => enterFusing({ src: 'FIELD', idx: selField }));
+        if (sl.faceDown) {
+          addBtn('🔄 Lật Ngửa Quái Vật', () => { E.perform(S, { type: 'CHANGE_POS', slotIdx: selField }); resetMode(); postAction(); }, 'primary');
+        } else if (!sl.posChanged) {
+          addBtn('🔄 Đổi Tư Thế', () => { E.perform(S, { type: 'CHANGE_POS', slotIdx: selField }); resetMode(); postAction(); }, 'primary');
+        }
       }
       addBtn('✖ Bỏ chọn', resetMode);
     } else {
@@ -414,7 +449,8 @@
     renderActionBar();
     renderPreview(previewCard());
     const isHuman = isCurrentHuman();
-    $('btn-battle').classList.toggle('hidden', !(isHuman && S.phase === 'MAIN'));
+    const canBattle = isHuman && S.phase === 'MAIN' && S.turnNo > 1;
+    $('btn-battle').classList.toggle('hidden', !canBattle);
     $('btn-endturn').classList.toggle('hidden', !(isHuman && S.phase === 'MAIN'));
     saveDuel();
   }
@@ -538,7 +574,7 @@
   function validFuseB(pIdx, slotIdx) {
     if (!pending.a) return false;
     const sl = S.players[pIdx].field[slotIdx];
-    if (!sl || sl.kind !== 'MONSTER' || sl.faceDown) return false;
+    if (!sl || sl.kind !== 'MONSTER') return false;
     if (pending.a.src === 'FIELD' && pending.a.idx === slotIdx) return false; // không tự fusing với chính mình
     return true;
   }
@@ -572,10 +608,17 @@
     const me = myIdx();
     const opp = oppIdx();
     if (!myTurnMain() && !myTurnBattle()) {
-      // xem bài (ngửa)
+      // xem bài
       const sl = S.players[vIdx === 0 ? me : opp].field[i];
-      if (sl && sl.kind === 'MONSTER' && !sl.faceDown) {
-        showPreview(sl.card, vIdx === 0 ? 'Thẻ của bạn' : 'Thẻ của đối thủ');
+      if (sl && sl.kind === 'MONSTER') {
+        if (vIdx === 0) {
+          // Bài của chính mình: xem được kể cả khi đang úp
+          showPreview(sl.card, sl.faceDown ? 'Quái của bạn (Đang ÚP THỦ)' : 'Quái của bạn');
+        } else if (!sl.faceDown) {
+          showPreview(sl.card, 'Quái của đối thủ');
+        } else {
+          toast('🛡 Quái úp của đối thủ (ẩn danh)');
+        }
       } else if (sl && sl.kind === 'TRAP') {
         toast('🂠 Bẫy đã SET (ẩn)');
       }
@@ -632,8 +675,8 @@
           toast('🎯 Chọn một quái đối thủ để tấn công');
           renderAll();
         }
-      } else if (sl && sl.kind === 'MONSTER' && !sl.faceDown) {
-        showPreview(sl.card, 'Quái của bạn');
+      } else if (sl && sl.kind === 'MONSTER') {
+        showPreview(sl.card, sl.faceDown ? 'Quái của bạn (Đang ÚP THỦ)' : 'Quái của bạn');
       }
       return;
     }
@@ -662,7 +705,7 @@
         return;
       }
     }
-    if (mode === 'fusing' && sl && sl.kind === 'MONSTER' && !sl.faceDown && validFuseB(me, i)) {
+    if (mode === 'fusing' && sl && sl.kind === 'MONSTER' && validFuseB(me, i)) {
       const a = pending.a;
       if (a.src === 'FIELD' && a.idx === i) return;
       const b = { src: 'FIELD', idx: i };
@@ -681,9 +724,8 @@
     if (sl) {
       sfx.select();
       if (sl.kind === 'MONSTER') {
-        if (!sl.faceDown) previewSel = null;
         mode = 'fieldSel'; selField = i; selHand = -1;
-        if (!sl.faceDown) showPreviewInstant(sl.card);
+        showPreview(sl.card, sl.faceDown ? 'Quái của bạn (Đang ÚP THỦ)' : 'Quái của bạn');
         openSidebarMobile();
         renderAll();
       } else {
@@ -1151,6 +1193,9 @@
     if (UI.isOnline) {
       const won = S.winner === myIdx();
       (won ? sfx.win : sfx.lose)();
+      if (FM.player && FM.player.recordDuelMatch) {
+        FM.player.recordDuelMatch(won, won ? 'S' : null, won ? 5 : 0);
+      }
       const meName = S.players[myIdx()].name;
       const oppName = S.players[oppIdx()].name;
       openModal(`
@@ -1158,7 +1203,7 @@
         <div class="msub">${won ? 'Chúc mừng! Bạn đã xuất sắc đánh bại đối thủ online!' : 'Rất tiếc! Đối thủ đã giành chiến thắng lần này.'}</div>
         <div class="msub" style="margin-top:10px;font-size:13px">LP cuối: ${escapeHtml(meName)} <b>${S.players[myIdx()].lp}</b> — ${escapeHtml(oppName)} <b>${S.players[oppIdx()].lp}</b> · Số lượt: ${S.turnNo}</div>
         <div class="mbtns" style="margin-top:20px">
-          <button class="primary" id="go-menu">🏠 Về Menu Chính</button>
+          <button class="primary" id="go-menu">🏠 Về Trang Chủ</button>
         </div>
       `, true);
       $('go-menu').onclick = () => { closeModal(); UI.showMenu(); };
@@ -1173,14 +1218,14 @@
         <div class="msub">Trận đấu PvP 2 người kết thúc đầy kịch tính!</div>
         <div class="msub" style="margin-top:10px;font-size:13px">LP cuối: ${escapeHtml(S.players[0].name)} <b>${S.players[0].lp}</b> — ${escapeHtml(S.players[1].name)} <b>${S.players[1].lp}</b> · Số lượt: ${S.turnNo}</div>
         <div class="mbtns" style="margin-top:20px">
-          <button class="primary" id="go-rematch">⚔ Đấu Lại</button>
+          <button class="primary" id="go-menu">🏠 Về Trang Chủ</button>
+          <button id="go-rematch">⚔ Đấu Tiếp</button>
           <button id="go-deck">🃏 Xếp Bài</button>
-          <button id="go-menu">🏠 Về Menu</button>
         </div>
       `, true);
+      $('go-menu').onclick = () => { closeModal(); UI.showMenu(); };
       $('go-rematch').onclick = () => { closeModal(); UI.startDuel(cfg); };
       $('go-deck').onclick = () => { closeModal(); UI.showDeckEditor(); };
-      $('go-menu').onclick = () => { closeModal(); UI.showMenu(); };
       return;
     }
     const won = S.winner === 0;
@@ -1243,17 +1288,17 @@
         </div>
         <div class="msub" style="margin-top:10px;font-size:12px">LP cuối: Bạn <b>${S.players[0].lp}</b> — ${S.players[1].name} <b>${S.players[1].lp}</b> · Số lượt: ${S.turnNo}</div>
         <div class="mbtns">
-          <button class="primary" id="go-rematch">⚔ Đấu Lại</button>
-          <button id="go-deck">🃏 Xếp Bài (Deck / Trunk)</button>
+          <button class="primary" id="go-menu">🏠 Về Trang Chủ</button>
+          <button id="go-rematch">⚔ Đấu Tiếp (Tái Đấu)</button>
+          <button id="go-deck">🃏 Xếp Bài (Vào Trunk)</button>
           <button id="go-shop">🏪 Tiệm Bài (Card Shop)</button>
-          <button id="go-menu">🚪 Về Menu</button>
         </div>
       `, true);
 
+      $('go-menu').onclick = () => { closeModal(); UI.showMenu(); };
       $('go-rematch').onclick = () => { closeModal(); UI.startDuel(cfg); };
       $('go-deck').onclick = () => { closeModal(); UI.showDeckEditor(); };
       $('go-shop').onclick = () => { closeModal(); UI.showCardShop(); };
-      $('go-menu').onclick = () => { closeModal(); UI.showMenu(); };
       return;
     }
 
@@ -1262,16 +1307,16 @@
       <div class="msub">${S.players[1].name} đã đánh bại bạn. Hãy nâng cấp bộ bài và thử lại!</div>
       <div class="msub">LP cuối: Bạn <b>${S.players[0].lp}</b> — ${S.players[1].name} <b>${S.players[1].lp}</b> · Số lượt: ${S.turnNo}</div>
       <div class="mbtns">
-        <button class="primary" id="go-rematch">⚔ Đấu Lại</button>
-        <button id="go-deck">🃏 Xếp Bài (Deck / Trunk)</button>
+        <button class="primary" id="go-menu">🏠 Về Trang Chủ</button>
+        <button id="go-rematch">⚔ Đấu Tiếp (Tái Đấu)</button>
+        <button id="go-deck">🃏 Xếp Bài (Vào Trunk)</button>
         <button id="go-shop">🏪 Tiệm Bài (Card Shop)</button>
-        <button id="go-menu">🚪 Về Menu</button>
       </div>
     `);
+    $('go-menu').onclick = () => { closeModal(); UI.showMenu(); };
     $('go-rematch').onclick = () => { closeModal(); UI.startDuel(cfg); };
     $('go-deck').onclick = () => { closeModal(); UI.showDeckEditor(); };
     $('go-shop').onclick = () => { closeModal(); UI.showCardShop(); };
-    $('go-menu').onclick = () => { closeModal(); UI.showMenu(); };
   }
 
   /* ---------------- Modal helpers ---------------- */
@@ -1425,7 +1470,11 @@
         if (res.ok) {
           sfx.select();
           toast('✅ Đã lưu bộ bài 40 lá thành công!');
-          UI.buildMenu();
+          if (!S || S.winner != null) {
+            UI.showMenu();
+          } else {
+            UI.buildMenu();
+          }
         } else {
           toast('❌ ' + res.msg);
         }
@@ -1467,7 +1516,11 @@
 
       $('de-btn-close').onclick = () => {
         closeModal();
-        UI.buildMenu();
+        if (!S || S.winner != null) {
+          UI.showMenu();
+        } else {
+          UI.buildMenu();
+        }
       };
 
       renderDeckGrid();
@@ -1626,7 +1679,14 @@
 
       $('cs-tab-cat').onclick = () => { curTab = 'catalog'; renderShopModal(); };
       $('cs-tab-pw').onclick = () => { curTab = 'password'; renderShopModal(); };
-      $('cs-btn-close').onclick = () => { closeModal(); UI.buildMenu(); };
+      $('cs-btn-close').onclick = () => {
+        closeModal();
+        if (!S || S.winner != null) {
+          UI.showMenu();
+        } else {
+          UI.buildMenu();
+        }
+      };
 
       if (curTab === 'catalog') {
         renderCatalogView();
@@ -1877,6 +1937,195 @@
     renderShopModal();
   }
 
+  /* ---------------- Account Profile Modal ---------------- */
+  function showProfile() {
+    const P = FM.player;
+    if (!P) return;
+
+    const avatars = ['👑', '🧙', '🧝', '🐲', '⚔️', '🛡️', '🦁', '🦅', '⚡', '🔮', '🃏', '👹', '🐺', '🦊', '💀', '🔥'];
+
+    function renderProfileModal() {
+      const prof = P.getProfile();
+      const stats = P.getStats();
+      const ranks = prof.ranks || { S: 0, A: 0, B: 0, C: 0, D: 0 };
+      const wins = stats.wins || 0;
+      const losses = stats.losses || 0;
+      const totalMatches = wins + losses;
+      const winRate = totalMatches > 0 ? Math.round((wins / totalMatches) * 100) : 0;
+      const coll = P.getUniqueCardCount();
+      const stars = P.getStars();
+      const title = P.getTitle();
+      const curAvatar = P.getAvatar();
+      const curName = P.getName();
+
+      openModal(`
+        <div class="profile-modal">
+          <div class="pm-header">
+            <div class="pm-avatar-big" id="pm-cur-avatar">${curAvatar}</div>
+            <div class="pm-info">
+              <div class="pm-name-row">
+                <input type="text" id="pm-name-input" class="pm-name-input" maxlength="18" value="${escapeHtml(curName)}" placeholder="Tên bài thủ">
+                <button class="primary" id="pm-save-name" type="button" style="padding:5px 12px;font-size:12px">💾 Lưu</button>
+              </div>
+              <div class="pm-title-badge">🎖 ${escapeHtml(title)}</div>
+            </div>
+          </div>
+
+          <div style="font-size:12px;color:var(--dim);margin-bottom:8px;text-align:left;font-weight:700">🎭 CHỌN ẢNH ĐẠI DIỆN:</div>
+          <div class="pm-avatar-picker">
+            ${avatars.map(a => `<button class="pm-avatar-opt ${a === curAvatar ? 'active' : ''}" type="button" data-av="${a}">${a}</button>`).join('')}
+          </div>
+
+          <div class="pm-stats-grid">
+            <div class="pm-stat-card">
+              <span class="pm-stat-num" style="color:#2ecc71">${wins}</span>
+              <span class="pm-stat-lbl">Trận Thắng</span>
+            </div>
+            <div class="pm-stat-card">
+              <span class="pm-stat-num" style="color:#e74c3c">${losses}</span>
+              <span class="pm-stat-lbl">Trận Thua</span>
+            </div>
+            <div class="pm-stat-card">
+              <span class="pm-stat-num" style="color:#3498db">${winRate}%</span>
+              <span class="pm-stat-lbl">Tỉ Lệ Thắng</span>
+            </div>
+            <div class="pm-stat-card">
+              <span class="pm-stat-num" style="color:#f1c40f">⭐ ${stars}</span>
+              <span class="pm-stat-lbl">Star Chips</span>
+            </div>
+            <div class="pm-stat-card">
+              <span class="pm-stat-num" style="color:#e67e22">🎁 ${stats.drops || 0}</span>
+              <span class="pm-stat-lbl">Lá Bài Đã Drop</span>
+            </div>
+            <div class="pm-stat-card">
+              <span class="pm-stat-num" style="color:#9b59b6">🃏 ${P.getDeck().length}</span>
+              <span class="pm-stat-lbl">Bài Trong Deck</span>
+            </div>
+          </div>
+
+          <div class="pm-progress-box">
+            <div class="pm-progress-header">
+              <span>📚 BỘ SƯU TẬP BÀI (722 THẺ)</span>
+              <b>${coll.count} / ${coll.total} thẻ (${coll.percent}%)</b>
+            </div>
+            <div class="pm-progress-bar">
+              <div class="pm-progress-fill" style="width: ${coll.percent}%"></div>
+            </div>
+          </div>
+
+          <div style="font-size:12px;color:var(--dim);margin-bottom:6px;text-align:left;font-weight:700">🏆 CHIẾN TÍCH THEO RANK CHIẾN ĐẤU:</div>
+          <div class="pm-rank-pills">
+            <span class="pm-rank-badge" style="color:#f1c40f;border-color:#f1c40f">Rank S: <b>${ranks.S || 0}</b></span>
+            <span class="pm-rank-badge" style="color:#2ecc71;border-color:#2ecc71">Rank A: <b>${ranks.A || 0}</b></span>
+            <span class="pm-rank-badge" style="color:#3498db;border-color:#3498db">Rank B: <b>${ranks.B || 0}</b></span>
+            <span class="pm-rank-badge" style="color:#95a5a6;border-color:#95a5a6">Rank C: <b>${ranks.C || 0}</b></span>
+            <span class="pm-rank-badge" style="color:#7f8c8d;border-color:#7f8c8d">Rank D: <b>${ranks.D || 0}</b></span>
+          </div>
+
+          <div class="pm-backup-box">
+            <div style="font-size:12px;font-weight:700;color:var(--gold2)">💾 SAO LƯU TIẾN TRÌNH &amp; DỮ LIỆU TÀI KHOẢN</div>
+            <div class="pm-backup-btns">
+              <button id="pm-btn-export" type="button" style="font-size:12px;padding:6px 12px">📋 Xuất Mã Sao Lưu</button>
+              <button id="pm-btn-import" type="button" style="font-size:12px;padding:6px 12px">📥 Nhập Mã Sao Lưu</button>
+              <button id="pm-btn-reset-prof" type="button" style="font-size:12px;padding:6px 12px;border-color:#e74c3c;color:#e74c3c">⚠️ Đặt Lại Nick</button>
+            </div>
+          </div>
+
+          <div class="mbtns" style="margin-top:16px">
+            <button id="pm-btn-close" class="primary" type="button" style="min-width:140px">✕ Đóng</button>
+          </div>
+        </div>
+      `, true);
+
+      // Event: Lưu tên
+      const nameInput = $('pm-name-input');
+      const saveNameBtn = $('pm-save-name');
+      const doSaveName = () => {
+        if (!nameInput) return;
+        const val = nameInput.value.trim();
+        if (!val) { toast('⚠️ Tên không được để trống!'); return; }
+        const saved = P.setName(val);
+        toast('✅ Đã đổi tên thành công: ' + saved + '!');
+        UI.buildMenu();
+        renderProfileModal();
+      };
+      if (saveNameBtn) saveNameBtn.onclick = doSaveName;
+      if (nameInput) {
+        nameInput.onkeydown = e => { if (e.key === 'Enter') doSaveName(); };
+      }
+
+      // Event: Chọn avatar
+      document.querySelectorAll('.pm-avatar-opt').forEach(btn => {
+        btn.onclick = () => {
+          const av = btn.dataset.av;
+          P.setAvatar(av);
+          toast('✅ Đã đổi Avatar: ' + av);
+          UI.buildMenu();
+          renderProfileModal();
+        };
+      });
+
+      // Event: Export backup
+      const btnExport = $('pm-btn-export');
+      if (btnExport) {
+        btnExport.onclick = () => {
+          const json = P.exportSaveData();
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(json).then(() => {
+              toast('📋 Đã sao chép mã sao lưu vào Clipboard!');
+            }).catch(() => {
+              prompt('Sao chép mã sao lưu dưới đây:', json);
+            });
+          } else {
+            prompt('Sao chép mã sao lưu dưới đây:', json);
+          }
+        };
+      }
+
+      // Event: Import backup
+      const btnImport = $('pm-btn-import');
+      if (btnImport) {
+        btnImport.onclick = () => {
+          const code = prompt('Dán chuỗi mã sao lưu tài khoản vào đây:');
+          if (code) {
+            const res = P.importSaveData(code);
+            if (res.ok) {
+              toast('✅ Khôi phục tài khoản thành công!');
+              UI.buildMenu();
+              renderProfileModal();
+            } else {
+              toast('❌ ' + (res.msg || 'Mã sao lưu không hợp lệ!'));
+            }
+          }
+        };
+      }
+
+      // Event: Reset Nick
+      const btnReset = $('pm-btn-reset-prof');
+      if (btnReset) {
+        btnReset.onclick = () => {
+          if (confirm('⚠️ Bạn có chắc muốn đặt lại tài khoản? Toàn bộ Star Chips, Rương và Chiến tích sẽ về mặc định ban đầu!')) {
+            P.resetProfile();
+            toast('🔄 Đã khởi tạo lại tài khoản mặc định!');
+            UI.buildMenu();
+            renderProfileModal();
+          }
+        };
+      }
+
+      // Event: Close
+      const btnClose = $('pm-btn-close');
+      if (btnClose) {
+        btnClose.onclick = () => {
+          closeModal();
+          UI.buildMenu();
+        };
+      }
+    }
+
+    renderProfileModal();
+  }
+
   /* ---------------- Public API ---------------- */
   UI._gameMode = 'ai';
   UI.setGameMode = function (mode) {
@@ -1948,8 +2197,9 @@
       p1deckExpanded = duelist.deck;
     }
 
+    const playerName = (FM.player && FM.player.getName()) || 'Bạn';
     S = E.newDuel({
-      p0name: is2P ? 'Người chơi 1 (P1)' : 'Bạn',
+      p0name: is2P ? 'Người chơi 1 (P1)' : playerName,
       p1name: is2P ? 'Người chơi 2 (P2)' : duelist.name,
       p0deck: p0deckExpanded,
       p1deck: p1deckExpanded,
@@ -2035,11 +2285,15 @@
 
   UI.buildMenu = function () {
     const prog = UI.getProgress();
-    // Update star counter
+    // Cập nhật Profile Bar ở màn hình chính
     const starValEl = $('player-star-count');
-    if (starValEl && FM.player) {
-      starValEl.textContent = FM.player.getStars();
-    }
+    if (starValEl && FM.player) starValEl.textContent = FM.player.getStars();
+    const avEl = $('player-avatar-display');
+    if (avEl && FM.player) avEl.textContent = FM.player.getAvatar();
+    const nameEl = $('player-name-display');
+    if (nameEl && FM.player) nameEl.textContent = FM.player.getName();
+    const titleEl = $('player-title-display');
+    if (titleEl && FM.player) titleEl.textContent = FM.player.getTitle();
 
     // duelists
     const dl = $('duelist-list');
@@ -2217,6 +2471,7 @@
 
   UI.showHelp = showHelp;
   UI.showFusionTable = showFusionTable;
+  UI.showProfile = showProfile;
   UI.showDeckEditor = showDeckEditor;
   UI.showCardShop = showCardShop;
   UI.toggleMute = function () { muted = !muted; return muted; };
