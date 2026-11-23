@@ -1,20 +1,26 @@
 /* =========================================================================
- * Forbidden Memory Web Clone — Networking layer (P2P via PeerJS / WebRTC)
+ * Forbidden Memory Web Clone — Networking layer (Real-time Online PvP)
  * Hỗ trợ 2 người chơi đấu nhau qua 2 thiết bị khác nhau (Phone / PC / Tablet)
+ * Sử dụng Secure WebSocket MQTT Broker (vượt 100% rào cản NAT / 4G / Firewall)
  * ========================================================================= */
 (function (root) {
   'use strict';
   const FM = root.FM = root.FM || {};
   const Net = FM.net = {};
 
-  const PREFIX = 'yfm-'; // Prefix ID trên PeerJS broker
-  let peer = null;
-  let conn = null;
+  const TOPIC_PREFIX = 'yfm_duel_v1/';
+  const BROKERS = [
+    { host: 'broker.hivemq.com', port: 8884, path: '/mqtt', ssl: true },
+    { host: 'broker.emqx.io', port: 8084, path: '/mqtt', ssl: true }
+  ];
+
+  let client = null;
   let myRoomCode = '';
   let isHosting = false;
   let isConnected = false;
+  let myInTopic = '';
+  let myOutTopic = '';
   let handshakeTimer = null;
-  let heartbeatTimer = null;
   let connectTimeoutTimer = null;
   let myPlayerPayload = null;
 
@@ -33,48 +39,21 @@
   };
 
   function emit(event, data) {
-    if (listeners[event]) listeners[event].forEach(fn => {
-      try { fn(data); } catch (e) { console.error('Net event error:', e); }
-    });
+    if (listeners[event]) {
+      listeners[event].forEach(fn => {
+        try { fn(data); } catch (e) { console.error('Net event error:', e); }
+      });
+    }
   }
 
   function randomCode() {
-    // Mã phòng 5 chữ số dễ đọc & gõ trên điện thoại
     return Math.floor(10000 + Math.random() * 90000).toString();
   }
 
-  function getIceServers() {
-    return [
-      { urls: 'stun:stun.l.google.com:19302' },
-      { urls: 'stun:stun1.l.google.com:19302' },
-      { urls: 'stun:stun2.l.google.com:19302' },
-      { urls: 'stun:stun.cloudflare.com:3478' },
-      { urls: 'stun:openrelay.metered.ca:80' },
-      {
-        urls: 'turn:openrelay.metered.ca:80',
-        username: 'openrelay',
-        credential: 'openrelay'
-      },
-      {
-        urls: 'turn:openrelay.metered.ca:443',
-        username: 'openrelay',
-        credential: 'openrelay'
-      },
-      {
-        urls: 'turn:openrelay.metered.ca:443?transport=tcp',
-        username: 'openrelay',
-        credential: 'openrelay'
-      }
-    ];
+  function stopTimers() {
+    if (handshakeTimer) { clearInterval(handshakeTimer); handshakeTimer = null; }
+    if (connectTimeoutTimer) { clearTimeout(connectTimeoutTimer); connectTimeoutTimer = null; }
   }
-
-  const PEER_CONFIG = {
-    debug: 1,
-    config: {
-      iceServers: getIceServers(),
-      iceCandidatePoolSize: 10,
-    },
-  };
 
   Net.isConnected = () => isConnected;
   Net.isHost = () => isHosting;
@@ -87,10 +66,10 @@
     return url.toString();
   };
 
-  function stopTimers() {
-    if (handshakeTimer) { clearInterval(handshakeTimer); handshakeTimer = null; }
-    if (heartbeatTimer) { clearInterval(heartbeatTimer); heartbeatTimer = null; }
-    if (connectTimeoutTimer) { clearTimeout(connectTimeoutTimer); connectTimeoutTimer = null; }
+  function createClient(brokerIdx) {
+    const b = BROKERS[brokerIdx || 0];
+    const clientId = 'yfm_' + (isHosting ? 'h_' : 'g_') + Math.random().toString(36).slice(2, 10);
+    return new root.Paho.MQTT.Client(b.host, b.port, b.path, clientId);
   }
 
   /* ---------------- Tạo phòng (Host - Player 1) ---------------- */
@@ -98,44 +77,37 @@
     Net.disconnect();
     isHosting = true;
     myRoomCode = customCode || randomCode();
-    const peerId = PREFIX + myRoomCode;
+    myInTopic = TOPIC_PREFIX + myRoomCode + '/g2h';
+    myOutTopic = TOPIC_PREFIX + myRoomCode + '/h2g';
 
     return new Promise((resolve, reject) => {
       try {
-        peer = new root.Peer(peerId, PEER_CONFIG);
+        client = createClient(0);
       } catch (err) {
         return reject(err);
       }
 
-      peer.on('open', id => {
-        console.log('[Net] Host room created with id:', id);
-        resolve(myRoomCode);
-      });
+      setupClientHandlers();
 
-      peer.on('connection', incomingConn => {
-        console.log('[Net] Incoming connection from guest');
-        if (conn && conn.open) {
-          // Đã có kết nối khác đang mở
-          try { incomingConn.close(); } catch (e) {}
-          return;
-        }
-        conn = incomingConn;
-        setupConnection();
-      });
-
-      peer.on('disconnected', () => {
-        console.warn('[Net] Peer disconnected from broker, reconnecting...');
-        if (peer && !peer.destroyed) {
-          try { peer.reconnect(); } catch (e) {}
-        }
-      });
-
-      peer.on('error', err => {
-        console.error('[Net] Peer error:', err);
-        if (err.type === 'unavailable-id') {
-          // Trùng mã phòng -> tự động tạo mã mới
-          Net.createRoom().then(resolve).catch(reject);
-        } else {
+      client.connect({
+        useSSL: true,
+        timeout: 8,
+        keepAliveInterval: 30,
+        cleanSession: true,
+        onSuccess: () => {
+          console.log('[Net] Host connected to broker, subscribing to:', myInTopic);
+          client.subscribe(myInTopic, {
+            onSuccess: () => {
+              console.log('[Net] Host subscribed successfully, room ready:', myRoomCode);
+              resolve(myRoomCode);
+            },
+            onFailure: e => {
+              reject(new Error('Không thể đăng ký phòng đấu.'));
+            }
+          });
+        },
+        onFailure: err => {
+          console.error('[Net] Host connect broker failed:', err);
           emit('error', err);
           reject(err);
         }
@@ -149,132 +121,104 @@
     isHosting = false;
     myPlayerPayload = playerPayload || { name: 'Người chơi 2' };
     myRoomCode = String(code).trim().toLowerCase().replace(/^yfm-?/i, '');
-    const targetPeerId = PREFIX + myRoomCode;
+    myInTopic = TOPIC_PREFIX + myRoomCode + '/h2g';
+    myOutTopic = TOPIC_PREFIX + myRoomCode + '/g2h';
 
     stopTimers();
-    // 20 giây timeout nếu không kết nối được
+    // 15 giây timeout nếu không kết nối được
     connectTimeoutTimer = setTimeout(() => {
       if (!isConnected) {
-        const err = new Error('Quá thời gian kết nối (Timeout). Vui lòng kiểm tra mã phòng hoặc thử lại.');
+        const err = new Error('Không tìm thấy phòng ' + myRoomCode + '. Vui lòng kiểm tra mã phòng từ Máy 1!');
         emit('error', err);
         Net.disconnect();
       }
-    }, 20000);
+    }, 15000);
 
     return new Promise((resolve, reject) => {
       try {
-        peer = new root.Peer(PEER_CONFIG);
+        client = createClient(0);
       } catch (err) {
         stopTimers();
         return reject(err);
       }
 
-      peer.on('open', myId => {
-        console.log('[Net] Guest peer open, connecting to host:', targetPeerId);
-        conn = peer.connect(targetPeerId, {
-          reliable: true,
-        });
-        setupConnection();
-        resolve(myRoomCode);
-      });
+      setupClientHandlers();
 
-      peer.on('disconnected', () => {
-        if (peer && !peer.destroyed) {
-          try { peer.reconnect(); } catch (e) {}
-        }
-      });
+      client.connect({
+        useSSL: true,
+        timeout: 8,
+        keepAliveInterval: 30,
+        cleanSession: true,
+        onSuccess: () => {
+          console.log('[Net] Guest connected to broker, subscribing to:', myInTopic);
+          client.subscribe(myInTopic, {
+            onSuccess: () => {
+              console.log('[Net] Guest subscribed successfully. Starting Handshake loop...');
+              // Guest gửi HANDSHAKE liên tục mỗi 500ms cho đến khi Host phản hồi ACK
+              let tries = 0;
+              if (handshakeTimer) clearInterval(handshakeTimer);
+              handshakeTimer = setInterval(() => {
+                if (isConnected || tries > 25) {
+                  clearInterval(handshakeTimer);
+                  handshakeTimer = null;
+                  return;
+                }
+                tries++;
+                Net.sendRaw({
+                  type: 'HANDSHAKE',
+                  payload: myPlayerPayload || { name: 'Người chơi 2' }
+                });
+              }, 500);
 
-      peer.on('error', err => {
-        console.error('[Net] Peer error during join:', err);
-        stopTimers();
-        let friendlyMsg = err.message || 'Lỗi mạng khi kết nối.';
-        if (err.type === 'peer-unavailable') {
-          friendlyMsg = `Không tìm thấy phòng số "${myRoomCode}". Hãy kiểm tra lại mã phòng từ Máy 1!`;
-        } else if (err.type === 'network') {
-          friendlyMsg = 'Lỗi kết nối mạng! Vui lòng kiểm tra kết nối Internet (Wifi/4G).';
+              resolve(myRoomCode);
+            },
+            onFailure: e => {
+              stopTimers();
+              reject(new Error('Không thể đăng ký phòng đấu.'));
+            }
+          });
+        },
+        onFailure: err => {
+          stopTimers();
+          console.error('[Net] Guest connect broker failed:', err);
+          emit('error', err);
+          reject(err);
         }
-        const errorObj = new Error(friendlyMsg);
-        errorObj.type = err.type;
-        emit('error', errorObj);
-        reject(errorObj);
       });
     });
   };
 
-  /* ---------------- Thiết lập kết nối DataChannel ---------------- */
-  function setupConnection() {
-    if (!conn) return;
+  /* ---------------- Xử lý Message ---------------- */
+  function setupClientHandlers() {
+    if (!client) return;
 
-    const onChannelOpen = () => {
-      console.log('[Net] DataChannel opened, starting handshake. Host =', isHosting);
-      isConnected = true;
-
-      if (!isHosting) {
-        // Guest bắt đầu gửi HANDSHAKE liên tục cho Host đến khi Host trả lời ACK
-        let tries = 0;
-        if (handshakeTimer) clearInterval(handshakeTimer);
-        handshakeTimer = setInterval(() => {
-          if (!isConnected || tries > 20) {
-            clearInterval(handshakeTimer);
-            handshakeTimer = null;
-            return;
-          }
-          tries++;
-          console.log('[Net] Guest sending HANDSHAKE try #' + tries);
-          try {
-            conn.send({
-              type: 'HANDSHAKE',
-              payload: myPlayerPayload || { name: 'Người chơi 2' }
-            });
-          } catch (e) {}
-        }, 500);
-      } else {
-        // Host gửi HOST_HELLO
-        try {
-          conn.send({ type: 'HOST_HELLO', payload: { isHost: true } });
-        } catch (e) {}
+    client.onConnectionLost = response => {
+      if (response.errorCode !== 0) {
+        console.warn('[Net] Connection lost:', response.errorMessage);
+        isConnected = false;
+        stopTimers();
+        emit('disconnect', {});
       }
-
-      // Heartbeat giữ kết nối sống (mobile sleep prevention)
-      if (heartbeatTimer) clearInterval(heartbeatTimer);
-      heartbeatTimer = setInterval(() => {
-        if (conn && conn.open) {
-          try { conn.send({ type: 'HEARTBEAT' }); } catch (e) {}
-        }
-      }, 8000);
     };
 
-    if (conn.open) {
-      onChannelOpen();
-    } else {
-      conn.on('open', onChannelOpen);
-    }
-
-    conn.on('data', rawData => {
-      let data = rawData;
-      if (typeof rawData === 'string') {
-        try { data = JSON.parse(rawData); } catch (e) {}
+    client.onMessageArrived = message => {
+      let data = null;
+      try {
+        data = JSON.parse(message.payloadString);
+      } catch (e) {
+        return;
       }
       if (!data || !data.type) return;
 
       switch (data.type) {
-        case 'HEARTBEAT':
-          // Keepalive - no action needed
-          break;
-
-        case 'HOST_HELLO':
-          console.log('[Net] Received HOST_HELLO');
-          break;
-
         case 'HANDSHAKE':
-          // Host nhận được handshake từ Guest -> phản hồi ACK ngay
+          // Host nhận được Handshake từ Guest -> phản hồi ACK ngay
           console.log('[Net] Host received HANDSHAKE from Guest:', data.payload);
-          try {
-            conn.send({
-              type: 'HANDSHAKE_ACK',
-              payload: { name: 'Chủ phòng (P1)' }
-            });
-          } catch (e) {}
+          Net.sendRaw({
+            type: 'HANDSHAKE_ACK',
+            payload: { name: 'Chủ phòng (P1)' }
+          });
+          isConnected = true;
           stopTimers();
           emit('connected', {
             isHost: true,
@@ -284,18 +228,15 @@
           break;
 
         case 'HANDSHAKE_ACK':
-          // Guest nhận được phản hồi từ Host -> hoàn tất kết nối!
+          // Guest nhận được phản hồi ACK từ Host -> kết nối hoàn tất!
           console.log('[Net] Guest received HANDSHAKE_ACK from Host:', data.payload);
+          isConnected = true;
           stopTimers();
           emit('connected', {
             isHost: false,
             hostInfo: data.payload,
             room: myRoomCode,
           });
-          break;
-
-        case 'GUEST_READY':
-          emit('connected', { isHost: true, peerInfo: data.payload });
           break;
 
         case 'START_DUEL':
@@ -313,31 +254,32 @@
         case 'EMOJI':
           emit('emoji', data.payload);
           break;
+
+        case 'DISCONNECT':
+          isConnected = false;
+          stopTimers();
+          emit('disconnect', {});
+          break;
       }
-    });
-
-    conn.on('close', () => {
-      console.warn('[Net] Connection closed');
-      isConnected = false;
-      stopTimers();
-      emit('disconnect', {});
-    });
-
-    conn.on('error', err => {
-      console.error('[Net] DataChannel error:', err);
-      emit('error', err);
-    });
+    };
   }
 
-  Net.send = function (type, payload) {
-    if (!conn || !isConnected) return false;
+  Net.sendRaw = function (obj) {
+    if (!client || !client.isConnected()) return false;
     try {
-      conn.send({ type, payload });
+      const msg = new root.Paho.MQTT.Message(JSON.stringify(obj));
+      msg.destinationName = myOutTopic;
+      msg.qos = 0;
+      client.send(msg);
       return true;
     } catch (e) {
-      console.error('[Net] send error:', e);
+      console.error('[Net] Send raw error:', e);
       return false;
     }
+  };
+
+  Net.send = function (type, payload) {
+    return Net.sendRaw({ type, payload });
   };
 
   Net.sendGuestReady = function (playerInfo) {
@@ -363,13 +305,14 @@
   Net.disconnect = function () {
     stopTimers();
     isConnected = false;
-    if (conn) {
-      try { conn.close(); } catch (e) {}
-      conn = null;
-    }
-    if (peer) {
-      try { peer.destroy(); } catch (e) {}
-      peer = null;
+    if (client) {
+      try {
+        if (client.isConnected()) {
+          Net.sendRaw({ type: 'DISCONNECT' });
+          client.disconnect();
+        }
+      } catch (e) {}
+      client = null;
     }
   };
 })(typeof window !== 'undefined' ? window : globalThis);
