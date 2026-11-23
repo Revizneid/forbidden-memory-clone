@@ -68,13 +68,13 @@
       return el;
     }
     el.className = 'card ' + (card.kind === 'MAGIC' ? 'magic' : card.kind === 'TRAP' ? 'trap' : '');
-    const m = card.kind === 'MONSTER' ? C.monsters[card.id] : null;
-    const md = card.kind === 'MAGIC' ? C.magics[card.mid] : null;
-    const td = card.kind === 'TRAP' ? C.traps[card.tid] : null;
+    const m = card.kind === 'MONSTER' ? (C.monsters[card.id] || { name: 'Quái #' + card.id, atk: 0, def: 0, attr: 'LIGHT', race: 'Warrior' }) : null;
+    const md = card.kind === 'MAGIC' ? (C.magics[card.mid] || { name: 'Phép #' + card.mid }) : null;
+    const td = card.kind === 'TRAP' ? (C.traps[card.tid] || { name: 'Bẫy #' + card.tid }) : null;
     const attrBg = m ? C.attrColor(m.attr) : (card.kind === 'MAGIC' ? '#2e86de' : '#c2457e');
-    const icon = C.cardIcon ? C.cardIcon(card) : (m ? C.raceIcon(m.race) : md ? md.icon : td.icon);
+    const icon = C.cardIcon ? C.cardIcon(card) : (m ? C.raceIcon(m.race) : md ? md.icon : td ? td.icon : '✨');
     el.innerHTML =
-      `<div class="cname">${m ? m.name : md ? md.name : td.name}</div>` +
+      `<div class="cname">${m ? m.name : md ? md.name : td ? td.name : 'Thẻ'}</div>` +
       `<div class="cart" style="${m ? `background: radial-gradient(circle at 50% 35%, rgba(255,255,255,.8), ${C.attrColor(m.attr)}66)` : ''}">${icon}</div>` +
       `<div class="cstats">${m ? `<span class="catk">ATK ${m.atk}</span><span class="cdef">DEF ${m.def}</span>` : `<span>${card.kind === 'MAGIC' ? '✨ PHÉP' : card.kind === 'TRAP' ? '🪤 BẪY' : '👁 RITUAL'}</span><span></span>`}${m && m.stars ? `<span class="cstar">${C.starIcon(C.starName(m.stars[0]))}</span>` : ''}</div>` +
       `<div class="cbadge" style="background:${attrBg}">${m ? m.attr : card.kind === 'MAGIC' ? 'MAGIC' : 'TRAP'}</div>`;
@@ -1426,10 +1426,12 @@
 
       // Sắp xếp: Quái ATK giảm dần, sau đó Phép/Bẫy
       filtered.sort((a, b) => {
-        const atkA = a.cd.isMonster ? a.cd.data.atk : -1;
-        const atkB = b.cd.isMonster ? b.cd.data.atk : -1;
+        const isMonA = a.cd.kind === 'MONSTER' || a.cd.isMonster;
+        const isMonB = b.cd.kind === 'MONSTER' || b.cd.isMonster;
+        const atkA = isMonA ? (a.cd.data ? a.cd.data.atk : 0) : -1;
+        const atkB = isMonB ? (b.cd.data ? b.cd.data.atk : 0) : -1;
         if (atkB !== atkA) return atkB - atkA;
-        return (a.cd.data.name || '').localeCompare(b.cd.data.name || '');
+        return (a.cd.data ? a.cd.data.name : '').localeCompare(b.cd.data ? b.cd.data.name : '');
       });
 
       if (filtered.length === 0) {
@@ -1440,9 +1442,11 @@
       filtered.forEach(item => {
         const wrap = document.createElement('div');
         wrap.className = 'de-trunk-item';
-        const cardObj = item.cd.isMonster
+        const isMon = item.cd.kind === 'MONSTER' || item.cd.isMonster;
+        const isMag = item.cd.kind === 'MAGIC' || item.cd.isMagic;
+        const cardObj = isMon
           ? { kind: 'MONSTER', id: item.cd.id }
-          : item.cd.isMagic
+          : isMag
           ? { kind: 'MAGIC', mid: item.cd.mid }
           : { kind: 'TRAP', tid: item.cd.tid };
         const el = cardEl(cardObj, false);
@@ -1565,16 +1569,20 @@
       const all = C.allCards ? C.allCards() : [];
       const filtered = all.filter(c => {
         if (!c || !c.data) return false;
-        if (catFilter === 'MONSTER' && !c.isMonster) return false;
-        if (catFilter === 'MAGIC' && !c.isMagic) return false;
-        if (catFilter === 'TRAP' && !c.isTrap) return false;
+        const isMonster = c.kind === 'MONSTER' || c.isMonster;
+        const isMagic = c.kind === 'MAGIC' || c.isMagic;
+        const isTrap = c.kind === 'TRAP' || c.isTrap;
+        if (catFilter === 'MONSTER' && !isMonster) return false;
+        if (catFilter === 'MAGIC' && !isMagic) return false;
+        if (catFilter === 'TRAP' && !isTrap) return false;
         if (catFilter === 'RITUAL' && (c.data.kind !== 'ritual')) return false;
         if (catSearch) {
           const d = c.data;
           const match = (d.name && d.name.toLowerCase().includes(catSearch)) ||
                         (d.race && d.race.toLowerCase().includes(catSearch)) ||
                         (d.attr && d.attr.toLowerCase().includes(catSearch)) ||
-                        (c.code && c.code.includes(catSearch)) ||
+                        (c.code && String(c.code).includes(catSearch)) ||
+                        (d.code && String(d.code).includes(catSearch)) ||
                         (String(c.id || '').includes(catSearch));
           if (!match) return false;
         }
@@ -1594,7 +1602,9 @@
         slice.forEach(item => {
           const cardDiv = document.createElement('div');
           cardDiv.className = 'cs-card-item';
-          const cardObj = item.isMonster ? { kind: 'MONSTER', id: item.id } : item.isMagic ? { kind: 'MAGIC', mid: item.mid } : { kind: 'TRAP', tid: item.tid };
+          const isMon = item.kind === 'MONSTER' || item.isMonster;
+          const isMag = item.kind === 'MAGIC' || item.isMagic;
+          const cardObj = isMon ? { kind: 'MONSTER', id: item.id } : isMag ? { kind: 'MAGIC', mid: item.mid } : { kind: 'TRAP', tid: item.tid };
           const el = cardEl(cardObj, false);
           cardDiv.appendChild(el);
 
@@ -1689,14 +1699,16 @@
           return;
         }
         const cardMatch = C.byCode ? C.byCode(pwInput) : null;
-        if (!cardMatch) {
+        if (!cardMatch || !cardMatch.data) {
           resDiv.innerHTML = `<div class="pw-error">❌ Mật mã "${pwInput}" không khớp với bất kỳ lá bài nào trong cơ sở dữ liệu 722 lá.</div>`;
           return;
         }
         const d = cardMatch.data;
         const cost = d.cost || 50;
         const curStars = P.getStars();
-        const cardObj = cardMatch.isMonster ? { kind: 'MONSTER', id: cardMatch.id } : cardMatch.isMagic ? { kind: 'MAGIC', mid: cardMatch.mid } : { kind: 'TRAP', tid: cardMatch.tid };
+        const isMon = cardMatch.kind === 'MONSTER' || cardMatch.isMonster;
+        const isMag = cardMatch.kind === 'MAGIC' || cardMatch.isMagic;
+        const cardObj = isMon ? { kind: 'MONSTER', id: cardMatch.id } : isMag ? { kind: 'MAGIC', mid: cardMatch.mid } : { kind: 'TRAP', tid: cardMatch.tid };
         const owned = P.totalOwned(cardMatch.key);
 
         resDiv.innerHTML = '';

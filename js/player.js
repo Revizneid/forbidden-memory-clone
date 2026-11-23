@@ -8,7 +8,7 @@
   const FM = root.FM = root.FM || {};
   const C = FM.cards;
 
-  const STORAGE_KEY = 'fm_player_v1';
+  const STORAGE_KEY = 'fm_player_v2';
   let profile = null;
 
   function cardKeyOf(c) {
@@ -20,29 +20,19 @@
     return null;
   }
 
-  /* Khởi tạo profile ban đầu (Phương án B: 1 deck khởi đầu + 3 deck còn lại vào Trunk + 50 Stars) */
+  /* Khởi tạo profile ban đầu: Random 1 trong 4 deck mẫu, Rương hoàn toàn rỗng */
   function initDefaultProfile() {
-    const defaultDeckKey = 'flameSwordsman';
-    const mainDeckList = FM.decks.DECKS[defaultDeckKey].list;
+    const starterDeckKeys = ['flameSwordsman', 'dragonMaster', 'shadowLegion', 'stormMachine'];
+    const chosenKey = starterDeckKeys[Math.floor(Math.random() * starterDeckKeys.length)];
+    const mainDeckList = FM.decks.DECKS[chosenKey].list;
     const starterDeck = FM.decks.expandDeck(mainDeckList);
 
-    // Đưa bài từ 3 deck mẫu còn lại vào Trunk làm kho bài ban đầu
-    const trunk = {};
-    const otherDeckKeys = ['dragonMaster', 'shadowLegion', 'stormMachine'];
-    for (const dk of otherDeckKeys) {
-      const list = FM.decks.DECKS[dk].list;
-      const expanded = FM.decks.expandDeck(list);
-      for (const card of expanded) {
-        const key = cardKeyOf(card);
-        if (key) trunk[key] = (trunk[key] || 0) + 1;
-      }
-    }
-
     profile = {
-      version: 1,
+      version: 2,
+      starterDeckKey: chosenKey,
       stars: 50,
       deck: starterDeck,
-      trunk: trunk,
+      trunk: {}, // Khởi đầu Rương không có gì
       stats: { wins: 0, losses: 0, drops: 0 },
     };
     saveProfile();
@@ -56,8 +46,8 @@
         const raw = localStorage.getItem(STORAGE_KEY);
         if (raw) {
           profile = JSON.parse(raw);
-          if (!profile.deck || !Array.isArray(profile.deck) || profile.deck.length !== 40) {
-            profile.deck = FM.decks.expandDeck(FM.decks.DECKS.flameSwordsman.list);
+          if (profile.version !== 2 || !profile.deck || !Array.isArray(profile.deck) || profile.deck.length !== 40) {
+            return initDefaultProfile();
           }
           if (!profile.trunk || typeof profile.trunk !== 'object') profile.trunk = {};
           if (profile.stars == null) profile.stars = 50;

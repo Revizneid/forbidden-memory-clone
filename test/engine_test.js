@@ -159,9 +159,9 @@ function simGame(deckA, deckB, diffA, diffB, maxTurns = 120) {
   // 2. Profile Starter
   const prof = P.getProfile();
   assert(prof.stars >= 50, 'Khởi đầu có ít nhất 50 Star Chips: ' + prof.stars);
-  assert(prof.deck.length === 40, 'Bộ bài chính có đúng 40 lá');
+  assert(prof.deck.length === 40, 'Bộ bài chính có đúng 40 lá, got ' + prof.deck.length);
   const trunkKeys = Object.keys(prof.trunk);
-  assert(trunkKeys.length > 0, 'Trunk có bài từ 3 deck mẫu còn lại (' + trunkKeys.length + ' loại thẻ)');
+  assert(trunkKeys.length === 0, 'Khởi đầu Rương hoàn toàn rỗng (0 thẻ), got ' + trunkKeys.length);
 
   // 3. Deck Save Validation
   const invalidDeck39 = prof.deck.slice(0, 39);

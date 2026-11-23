@@ -83,17 +83,31 @@
     },
     byCode(code) {
       if (!code) return null;
-      const cleanCode = String(code).replace(/[^0-9]/g, '').padStart(8, '0');
-      for (const k in M) if (M[k].code === cleanCode) return { key: String(M[k].id), kind: 'MONSTER', id: M[k].id, data: M[k] };
-      for (const k in magics) if (magics[k].code === cleanCode) return { key: k, kind: 'MAGIC', mid: k, data: magics[k] };
-      for (const k in traps) if (traps[k].code === cleanCode) return { key: k, kind: 'TRAP', tid: k, data: traps[k] };
+      const digits = String(code).replace(/[^0-9]/g, '');
+      if (!digits) return null;
+      const cleanCode = digits.padStart(8, '0');
+      for (const k in M) {
+        if (M[k].code === cleanCode || M[k].code === digits) {
+          return { key: String(M[k].id), kind: 'MONSTER', id: M[k].id, data: M[k], isMonster: true, isMagic: false, isTrap: false };
+        }
+      }
+      for (const k in magics) {
+        if (magics[k].code === cleanCode || magics[k].code === digits) {
+          return { key: k, kind: 'MAGIC', mid: k, data: magics[k], isMonster: false, isMagic: true, isTrap: false };
+        }
+      }
+      for (const k in traps) {
+        if (traps[k].code === cleanCode || traps[k].code === digits) {
+          return { key: k, kind: 'TRAP', tid: k, data: traps[k], isMonster: false, isMagic: false, isTrap: true };
+        }
+      }
       return null;
     },
     allCards() {
       const list = [];
-      for (const k in M) list.push({ key: String(M[k].id), kind: 'MONSTER', id: M[k].id, data: M[k] });
-      for (const k in magics) list.push({ key: k, kind: 'MAGIC', mid: k, data: magics[k] });
-      for (const k in traps) list.push({ key: k, kind: 'TRAP', tid: k, data: traps[k] });
+      for (const k in M) list.push({ key: String(M[k].id), kind: 'MONSTER', id: M[k].id, data: M[k], isMonster: true, isMagic: false, isTrap: false });
+      for (const k in magics) list.push({ key: k, kind: 'MAGIC', mid: k, data: magics[k], isMonster: false, isMagic: true, isTrap: false });
+      for (const k in traps) list.push({ key: k, kind: 'TRAP', tid: k, data: traps[k], isMonster: false, isMagic: false, isTrap: true });
       return list;
     },
     cardData(ref) {
@@ -166,7 +180,7 @@
     ]},
     dragonMaster: { name: 'Chúa Tể Rồng', list: [
       ['Blue-eyes White Dragon', 1], ['Red-eyes B. Dragon', 1], ['Tri-Horned Dragon', 1], ['Curse of Dragon', 3], ['Gaia The Fierce Knight', 1],
-      ['Crawling Dragon', 2], ['Lesser Dragon', 3], ['Petit Dragon', 3], ['Koumori Dragon', 2], ['Uraby', 2],
+      ['Crawling Dragon', 2], ['Lesser Dragon', 3], ['Petit Dragon', 2], ['Koumori Dragon', 2], ['Uraby', 2],
       ['Blackland Fire Dragon', 1], ['Sword Arm of Dragon', 1], ['Two-Headed King Rex', 1], ['Ryu-Kishin', 2],
       ['Celtic Guardian', 1], ['Hitotsu-me Giant', 1], ['Kojikocy', 1], ['Giant Soldier of Stone', 1], ['Mystical Elf', 1],
       ['#fm332', 2], ['#fm654', 1], ['#fm315', 1], ['#fm337', 1], ['#fm336', 1], ['#fm346', 1], ['#fm342', 1],
@@ -175,14 +189,14 @@
     shadowLegion: { name: 'Quân Đoàn Bóng Tối', list: [
       ['Summoned Skull', 1], ['Dark Magician', 1], ['La Jinn the Mystical Genie', 3], ['King of Yamimakai', 2],
       ['Ryu-Kishin', 3], ['Feral Imp', 3], ['Saggi the Dark Clown', 2], ['Claw Reacher', 2], ["Fiend's Hand", 2],
-      ['Armored Zombie', 2], ['Dragon Zombie', 1], ['Swordstalker', 2], ['Ancient Brain', 2], ['Armaill', 1],
-      ['Mysterious Puppeteer', 2], ['Ushi Oni', 1],
+      ['Armored Zombie', 2], ['Dragon Zombie', 1], ['Swordstalker', 2], ['Ancient Brain', 1], ['Armaill', 1],
+      ['Mysterious Puppeteer', 1], ['Ushi Oni', 1],
       ['#fm335', 2], ['#fm303', 2], ['#fm311', 1], ['#fm337', 1], ['#fm336', 1], ['#fm342', 1], ['#fm343', 1],
       ['#fm683', 1], ['#fm686', 1], ['#fm669', 1],
     ]},
     stormMachine: { name: 'Sấm Sét & Máy Móc', list: [
       ['Machine King', 1], ['Steel Ogre Grotto #1', 2], ['Thunder Dragon', 3], ['Kaminari Attack', 2], ['Sanga of the Thunder', 1],
-      ['Kazejin', 1], ['Suijin', 1], ['Giltia the D. Knight', 2], ['Celtic Guardian', 1], ['Battle Ox', 2],
+      ['Kazejin', 1], ['Suijin', 1], ['Giltia the D. Knight', 2], ['Celtic Guardian', 2], ['Battle Ox', 2],
       ['Hitotsu-me Giant', 2], ['Mystic Horseman', 2], ['Rabid Horseman', 1], ['Kojikocy', 2], ['Giant Soldier of Stone', 1],
       ['Mystical Elf', 1], ['Winged Dragon #1', 2],
       ['#fm325', 2], ['#fm332', 2], ['#fm333', 1], ['#fm337', 1], ['#fm336', 1], ['#fm342', 1], ['#fm346', 1],
