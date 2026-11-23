@@ -8,64 +8,80 @@
   const FM = root.FM = root.FM || {};
   const E = FM.engine, C = FM.cards;
 
-  const ROW2 = 2, ROW1 = 1, ROW0 = 0;
-  const emptySlots = p => { const out = []; for (let i = 0; i < 9; i++) if (!p.field[i]) out.push(i); return out; };
-  const frontEmpty = p => [6, 7, 8].filter(i => !p.field[i]);           // row 2 (front): idx 6,7,8
-  const backEmpty = p => [0, 1, 2, 3, 4, 5].filter(i => !p.field[i]);   // row 0/1: idx 0..5
-  const trapCount = p => p.field.filter(x => x && x.kind === 'TRAP').length;
+  const MONSTER_SLOTS = 5, SPELL_SLOTS = 5;
+  const emptyMonsterSlots = p => [0, 1, 2, 3, 4].filter(i => !p.field[i]);
+  const emptyTrapSlots = p => [5, 6, 7, 8, 9].filter(i => !p.field[i]);
+  const trapCount = p => [5, 6, 7, 8, 9].filter(i => p.field[i] && p.field[i].kind === 'TRAP').length;
 
-  // Sức mạnh cột của đối thủ: quái gần nhất trong cột (front -> sâu) ở tư thế tấn công
+  // Sức mạnh cột đối diện
   function columnThreat(s, enemyIdx, col) {
     const en = s.players[enemyIdx];
-    for (let row = ROW2; row >= ROW0; row--) {
-      const sl = en.field[row * 3 + col];
-      if (sl && sl.kind === 'MONSTER') {
-        const a = sl.faceDown ? 0 : E.effAtk(s, enemyIdx, sl);
-        const d = sl.faceDown ? 1300 : (sl.pos === 'ATK' ? a : E.effDef(s, enemyIdx, sl));
-        return { slotIdx: row * 3 + col, atk: a, def: d, faceDown: sl.faceDown };
-      }
+    const sl = en.field[col];
+    if (sl && sl.kind === 'MONSTER') {
+      const a = sl.faceDown ? 0 : E.effAtk(s, enemyIdx, sl);
+      const d = sl.faceDown ? 1300 : (sl.pos === 'ATK' ? a : E.effDef(s, enemyIdx, sl));
+      return { slotIdx: col, atk: a, def: d, faceDown: sl.faceDown };
     }
     return null;
   }
 
-  // Tìm mục tiêu đánh: quái ngửa pos ATK, cùng cột đối thủ, ưu tiên gần nhất; cột trống => direct.
-  // (không phụ thuộc phase — dùng được cả khi MAIN để AI quyết định có vào Battle hay không)
-  function findTarget(s, pIdx, slotIdx) {
+  // Điểm số khi quái ở slotIdx tấn công mục tiêu enemyTarget (-1 là direct)
+  function attackScore(s, pIdx, slotIdx, enemyTarget, lethal) {
     const p = s.players[pIdx];
     const sl = p.field[slotIdx];
     if (!sl || sl.kind !== 'MONSTER' || sl.faceDown || sl.pos !== 'ATK' || sl.attacked) return null;
-    const col = E.slotCol(slotIdx);
-    const en = s.players[1 - pIdx];
-    for (let row = ROW2; row >= ROW0; row--) {
-      const i = row * 3 + col;
-      const es = en.field[i];
-      if (es && es.kind === 'MONSTER') return { target: i, direct: false };
-    }
-    return { target: -1, direct: true };
-  }
-
-  // Điểm số khi quái của tôi ở slotIdx tấn công (dùng cả cho chọn lúc summon & battle)
-  function attackScore(s, pIdx, slotIdx, lethal) {
-    const t = findTarget(s, pIdx, slotIdx);
-    if (!t) return null;
-    const my = s.players[pIdx].field[slotIdx];
-    const myAtk = E.effAtk(s, pIdx, my);
-    if (t.direct) return { score: lethal ? 10000 + myAtk : myAtk, action: { type: 'ATTACK', slotIdx } };
     const enemyIdx = 1 - pIdx;
-    const dslot = s.players[enemyIdx].field[t.target];
+    const en = s.players[enemyIdx];
+    const myAtk = E.effAtk(s, pIdx, sl);
+
+    const enemyMonsters = [];
+    for (let i = 0; i < MONSTER_SLOTS; i++) {
+      if (en.field[i] && en.field[i].kind === 'MONSTER') enemyMonsters.push(i);
+    }
+    // Nếu đối thủ không có quái vật -> Tấn công trực tiếp LP
+    if (enemyMonsters.length === 0) {
+      return { score: lethal ? 10000 + myAtk : myAtk, action: { type: 'ATTACK', slotIdx } };
+    }
+
+    // Nếu có quái -> bắt buộc tấn công một quái đối thủ
+    const target = (enemyTarget != null && enemyMonsters.includes(enemyTarget)) ? enemyTarget : (enemyMonsters.includes(slotIdx) ? slotIdx : enemyMonsters[0]);
+    const dslot = en.field[target];
     const dAtkPos = dslot.pos === 'ATK';
-    // Tường úp: AI không biết bài là gì — đoán sức phòng thủ 1200 (đủ tham để đánh)
-    const dPower = dAtkPos ? E.effAtk(s, enemyIdx, dslot) : (dslot.faceDown ? 1200 : E.effDef(s, enemyIdx, dslot));
+    var dPower = dAtkPos ? E.effAtk(s, enemyIdx, dslot) : (dslot.faceDown ? 1200 : E.effDef(s, enemyIdx, dslot));
+
+    // Xét Guardian Star bonus (+500)
+    var aStar = C.monsters[sl.card.id].stars ? C.monsters[sl.card.id].stars[sl.star || 0] : null;
+    var dStar = C.monsters[dslot.card.id].stars ? C.monsters[dslot.card.id].stars[dslot.star || 0] : null;
+    var aAtkCalc = myAtk + (C.starBeats(aStar, dStar) ? 500 : 0);
+    var dPowerCalc = dPower + (C.starBeats(dStar, aStar) ? 500 : 0);
+
     let score;
     if (dAtkPos) {
-      if (myAtk > dPower) score = 1000 + myAtk - dPower + (dPower >= 2000 ? 400 : 0);
-      else if (myAtk === dPower) score = -300 - (myAtk >= 1500 ? 400 : 0);
-      else score = -800 - (dPower - myAtk);
+      if (aAtkCalc > dPowerCalc) score = 1000 + (aAtkCalc - dPowerCalc) + (dPowerCalc >= 2000 ? 500 : 0);
+      else if (aAtkCalc === dPowerCalc) score = -300 - (aAtkCalc >= 1500 ? 400 : 0);
+      else score = -800 - (dPowerCalc - aAtkCalc);
     } else {
-      if (myAtk > dPower) score = 500 + (dPower >= 2000 ? 300 : 0);
-      else score = -800 - (dPower - myAtk);
+      if (aAtkCalc > dPowerCalc) score = 500 + (dPowerCalc >= 2000 ? 300 : 0);
+      else score = -800 - (dPowerCalc - aAtkCalc);
     }
-    return { score, action: { type: 'ATTACK', slotIdx } };
+    return { score, action: { type: 'ATTACK', slotIdx, targetSlot: target } };
+  }
+
+  function bestAttackForMonster(s, pIdx, slotIdx, lethal) {
+    const enemyIdx = 1 - pIdx, en = s.players[enemyIdx];
+    const enemyMonsters = [];
+    for (let i = 0; i < MONSTER_SLOTS; i++) {
+      if (en.field[i] && en.field[i].kind === 'MONSTER') enemyMonsters.push(i);
+    }
+    if (enemyMonsters.length === 0) {
+      return attackScore(s, pIdx, slotIdx, -1, lethal);
+    }
+    let best = null;
+    for (const em of enemyMonsters) {
+      const scr = attackScore(s, pIdx, slotIdx, em, lethal);
+      if (scr && (!best || scr.score > best.score)) best = scr;
+    }
+    return best;
   }
 
   /* ---------------- MAIN phase: chọn 1 hành động ---------------- */
@@ -79,7 +95,7 @@
     // --- 1. Magic/Equip/Ritual (dispatch theo fx.kind) ---
     var enemyFaceDown = 0, enemyFaceUpAtkMax = 0, enemyTraps = 0;
     var raceCount = {};
-    for (var ei = 0; ei < 9; ei++) {
+    for (var ei = 0; ei < 10; ei++) {
       var es = e.field[ei];
       if (!es || es.kind !== 'MONSTER') { if (es && es.kind === 'TRAP') enemyTraps++; continue; }
       if (es.faceDown) enemyFaceDown++;
@@ -101,17 +117,17 @@
       if (mfx.kind === 'ritual') {
         var pool = {};
         for (var hi = 0; hi < hand.length; hi++) { var hc = hand[hi]; if (E.isMon(hc)) pool[hc.id] = (pool[hc.id] || 0) + 1; }
-        for (var fi = 0; fi < 9; fi++) { var fs = p.field[fi]; if (fs && fs.kind === 'MONSTER') pool[fs.card.id] = (pool[fs.card.id] || 0) + 1; }
+        for (var fi = 0; fi < MONSTER_SLOTS; fi++) { var fs = p.field[fi]; if (fs && fs.kind === 'MONSTER') pool[fs.card.id] = (pool[fs.card.id] || 0) + 1; }
         usable = (md.offerings || []).every(function (oid) { return (pool[oid] || 0) >= 1; });
       }
-      else if (mfx.kind === 'equip') usable = p.field.some(function (sl) { return sl && sl.kind === 'MONSTER' && !sl.faceDown && (typeof md.match === 'function' ? md.match(E.mdata(sl.card)) : (md.races || md.compat || []).indexOf(E.mdata(sl.card).race) >= 0); });
+      else if (mfx.kind === 'equip') usable = p.field.slice(0, MONSTER_SLOTS).some(function (sl) { return sl && sl.kind === 'MONSTER' && !sl.faceDown && (typeof md.match === 'function' ? md.match(E.mdata(sl.card)) : (md.races || md.compat || []).indexOf(E.mdata(sl.card).race) >= 0); });
       else if (mfx.kind === 'terrain') usable = s.turnNo <= 3 && !s.players.some(function (pl) { return pl.terrains.indexOf(md.id) >= 0; });
       else if (mfx.kind === 'heal') usable = p.lp <= 4000;
       else if (mfx.kind === 'damage') usable = e.lp <= mfx.amount || e.lp <= 2500;
       else if (mfx.kind === 'destroyEnemyAll') usable = enemyMonsters >= 3;
       else if (mfx.kind === 'destroyAll') {
-        var tp = e.field.reduce(function (acc, sl) { return acc + (sl && sl.kind === 'MONSTER' && !sl.faceDown ? E.effAtk(s, enemyIdx, sl) : 0); }, 0);
-        var mp = p.field.reduce(function (acc, sl) { return acc + (sl && sl.kind === 'MONSTER' && !sl.faceDown && sl.pos === 'ATK' ? E.effAtk(s, pIdx, sl) : 0); }, 0);
+        var tp = e.field.slice(0, MONSTER_SLOTS).reduce(function (acc, sl) { return acc + (sl && sl.kind === 'MONSTER' && !sl.faceDown ? E.effAtk(s, enemyIdx, sl) : 0); }, 0);
+        var mp = p.field.slice(0, MONSTER_SLOTS).reduce(function (acc, sl) { return acc + (sl && sl.kind === 'MONSTER' && !sl.faceDown && sl.pos === 'ATK' ? E.effAtk(s, pIdx, sl) : 0); }, 0);
         usable = enemyMonsters >= 3 || tp > mp + 800;
       }
       else if (mfx.kind === 'destroyRace') usable = (mfx.races || []).some(function (r) { return (raceCount[r] || 0) >= 2; });
@@ -121,23 +137,22 @@
       else if (mfx.kind === 'dragonsToDef') usable = raceCount['Dragon'] >= 1;
       if (!usable) continue;
       if (mfx.kind === 'equip') {
-        for (var si2 = 0; si2 < 9; si2++) {
+        for (var si2 = 0; si2 < MONSTER_SLOTS; si2++) {
           var es2 = p.field[si2];
           if (es2 && es2.kind === 'MONSTER' && !es2.faceDown && (typeof md.match === 'function' ? md.match(E.mdata(es2.card)) : (md.races || md.compat || []).indexOf(E.mdata(es2.card).race) >= 0)) return { type: 'MAGIC', handIdx: mi, targetSlot: si2 };
         }
         continue;
       }
       if (mfx.kind === 'forceDef') {
-        for (var si3 = 0; si3 < 9; si3++) {
+        for (var si3 = 0; si3 < MONSTER_SLOTS; si3++) {
           var es3 = e.field[si3];
           if (es3 && es3.kind === 'MONSTER' && !es3.faceDown && E.effAtk(s, enemyIdx, es3) === enemyFaceUpAtkMax) return { type: 'MAGIC', handIdx: mi, targetSlot: si3 };
         }
         continue;
       }
       if (mfx.kind === 'ritual') {
-        var emptySlot = -1;
-        for (var si4 = 0; si4 < 9; si4++) if (!p.field[si4]) { emptySlot = si4; break; }
-        if (emptySlot >= 0) return { type: 'MAGIC', handIdx: mi, targetSlot: emptySlot };
+        var meR = emptyMonsterSlots(p);
+        if (meR.length > 0) return { type: 'MAGIC', handIdx: mi, targetSlot: meR[0] };
         continue;
       }
       return { type: 'MAGIC', handIdx: mi };
@@ -147,8 +162,8 @@
     if (diff >= 1 && trapCount(p) < 2) {
       for (let i = 0; i < hand.length; i++) {
         if (hand[i].kind === 'TRAP') {
-          const slots = emptySlots(p);
-          if (slots.length) return { type: 'SET_TRAP', handIdx: i, slotIdx: slots[slots.length - 1] }; // đặt ô sau cùng
+          const slots = emptyTrapSlots(p);
+          if (slots.length) return { type: 'SET_TRAP', handIdx: i, slotIdx: slots[0] };
         }
       }
     }
@@ -175,7 +190,7 @@
             if (hand[j].kind !== 'MONSTER') continue;
             consider({ src: 'HAND', idx: i }, { src: 'HAND', idx: j }, false);
           }
-          for (let si = 0; si < 9; si++) {
+          for (let si = 0; si < MONSTER_SLOTS; si++) {
             const sl = p.field[si];
             if (sl && sl.kind === 'MONSTER' && !sl.faceDown && E.effAtk(s, pIdx, sl) < 2000) {
               consider({ src: 'HAND', idx: i }, { src: 'FIELD', idx: si }, true);
@@ -185,12 +200,12 @@
         if (best) {
           let targetSlot = null;
           if (!best.fieldFusion) {
-            const fe = frontEmpty(p);
-            targetSlot = fe.length ? fe[0] : (emptySlots(p)[0] !== undefined ? emptySlots(p)[0] : null);
+            const meF = emptyMonsterSlots(p);
+            targetSlot = meF.length ? meF[0] : null;
           }
-          if (targetSlot != null) {
+          if (targetSlot != null || best.fieldFusion) {
             p._fusCount++;
-            return { type: 'FUSION', a: best.a, b: best.b, targetSlot };
+            return { type: 'FUSION', a: best.a, b: best.b, targetSlot: best.fieldFusion ? (best.a.src === 'FIELD' ? best.a.idx : best.b.idx) : targetSlot };
           }
         }
       }
@@ -198,7 +213,7 @@
 
     // --- 4. Đổi tư thế (lật úp mạnh / DEF mạnh lên ATK) ---
     if (diff >= 1) {
-      for (let si = 0; si < 9; si++) {
+      for (let si = 0; si < MONSTER_SLOTS; si++) {
         const sl = p.field[si];
         if (!sl || sl.kind !== 'MONSTER') continue;
         const m = E.mdata(sl.card);
@@ -208,36 +223,24 @@
     }
 
     // --- 5. Summon/Set ---
-    const fe = frontEmpty(p), be = backEmpty(p);
+    const me = emptyMonsterSlots(p);
     const monIdxs = hand.map((c, i) => ({ c, i })).filter(x => x.c.kind === 'MONSTER');
-    if (monIdxs.length) {
+    if (monIdxs.length && me.length) {
       monIdxs.sort((a, b) => C.monsters[b.c.id].atk - C.monsters[a.c.id].atk);
       const strongest = monIdxs[0];
       const mAtk = C.monsters[strongest.c.id].atk;
       const weakest = monIdxs[monIdxs.length - 1];
       const wAtk = C.monsters[weakest.c.id].atk;
-      const fdCount = p.field.filter(sl => sl && sl.kind === 'MONSTER' && sl.faceDown).length;
-      const wallCap = diff >= 1 ? 3 : 4;
+      const fdCount = p.field.slice(0, MONSTER_SLOTS).filter(sl => sl && sl.kind === 'MONSTER' && sl.faceDown).length;
+      const wallCap = diff >= 1 ? 2 : 3;
 
-      // Tìm cột front tốt nhất: nơi quái mạnh nhất thắng hiện tại
-      if (fe.length && (mAtk >= 1500 || diff === 0 || fdCount >= wallCap)) {
-        let bestSlot = fe[0], bestScore = -Infinity;
-        for (const si of fe) {
-          const col = E.slotCol(si);
-          const th = columnThreat(s, enemyIdx, col);
-          let sc = 0;
-          if (!th) sc = 5000 + mAtk;                    // cột trống => direct
-          else if (mAtk > th.def || (th.faceDown && mAtk > 1300)) sc = 3000 + mAtk - th.def;
-          else if (mAtk <= th.def && !th.faceDown && mAtk > th.atk) sc = 1500;
-          else sc = 500 - th.def;
-          if (sc > bestScore) { bestScore = sc; bestSlot = si; }
-        }
-        return { type: 'SUMMON', handIdx: strongest.i, slotIdx: bestSlot, faceDown: false };
+      if (mAtk >= 1500 || diff === 0 || fdCount >= wallCap) {
+        return { type: 'SUMMON', handIdx: strongest.i, slotIdx: me[0], faceDown: false };
       }
-      // Quái yếu: set úp làm tường front (chặn direct) — tối đa wallCap tường
-      if (fe.length && wAtk < 1500 && diff >= 1 && fdCount < wallCap) return { type: 'SUMMON', handIdx: weakest.i, slotIdx: fe[fe.length - 1], faceDown: true };
-      if (be.length && diff >= 1 && wAtk < 1500 && fdCount < wallCap) return { type: 'SUMMON', handIdx: weakest.i, slotIdx: be[0], faceDown: true };
-      if (be.length && mAtk >= 1500) return { type: 'SUMMON', handIdx: strongest.i, slotIdx: be[0], faceDown: false };
+      if (wAtk < 1500 && diff >= 1 && fdCount < wallCap) {
+        return { type: 'SUMMON', handIdx: weakest.i, slotIdx: me[me.length - 1], faceDown: true };
+      }
+      return { type: 'SUMMON', handIdx: strongest.i, slotIdx: me[0], faceDown: false };
     }
 
     // --- 6. Không còn gì tốt hơn: chuyển sang battle nếu có đòn điểm, ngược lại end ---
@@ -247,8 +250,8 @@
   }
 
   function battlePhaseWorth(s, pIdx) {
-    for (let si = 0; si < 9; si++) {
-      const r = attackScore(s, pIdx, si, false);
+    for (let si = 0; si < MONSTER_SLOTS; si++) {
+      const r = bestAttackForMonster(s, pIdx, si, false);
       if (r && r.score > 0) return true;
     }
     return false;
@@ -262,21 +265,20 @@
     let lethal = false;
     if (diff >= 2) {
       let total = 0;
-      for (let si = 0; si < 9; si++) {
-        const r = attackScore(s, pIdx, si, true);
-        if (r && r.score > 0) total += E.effAtk(s, pIdx, p.field[si]);
+      for (let si = 0; si < MONSTER_SLOTS; si++) {
+        const r = bestAttackForMonster(s, pIdx, si, true);
+        if (r && r.score > 0 && p.field[si]) total += E.effAtk(s, pIdx, p.field[si]);
       }
       if (total >= e.lp) lethal = true;
     }
     let best = null;
-    for (let si = 0; si < 9; si++) {
-      const r = attackScore(s, pIdx, si, lethal);
+    for (let si = 0; si < MONSTER_SLOTS; si++) {
+      const r = bestAttackForMonster(s, pIdx, si, lethal);
       if (r && (lethal ? r.score > -800 : r.score > 0)) {
         if (!best || r.score > best.score) best = r;
       }
     }
     if (best) return best.action;
-    // Còn quái chưa đánh mà đáng đánh thì đánh cái tệ nhất có lợi? -> nếu hết đòn điểm: end turn
     return { type: 'END' };
   }
 

@@ -87,6 +87,329 @@ const TRAP_FX = {
   690: { kind: 'fake' },                     // Fake Trap
 };
 
+/* Specific icons cho các lá bài nổi tiếng và đặc trưng FM gốc (map theo tên chuẩn) */
+const FAMOUS_BY_NAME = {
+  'blue-eyes white dragon': '🐉⚡',
+  'blue-eyes ultimate dragon': '🐲👑',
+  'dark magician': '🧙‍♂️🔮',
+  'dark magician girl': '🧙‍♀️💖',
+  'red-eyes b. dragon': '🌑🐉',
+  'red-eyes black metal dragon': '🤖🐲',
+  'b. skull dragon': '💀🐉',
+  'black skull dragon': '💀🐉',
+  'summoned skull': '💀⚡',
+  'celtic guardian': '🧝‍♂️🗡️',
+  'mystical elf': '🧝‍♀️✨',
+  'hitotsu-me giant': '👁️👹',
+  'baby dragon': '🐣🐲',
+  'flame swordsman': '🔥⚔️',
+  'time wizard': '⏰🧙‍♂️',
+  'kuriboh': '🌰✨',
+  'sangan': '👁️🐾',
+  'harpie lady': '🪶💃',
+  'harpie lady sisters': '🪶💃',
+  'gaia the fierce knight': '🏇⚔️',
+  'gaia the dragon champion': '🏇🐉',
+  'curse of dragon': '🐉🔥',
+  'meteor dragon': '☄️🐉',
+  'meteor b. dragon': '☄️🐲',
+  'gate guardian': '⛩️💥',
+  'sanga of the thunder': '⚡🗿',
+  'kazejin': '🌪️🗿',
+  'suijin': '🌊🗿',
+  'black luster soldier': '🛡️⚔️',
+  'magician of black chaos': '🧙‍♂️🌑',
+  'exodia the forbidden one': '👑⚡',
+  'right leg of the forbidden one': '🦵✨',
+  'left leg of the forbidden one': '🦵✨',
+  'right arm of the forbidden one': '🖐️⚡',
+  'left arm of the forbidden one': '🖐️⚡',
+  'skull servant': '💀🦴',
+  'feral imp': '😈🗡️',
+  'ryu-kishin': '👿🪨',
+  'ryu-kishin powered': '👿⚡',
+  'battle ox': '🐂🪓',
+  'beaver warrior': '🦫🗡️',
+  'silver fang': '🐺❄️',
+  'kairyu-shin': '🐉🌊',
+  'great mammoth of goldfine': '🦣☠️',
+  'zoa': '👹💥',
+  'metalzoa': '🤖👹',
+  'giltia the d. knight': '🤺⚔️',
+  'swordsman of landstar': '🗡️⭐',
+  'twin-headed thunder dragon': '⚡🐲',
+  'thunder dragon': '⚡🐉',
+  'kaminari attack': '⚡🦅',
+  'machine king': '👑🤖',
+  'cyber tech alligator': '🤖🐊',
+  'dark hole': '🕳️🌀',
+  'raigeki': '⚡🌩️',
+  'fissure': '🪨⚡',
+  'trap hole': '🕳️🕸️',
+  'widespread ruin': '💥🚀',
+  'bear trap': '🪤🐻',
+  'invisible wire': '🪤⚡',
+  'acid trap hole': '🧪🕳️',
+  'goblin fan': '🪭💨',
+  'bad reaction to simochi': '🍭☠️',
+  'reverse trap': '🔄🪤',
+  'fake trap': '🎭🪤',
+  'dian keto the cure maiden': '💚✨',
+  'mooyan curry': '🍛✨',
+  'red medicine': '🧪❤️',
+  'goblin\'s secret remedy': '🏺💚',
+  'soul of the pure': '🕊️💖',
+  'sparks': '✨⚡',
+  'hinotama': '🔥☄️',
+  'final flame': '🌋🔥',
+  'ookazi': '💥🔥',
+  'tremendous fire': '🔥🌋',
+  'swords of revealing light': '🗡️✨',
+  'spellbinding circle': '✡️🔒',
+  'dark-piercing light': '☀️✨',
+  'salamandra': '🦎🔥',
+  'dark energy': '🔮🌑',
+  'dragon treasure': '🐉💎',
+  'beast fangs': '🦷🐺',
+  'forest': '🌲🦌',
+  'wasteland': '🏜️🦖',
+  'mountain': '⛰️🦅',
+  'sogen': '🌾⚔️',
+  'umi': '🌊⚓',
+  'yami': '🌌🌑',
+  'harpie\'s feather duster': '🪶🧹',
+  'crush card': '🧪🦠',
+  'megamorph': '💪✨',
+  'gate guardian ritual': '⛩️⚡',
+  'black luster ritual': '🛡️🗡️',
+  'magician of black chaos ritual': '🧙‍♂️🌑',
+  'ultimate dragon ritual': '🐲👑',
+};
+
+const RACE_SUB_EMOJIS = {
+  'Dragon': ['🔥', '⚡', '🌊', '🌪️', '✨', '🌑', '💎', '🌋'],
+  'Spellcaster': ['🔮', '📜', '✨', '🌑', '🕯️', '🪄', '🌟', '📿'],
+  'Zombie': ['💀', '🦴', '⚰️', '👻', '🥩', '🌑', '🩸', '🕸️'],
+  'Warrior': ['🛡️', '🗡️', '🏹', '🔱', '🪓', '🥊', '🏆', '🎖️'],
+  'Beast-Warrior': ['🪓', '⚔️', '🛡️', '🐺', '🐂', '🐾', '🌲', '⚡'],
+  'Beast': ['🐾', '🌿', '🌙', '🌲', '🪵', '❄️', '🐾', '⚡'],
+  'Winged Beast': ['🪶', '🌪️', '🎯', '⚡', '🌲', '🌤️', '🏔️', '🌙'],
+  'Fiend': ['😈', '💀', '⛓️', '🌑', '🔥', '🩸', '👁️', '🗡️'],
+  'Fairy': ['✨', '💖', '🌸', '👼', '🌟', '🕊️', '🪞', '🌈'],
+  'Insect': ['🌱', '🌳', '🍯', '🕸️', '🍃', '🏜️', '🌿', '🌾'],
+  'Dinosaur': ['🔥', '🌋', '🦴', '🌿', '🥚', '⚡', '🐾', '💥'],
+  'Reptile': ['🌿', '🍃', '🐍', '🏜️', '💧', '🪵', '🐾', '🌴'],
+  'Fish': ['🌊', '🫧', '🐚', '🪸', '💧', '⚓', '🐬', '🎣'],
+  'Sea Serpent': ['🌊', '⚡', '🫧', '🌪️', '⚓', '🌀', '🧊', '🌊'],
+  'Machine': ['⚙️', '🚀', '🛞', '🔋', '📡', '🔧', '💡', '🏭'],
+  'Thunder': ['🌩️', '💥', '🌪️', '☁️', '☄️', '🔋', '🌟', '🔮'],
+  'Aqua': ['💧', '🫧', '🧊', '❄️', '🌧️', '⚓', '🪸', '🐚'],
+  'Pyro': ['💥', '🌋', '☄️', '🕯️', '🧨', '☀️', '🎇', '♨️'],
+  'Rock': ['⛰️', '🗿', '🏜️', '💎', '⛏️', '🌋', '🧱', '🏰'],
+  'Plant': ['🌺', '🍄', '🌹', '🌲', '🍇', '🍂', '🌻', '🌿'],
+};
+
+function resolveMonsterIcon(id, name, race, attr) {
+  const norm = name.toLowerCase().trim();
+  const cleanKey = norm.replace(/[^a-z0-9]/g, '');
+  for (const [k, ico] of Object.entries(FAMOUS_BY_NAME)) {
+    if (k.replace(/[^a-z0-9]/g, '') === cleanKey) return ico;
+  }
+  const n = norm;
+  if (n.includes('blue-eyes ultimate') || n.includes('blue eyes ultimate')) return '🐲👑';
+  if (n.includes('blue-eyes') || n.includes('blue eyes')) return '🐉⚡';
+  if (n.includes('hitotsu-me') || n.includes('hitotsume') || n.includes('cyclops')) return '👁️👹';
+  if (n.includes('dragon')) {
+    if (attr === 'FIRE' || n.includes('fire') || n.includes('flame')) return '🔥🐉';
+    if (attr === 'WATER' || n.includes('sea') || n.includes('aqua')) return '🌊🐉';
+    if (attr === 'THUNDER' || n.includes('thunder') || n.includes('lightning')) return '⚡🐉';
+    if (attr === 'DARK' || n.includes('dark') || n.includes('black')) return '🌑🐉';
+    if (attr === 'LIGHT' || n.includes('white') || n.includes('light')) return '✨🐉';
+    if (attr === 'WIND' || n.includes('winged') || n.includes('sky')) return '🦅🐉';
+    return '🐉';
+  }
+  if (n.includes('magician') || n.includes('wizard') || n.includes('sorcerer') || n.includes('mage') || n.includes('witch') || n.includes('shaman')) {
+    if (n.includes('witch')) return '🧙‍♀️✨';
+    if (attr === 'DARK' || n.includes('dark')) return '🧙‍♂️🌑';
+    if (attr === 'FIRE' || n.includes('flame')) return '🧙‍♂️🔥';
+    return '🧙‍♂️🔮';
+  }
+  if (n.includes('knight') || n.includes('swordsman') || n.includes('warrior') || n.includes('blade') || n.includes('sword') || n.includes('samurai') || n.includes('ninja') || n.includes('guard')) {
+    if (n.includes('ninja')) return '🥷⚔️';
+    if (n.includes('samurai')) return '🤺⚔️';
+    if (n.includes('archer') || n.includes('bow')) return '🏹⚔️';
+    if (attr === 'FIRE') return '🔥⚔️';
+    if (attr === 'DARK') return '🗡️🌑';
+    if (attr === 'LIGHT') return '🛡️✨';
+    return '⚔️🛡️';
+  }
+  if (n.includes('zombie') || n.includes('skeleton') || n.includes('skull') || n.includes('bone') || n.includes('mummy') || n.includes('ghost') || n.includes('specter') || n.includes('phantom') || n.includes('lich') || n.includes('ghoul')) {
+    if (n.includes('ghost') || n.includes('specter') || n.includes('phantom')) return '👻🌑';
+    if (n.includes('mummy')) return '🧟📜';
+    if (n.includes('skull') || n.includes('skeleton') || n.includes('bone')) return '💀🦴';
+    return '🧟🥩';
+  }
+  if (n.includes('fiend') || n.includes('demon') || n.includes('devil') || n.includes('imp') || n.includes('abyss') || n.includes('gargoyle')) {
+    if (n.includes('gargoyle')) return '🗿😈';
+    if (n.includes('imp')) return '😈🗡️';
+    return '👹🔥';
+  }
+  if (n.includes('angel') || n.includes('fairy') || n.includes('goddess') || n.includes('maiden') || n.includes('elf') || n.includes('valkyrie') || n.includes('pixie')) {
+    if (n.includes('angel')) return '👼✨';
+    if (n.includes('valkyrie')) return '🛡️✨';
+    if (n.includes('maiden') || n.includes('goddess')) return '👸✨';
+    return '🧚‍♀️✨';
+  }
+  if (n.includes('machine') || n.includes('robot') || n.includes('cyber') || n.includes('mech') || n.includes('cannon') || n.includes('tank') || n.includes('gear')) {
+    if (n.includes('cannon') || n.includes('tank')) return '🚀🤖';
+    if (n.includes('gear')) return '⚙️🤖';
+    return '🤖🦾';
+  }
+  if (n.includes('insect') || n.includes('beetle') || n.includes('wasp') || n.includes('bee') || n.includes('spider') || n.includes('ant') || n.includes('mantis') || n.includes('moth') || n.includes('worm')) {
+    if (n.includes('spider')) return '🕷️🕸️';
+    if (n.includes('wasp') || n.includes('bee')) return '🐝🍯';
+    if (n.includes('mantis')) return '🦗🗡️';
+    if (n.includes('beetle')) return '🪲🌳';
+    return '🐜🌱';
+  }
+  if (n.includes('bird') || n.includes('eagle') || n.includes('hawk') || n.includes('falcon') || n.includes('crow') || n.includes('harpie') || n.includes('wing') || n.includes('owl')) {
+    if (n.includes('owl')) return '🦉🌙';
+    if (n.includes('crow') || n.includes('raven')) return '🐦‍⬛🌑';
+    if (n.includes('harpie')) return '🪶💃';
+    return '🦅🪶';
+  }
+  if (n.includes('fish') || n.includes('shark') || n.includes('whale') || n.includes('sea') || n.includes('ocean') || n.includes('aqua') || n.includes('crab') || n.includes('turtle') || n.includes('kraken') || n.includes('squid')) {
+    if (n.includes('shark')) return '🦈🌊';
+    if (n.includes('whale')) return '🐋🌊';
+    if (n.includes('crab') || n.includes('lobster')) return '🦀🌊';
+    if (n.includes('turtle')) return '🐢🌊';
+    return '🐟🌊';
+  }
+  if (n.includes('dinosaur') || n.includes('rex') || n.includes('raptor') || n.includes('tomozaurus')) {
+    if (n.includes('rex')) return '🦖🔥';
+    return '🦖🌿';
+  }
+  if (n.includes('snake') || n.includes('serpent') || n.includes('cobra') || n.includes('viper') || n.includes('lizard') || n.includes('croc')) {
+    if (n.includes('snake') || n.includes('cobra') || n.includes('viper')) return '🐍🩸';
+    if (n.includes('croc')) return '🐊🌊';
+    return '🦎🌿';
+  }
+  if (n.includes('plant') || n.includes('tree') || n.includes('flower') || n.includes('vine') || n.includes('mushroom') || n.includes('rose')) {
+    if (n.includes('rose') || n.includes('flower')) return '🌹✨';
+    if (n.includes('mushroom')) return '🍄🌱';
+    if (n.includes('tree') || n.includes('wood')) return '🌲🪵';
+    return '🌱🌿';
+  }
+  if (n.includes('rock') || n.includes('stone') || n.includes('boulder') || n.includes('statue') || n.includes('golem')) {
+    if (n.includes('statue') || n.includes('golem')) return '🗿🪨';
+    return '🪨⛰️';
+  }
+  if (n.includes('fire') || n.includes('flame') || n.includes('pyro') || n.includes('lava') || n.includes('magma') || n.includes('burn')) {
+    if (n.includes('lava') || n.includes('magma')) return '🌋🔥';
+    return '🔥💥';
+  }
+  if (n.includes('thunder') || n.includes('lightning') || n.includes('electric') || n.includes('spark') || n.includes('volt')) {
+    return '⚡🌩️';
+  }
+  if (n.includes('beast') || n.includes('wolf') || n.includes('lion') || n.includes('tiger') || n.includes('bear') || n.includes('hound') || n.includes('dog') || n.includes('boar') || n.includes('bull') || n.includes('ox') || n.includes('horse') || n.includes('cat') || n.includes('fox')) {
+    if (n.includes('wolf') || n.includes('hound')) return '🐺🌙';
+    if (n.includes('lion')) return '🦁👑';
+    if (n.includes('tiger')) return '🐅🌿';
+    if (n.includes('bear')) return '🐻🐾';
+    if (n.includes('fox')) return '🦊🔥';
+    if (n.includes('cat') || n.includes('neko')) return '🐱🐾';
+    if (n.includes('boar')) return '🐗🪵';
+    if (n.includes('bull') || n.includes('ox')) return '🐂⚡';
+    if (n.includes('horse') || n.includes('steed')) return '🐎💨';
+    return '🐾🌿';
+  }
+  // Fallback: kết hợp race + flair theo id
+  const subs = RACE_SUB_EMOJIS[race] || ['✨', '🔥', '⚡', '🌙'];
+  const sub = subs[id % subs.length];
+  const base = {
+    Dragon: '🐉', Spellcaster: '🧙', Zombie: '🧟', Warrior: '⚔️', 'Beast-Warrior': '🐗',
+    Beast: '🐅', 'Winged Beast': '🦅', Fiend: '👹', Fairy: '🧚', Insect: '🪲',
+    Dinosaur: '🦖', Reptile: '🦎', Fish: '🐟', 'Sea Serpent': '🐍', Machine: '🤖',
+    Thunder: '⚡', Aqua: '🌊', Pyro: '🔥', Rock: '🪨', Plant: '🌱',
+  }[race] || '❔';
+  return base + sub;
+}
+
+function resolveEquipIcon(id, name) {
+  const norm = name.toLowerCase().trim();
+  const cleanKey = norm.replace(/[^a-z0-9]/g, '');
+  for (const [k, ico] of Object.entries(FAMOUS_BY_NAME)) {
+    if (k.replace(/[^a-z0-9]/g, '') === cleanKey) return ico;
+  }
+  const n = norm;
+  if (n.includes('sword') || n.includes('blade')) return '🗡️✨';
+  if (n.includes('bow') || n.includes('arrow')) return '🏹✨';
+  if (n.includes('armor') || n.includes('mail') || n.includes('shield')) return '🛡️✨';
+  if (n.includes('fang') || n.includes('claw')) return '🦷🐺';
+  if (n.includes('horn')) return '📯✨';
+  if (n.includes('laser') || n.includes('cannon')) return '🔫⚡';
+  if (n.includes('treasure') || n.includes('jewel') || n.includes('gem')) return '💎✨';
+  if (n.includes('book') || n.includes('scroll') || n.includes('secret')) return '📖✨';
+  if (n.includes('energy') || n.includes('power')) return '🔮✨';
+  if (n.includes('fire') || n.includes('flame')) return '🔥⚒️';
+  return '⚒️✨';
+}
+
+function resolveRitualIcon(id, name) {
+  const norm = name.toLowerCase().trim();
+  const cleanKey = norm.replace(/[^a-z0-9]/g, '');
+  for (const [k, ico] of Object.entries(FAMOUS_BY_NAME)) {
+    if (k.replace(/[^a-z0-9]/g, '') === cleanKey) return ico;
+  }
+  const n = norm;
+  if (n.includes('chaos') || n.includes('black')) return '🧙‍♂️🌑';
+  if (n.includes('soldier') || n.includes('luster')) return '🛡️🗡️';
+  if (n.includes('dragon')) return '🐲👑';
+  if (n.includes('guardian') || n.includes('gate')) return '⛩️⚡';
+  return '👁️✨';
+}
+
+function resolveMagicIcon(id, name, fx) {
+  const norm = name.toLowerCase().trim();
+  const cleanKey = norm.replace(/[^a-z0-9]/g, '');
+  for (const [k, ico] of Object.entries(FAMOUS_BY_NAME)) {
+    if (k.replace(/[^a-z0-9]/g, '') === cleanKey) return ico;
+  }
+  const n = norm;
+  if (n.includes('dian keto')) return '💚✨';
+  if (n.includes('curry')) return '🍛✨';
+  if (n.includes('medicine')) return '🧪❤️';
+  if (n.includes('remedy')) return '🏺💚';
+  if (n.includes('soul')) return '🕊️💖';
+  if (n.includes('sparks')) return '✨⚡';
+  if (n.includes('hinotama')) return '🔥☄️';
+  if (n.includes('flame') || n.includes('fire')) return '🔥🌋';
+  if (n.includes('ookazi')) return '💥🔥';
+  if (fx && fx.terrain) return '🏞️';
+  return '🪄✨';
+}
+
+function resolveTrapIcon(id, name) {
+  const norm = name.toLowerCase().trim();
+  const cleanKey = norm.replace(/[^a-z0-9]/g, '');
+  for (const [k, ico] of Object.entries(FAMOUS_BY_NAME)) {
+    if (k.replace(/[^a-z0-9]/g, '') === cleanKey) return ico;
+  }
+  const n = norm;
+  if (n.includes('adhesive')) return '🩹🪤';
+  if (n.includes('eatgaboon')) return '🦷🪤';
+  if (n.includes('wire')) return '🪤⚡';
+  if (n.includes('bear')) return '🪤🐻';
+  if (n.includes('acid')) return '🧪🕳️';
+  if (n.includes('ruin') || n.includes('widespread')) return '💥🚀';
+  if (n.includes('fan')) return '🪭💨';
+  if (n.includes('simochi')) return '🍭☠️';
+  if (n.includes('reverse')) return '🔄🪤';
+  if (n.includes('fake')) return '🎭🪤';
+  if (n.includes('trap hole')) return '🕳️🕸️';
+  return '🪤';
+}
+
 const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 const clean = s => s.replace(/\s+/g, ' ').trim();
 
@@ -99,9 +422,11 @@ let monsterCount = 0;
 for (const c of cards) {
   const name = clean(c.Name);
   if (c.Type <= 19) {
+    const race = cardTypes[c.Type], attr = ATTRS[c.Attribute];
     monsters[c.Id] = {
       id: c.Id, name,
-      race: cardTypes[c.Type], attr: ATTRS[c.Attribute],
+      icon: resolveMonsterIcon(c.Id, name, race, attr),
+      race, attr,
       atk: c.Attack, def: c.Defense,
       stars: [starNames[c.GuardianStarA], starNames[c.GuardianStarB]],
     };
@@ -110,20 +435,20 @@ for (const c of cards) {
     const fx = MAGIC_FX[c.Id] || TERRAIN[c.Id];
     magic['fm' + c.Id] = Object.assign({
       id: 'fm' + c.Id, fid: c.Id, name,
-      icon: fx && fx.terrain ? '🏞️' : '✨',
+      icon: resolveMagicIcon(c.Id, name, fx),
       desc: '',
     }, fx || { kind: 'generic' });
   } else if (c.Type === 21) { // Trap
     const fx = TRAP_FX[c.Id] || { kind: 'fake' };
     traps['fm' + c.Id] = Object.assign({
       id: 'fm' + c.Id, fid: c.Id, name,
-      icon: '🪤', desc: '',
+      icon: resolveTrapIcon(c.Id, name), desc: '',
     }, fx);
   } else if (c.Type === 22 && c.Ritual) { // Ritual
     const r = Array.isArray(c.Ritual) ? c.Ritual[0] : c.Ritual;
     rituals['fm' + c.Id] = {
       id: 'fm' + c.Id, fid: c.Id, name,
-      icon: '👁️', kind: 'ritual',
+      icon: resolveRitualIcon(c.Id, name), kind: 'ritual',
       offerings: [r.Card1, r.Card2, r.Card3], result: r.Result,
       desc: '',
     };
@@ -131,7 +456,7 @@ for (const c of cards) {
     const compat = equipTypes[c.Id] || [];
     magic['fm' + c.Id] = {
       id: 'fm' + c.Id, fid: c.Id, name,
-      icon: '⚒️', kind: 'equip', atk: EQUIP_BONUS[c.Id] != null ? EQUIP_BONUS[c.Id] : 300,
+      icon: resolveEquipIcon(c.Id, name), kind: 'equip', atk: EQUIP_BONUS[c.Id] != null ? EQUIP_BONUS[c.Id] : 300,
       races: compat,
       desc: '',
     };

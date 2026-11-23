@@ -110,12 +110,12 @@ function simGame(deckA, deckB, diffA, diffB, maxTurns = 120) {
   p.hand.push({ kind: 'MONSTER', id: C.idOf('Sanga of the Thunder'), uid: s._uid++ });
   p.hand.push({ kind: 'MONSTER', id: C.idOf('Kazejin'), uid: s._uid++ });
   p.hand.push({ kind: 'MONSTER', id: C.idOf('Suijin'), uid: s._uid++ });
-  const r = E.perform(s, { type: 'MAGIC', handIdx: 0, targetSlot: 6 });
+  const r = E.perform(s, { type: 'MAGIC', handIdx: 0, targetSlot: 2 });
   assert(r.ok, 'ritual perform ok: ' + (r.msg || ''));
   if (r.ok) {
     assert(r.result.name === 'Gate Guardian', 'Gate Guardian summoned, got ' + (r.result && r.result.name));
-    const slot = p.field[6];
-    assert(slot && slot.kind === 'MONSTER' && E.mdata(slot.card).name === 'Gate Guardian', 'Gate Guardian trên sân slot 6');
+    const slot = p.field[2];
+    assert(slot && slot.kind === 'MONSTER' && E.mdata(slot.card).name === 'Gate Guardian', 'Gate Guardian trên sân slot 2');
     assert(p.hand.length === 0, 'hand rỗng sau ritual (3 nguyên liệu + ritual consumed), got ' + p.hand.length);
     assert(p.graveyard.length >= 4, 'nguyên liệu + ritual vào mộ');
   }
@@ -131,13 +131,13 @@ function simGame(deckA, deckB, diffA, diffB, maxTurns = 120) {
   // DM (2500 ATK, Sun star) vs Mystical Elf (800 ATK, Moon star): Sun > Moon -> attacker +500
   p.hand = [{ kind: 'MONSTER', id: C.idOf('Dark Magician'), uid: s._uid++ }];
   e.hand = [{ kind: 'MONSTER', id: C.idOf('Mystical Elf'), uid: s._uid++ }];
-  p.field[6] = { kind: 'MONSTER', card: p.hand[0], pos: 'ATK', faceDown: false, attacked: false, star: 0, buffs: [] };
+  p.field[2] = { kind: 'MONSTER', card: p.hand[0], pos: 'ATK', faceDown: false, attacked: false, star: 0, buffs: [] };
   p.hand = [];
-  e.field[6] = { kind: 'MONSTER', card: { kind: 'MONSTER', id: C.idOf('Mystical Elf'), uid: s._uid++ }, pos: 'ATK', faceDown: false, attacked: false, star: 0, buffs: [] };
+  e.field[2] = { kind: 'MONSTER', card: { kind: 'MONSTER', id: C.idOf('Mystical Elf'), uid: s._uid++ }, pos: 'ATK', faceDown: false, attacked: false, star: 0, buffs: [] };
   e.hand = [];
   s.phase = 'BATTLE';
   const lpBefore = e.lp;
-  E.perform(s, { type: 'ATTACK', slotIdx: 6 });
+  E.perform(s, { type: 'ATTACK', slotIdx: 2, targetSlot: 2 });
   const dmg = lpBefore - e.lp;
   // damage = (2500 + 500 star) - 800 = 2200
   assert(dmg === 2200, 'Guardian star damage: expect 2200 (2500+500-800), got ' + dmg);

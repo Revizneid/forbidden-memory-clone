@@ -13,7 +13,7 @@
   --purple: #8e44ad;
   --text: #d8d4e8;
   --dim: #8b86a0;
-  --slot: clamp(52px, 7.5vh, 84px);
+  --slot: clamp(48px, 6.8vh, 76px);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -149,9 +149,9 @@ button.big { font-size: 18px; padding: 12px 30px; }
 .gridwrap { display: flex; flex-direction: column; align-items: center; }
 .gridlabel { font-size: 10px; letter-spacing: 3px; color: var(--dim); font-weight: 800; padding: 1px 0; }
 .grid {
-  display: grid; grid-template-columns: repeat(3, var(--slot));
-  grid-auto-rows: calc(var(--slot) * 1.38);
-  gap: 5px; padding: 6px; border-radius: 10px;
+  display: grid; grid-template-columns: repeat(5, var(--slot));
+  grid-auto-rows: calc(var(--slot) * 1.35);
+  gap: 4px; padding: 5px; border-radius: 10px;
   background: linear-gradient(160deg, #241f38, #191530);
   border: 1px solid #3a3355;
 }
@@ -162,18 +162,34 @@ button.big { font-size: 18px; padding: 12px 30px; }
   display: flex; align-items: center; justify-content: center;
   position: relative; background: rgba(0,0,0,.22);
 }
+.slotcell.slot-monster {
+  border-color: rgba(180, 140, 70, 0.45);
+  background: rgba(40, 30, 20, 0.22);
+}
+.slotcell.slot-monster::before {
+  content: 'M'; position: absolute; font-size: 13px; font-weight: 900;
+  color: rgba(212, 175, 55, 0.12); pointer-events: none;
+}
+.slotcell.slot-spelltrap {
+  border-color: rgba(70, 130, 180, 0.45);
+  background: rgba(20, 35, 50, 0.22);
+}
+.slotcell.slot-spelltrap::before {
+  content: 'S/T'; position: absolute; font-size: 11px; font-weight: 900;
+  color: rgba(100, 180, 255, 0.12); pointer-events: none;
+}
 .slotcell.empty-target { border-color: var(--gold); cursor: pointer; animation: pulse 1s infinite; }
 .slotcell .slotcard { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
-.slotcell .slotcard .card { width: calc(var(--slot) - 10px); height: calc(var(--slot) * 1.38 - 10px); }
+.slotcell .slotcard .card { width: calc(var(--slot) - 8px); height: calc(var(--slot) * 1.35 - 8px); }
 
 /* Divider giữa 2 lưới — mỏng, rộng đúng bằng lưới */
 #center-strip {
   display: flex; flex-direction: row; align-items: center; gap: 8px;
-  width: calc(var(--slot) * 3 + 24px); padding: 0 2px;
+  width: calc(var(--slot) * 5 + 20px); padding: 0 2px;
 }
 #log-ticker {
   flex: 1; background: rgba(0,0,0,.45); border: 1px solid #3a3355; border-radius: 8px;
-  padding: 4px 8px; font-size: 10.5px; line-height: 1.45; height: calc(var(--slot) * 0.62);
+  padding: 4px 8px; font-size: 10.5px; line-height: 1.45; height: calc(var(--slot) * 0.58);
   overflow: hidden;
   display: flex; flex-direction: column; justify-content: flex-end;
 }
@@ -181,6 +197,21 @@ button.big { font-size: 18px; padding: 12px 30px; }
 #log-ticker .lt:last-child { color: #fff; }
 #terrain-strip { display: flex; flex-direction: column; gap: 2px; align-items: flex-start; max-width: 42%; }
 .terrain-chip { font-size: 9.5px; background: #1d3a2f; border: 1px solid var(--green); border-radius: 8px; padding: 1px 6px; white-space: nowrap; }
+
+.mobile-only { display: none; }
+.sidebar-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 2px 4px 6px; border-bottom: 1px solid #3a3355; margin-bottom: 6px;
+  font-weight: 800; font-size: 13px; color: var(--gold2);
+}
+.sidebar-close-btn {
+  background: rgba(255,255,255,0.08); border: 1px solid #5a4f7d;
+  padding: 4px 10px; font-size: 12px; border-radius: 6px;
+}
+.sidebar-backdrop {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.65);
+  z-index: 140; backdrop-filter: blur(3px);
+}
 
 #sidebar {
   position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
@@ -440,3 +471,319 @@ button.big { font-size: 18px; padding: 12px 30px; }
 /* LP bar pulse khi trúng đòn */
 .lpbar.hitflash { animation: lpHit .5s; }
 @keyframes lpHit { 0%,100% { filter: none; } 40% { filter: brightness(2) saturate(2) hue-rotate(-30deg); } }
+
+/* =========================================================
+ * RESPONSIVE MOBILE (Điện thoại & Màn hình hẹp <= 768px)
+ * ========================================================= */
+@media (max-width: 768px) {
+  :root {
+    --slot: clamp(44px, 17vw, 64px);
+  }
+
+  body {
+    overflow-x: hidden;
+  }
+
+  .mobile-only {
+    display: flex !important;
+  }
+
+  #battle {
+    padding: 3px 4px 6px;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  /* Topbar tinh gọn */
+  #topbar {
+    gap: 4px;
+    padding: 1px 0;
+  }
+  .duelist-info {
+    min-width: unset;
+    flex: 1;
+    gap: 6px;
+  }
+  .duelist-info .portrait {
+    width: 36px; height: 36px; font-size: 19px; border-radius: 8px; flex-shrink: 0;
+  }
+  .dname { font-size: 11.5px; }
+  .lpbar { height: 14px; margin: 1px 0; border-radius: 7px; }
+  .lptext { font-size: 10px; }
+  .dmini { font-size: 9.5px; gap: 6px; }
+
+  #turnbox {
+    min-width: 55px;
+    padding: 0 2px;
+  }
+  #turn-num { font-size: 11px; }
+  #phase-ind { font-size: 9.5px; padding: 1px 6px; }
+
+  .topbtns { gap: 3px; }
+  .topbtns button {
+    padding: 4px 6px;
+    font-size: 11px;
+    border-radius: 5px;
+  }
+
+  #enemy-handrow {
+    height: 16px;
+    margin: 1px 0 2px;
+    gap: 2px;
+  }
+  .handrow .mini-back {
+    width: 20px; height: 14px; border-radius: 3px;
+  }
+
+  /* Sàn đấu 2 hàng 5 cột co giãn chuẩn màn hình */
+  #board-area {
+    width: 100%;
+    position: relative;
+    padding: 0;
+  }
+  #field-column {
+    width: 100%;
+    max-width: calc(var(--slot) * 5 + 16px);
+    padding: 3px 4px;
+    border-radius: 10px;
+    gap: 2px;
+  }
+  .grid {
+    gap: 2px;
+    padding: 2px;
+    border-radius: 6px;
+  }
+  .slotcell {
+    border-radius: 4px;
+    border-width: 1.5px;
+  }
+  .slotcell .slotcard .card {
+    width: calc(var(--slot) - 4px);
+    height: calc(var(--slot) * 1.35 - 4px);
+  }
+  .card .cname {
+    font-size: 7.5px;
+    min-height: 16px;
+    padding: 2px 2px 0;
+  }
+  .card .cart {
+    font-size: 20px;
+    margin: 1px 2px;
+  }
+  .card .cstats {
+    font-size: 7.5px;
+    padding: 1px 2px 2px;
+  }
+  .card .cbadge {
+    font-size: 6.5px;
+    padding: 0 2px;
+  }
+  .card .posico {
+    font-size: 8px;
+    padding: 0 2px;
+  }
+
+  #center-strip {
+    width: 100%;
+    gap: 4px;
+    padding: 1px;
+  }
+  #log-ticker {
+    height: 24px;
+    padding: 1px 5px;
+    font-size: 9px;
+    line-height: 1.3;
+  }
+  .terrain-chip {
+    font-size: 8px;
+    padding: 1px 4px;
+  }
+
+  /* Drawer Sidebar trượt từ đáy màn hình */
+  #sidebar {
+    position: fixed;
+    left: 0; right: 0; bottom: 0; top: auto;
+    transform: translateY(115%);
+    width: 100%;
+    max-height: 75vh;
+    border-radius: 18px 18px 0 0;
+    border: 2px solid var(--gold);
+    border-bottom: none;
+    background: rgba(18, 14, 28, 0.98);
+    backdrop-filter: blur(14px);
+    z-index: 160;
+    box-shadow: 0 -10px 40px rgba(0,0,0,0.88);
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    padding: 12px 14px 18px;
+  }
+  #sidebar.open {
+    transform: translateY(0);
+  }
+  .preview-card {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+  .preview-card .card {
+    width: 90px;
+    height: 124px;
+    flex-shrink: 0;
+  }
+  .preview-card .card .cart { font-size: 36px; }
+  .preview-card .card .cname { font-size: 9.5px; min-height: 20px; }
+  .preview-card .card .cstats { font-size: 9px; }
+  .preview-card .pdesc {
+    text-align: left;
+    font-size: 11px;
+    flex: 1;
+    line-height: 1.4;
+  }
+  .preview-card .pfusion {
+    font-size: 10px;
+    text-align: left;
+    margin-top: 4px;
+  }
+  #actionbar {
+    margin-top: 10px;
+    gap: 8px;
+  }
+  #actionbar button {
+    min-height: 40px;
+    font-size: 13.5px;
+  }
+
+  /* Hand Area: fan vuốt ngang mượt mà + info & phasebar đặt cạnh nhau */
+  #hand-area {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 2px 0 0;
+  }
+  .fan {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    min-height: 82px;
+    padding: 4px 6px;
+    justify-content: flex-start;
+    gap: 5px;
+  }
+  .fan::-webkit-scrollbar { display: none; }
+  .fan .card {
+    width: clamp(52px, 16vw, 68px);
+    height: calc(clamp(52px, 16vw, 68px) * 1.35);
+    flex-shrink: 0;
+    margin-bottom: 0;
+  }
+  .fan .card .cart { font-size: 20px; }
+  .fan .card .cname { font-size: 7px; min-height: 14px; }
+  .fan .card .cstats { font-size: 7px; padding: 1px 2px; }
+  .fan .card:hover { transform: none; }
+  .fan .card.selected { transform: translateY(-10px) scale(1.06); }
+
+  /* Đặt Player Info và Phasebar chung 1 hàng đáy */
+  #player-info {
+    min-width: unset;
+    max-width: unset;
+    flex: 1;
+    padding-bottom: 0;
+  }
+  #player-info .portrait { width: 34px; height: 34px; font-size: 18px; }
+  #phasebar {
+    width: 100%;
+    flex-direction: row;
+    gap: 6px;
+  }
+  #phasebar button {
+    flex: 1;
+    min-height: 40px;
+    font-size: 12.5px;
+    padding: 6px;
+  }
+
+  #hand-area > div:not(.fan) {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Log popup trên mobile */
+  #log-panel {
+    right: 0; left: 0; width: 100%; max-height: 45vh; border-radius: 14px 14px 0 0;
+  }
+  #btn-togglelog {
+    right: 8px; bottom: 48px;
+  }
+
+  /* Menu screen trên mobile */
+  #menu {
+    padding: 16px 8px;
+  }
+  .game-title {
+    font-size: 32px;
+    letter-spacing: 3px;
+  }
+  .game-sub {
+    font-size: 11.5px;
+    margin-bottom: 16px;
+  }
+  .menu-sec h2 {
+    font-size: 13.5px;
+    margin-bottom: 8px;
+  }
+  .duelist-list {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+  .duelist-card {
+    padding: 6px 3px;
+  }
+  .duelist-card .dp { font-size: 24px; }
+  .duelist-card .dn { font-size: 11px; }
+  .duelist-card .dd { font-size: 9px; }
+  .deck-list {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+  .deck-card {
+    padding: 8px 6px;
+  }
+  .deck-card .dk { font-size: 12px; }
+  .deck-card .dd { font-size: 9.5px; }
+  .diff-list button {
+    min-width: 56px;
+    font-size: 11.5px;
+    padding: 6px 4px;
+  }
+  button.big {
+    font-size: 15px;
+    padding: 11px 18px;
+    width: 100%;
+  }
+
+  /* Modal trên mobile */
+  .modal {
+    padding: 16px 14px;
+    max-width: 95vw;
+    max-height: 88vh;
+  }
+  .modal h1 { font-size: 24px; }
+  .modal .msub { font-size: 12px; margin-bottom: 12px; }
+  .modal.help h3 { font-size: 13.5px; margin: 10px 0 4px; }
+  .modal.help p, .modal.help li { font-size: 11.5px; line-height: 1.5; }
+}
+
+@media (max-width: 420px) {
+  :root {
+    --slot: clamp(40px, 17.5vw, 56px);
+  }
+  .duelist-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .deck-list {
+    grid-template-columns: 1fr;
+  }
+}

@@ -15,16 +15,21 @@
 
   const LP_START = 8000;
   const HAND_MAX = 5;
-  const ROWS = 3, COLS = 3;
-  const FRONT_ROW = 2;
+  const MONSTER_SLOTS = 5;      // Hàng quái vật (row 0): slots 0..4
+  const SPELL_SLOTS = 5;        // Hàng phép/bẫy (row 1): slots 5..9
+  const FIELD_SIZE = 10;        // Mỗi bên 2 row x 5 cols = 10 slots
+  const ROWS = 2, COLS = 5;
+  const FRONT_ROW = 0;
 
   /* ---------------- helpers ---------------- */
   const rngInt = n => Math.floor(Math.random() * n);
   function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = rngInt(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; }
   const isMon = c => c && c.kind === 'MONSTER';
   const mdata = c => C.monsters[c.id];
-  function slotRow(i) { return Math.floor(i / 3); }
-  function slotCol(i) { return i % 3; }
+  const isMonsterSlot = i => i >= 0 && i < MONSTER_SLOTS;
+  const isSpellTrapSlot = i => i >= MONSTER_SLOTS && i < FIELD_SIZE;
+  function slotRow(i) { return i < MONSTER_SLOTS ? 0 : 1; }
+  function slotCol(i) { return i < MONSTER_SLOTS ? i : i - MONSTER_SLOTS; }
 
   /* ---------------- setup ---------------- */
   function makePlayer(name, deckList, isAI) {
@@ -32,7 +37,7 @@
     shuffle(deck);
     return {
       name, isAI: !!isAI, lp: LP_START,
-      deck, hand: [], field: new Array(ROWS * COLS).fill(null),
+      deck, hand: [], field: new Array(FIELD_SIZE).fill(null),
       graveyard: [], terrains: [],
     };
   }
@@ -172,6 +177,7 @@
     const card = p.hand[handIdx];
     if (!card) return { ok: false, msg: 'Không có bài ở vị trí đó.' };
     if (!isMon(card)) return { ok: false, msg: 'Chỉ summon quái vật.' };
+    if (!isMonsterSlot(slotIdx)) return { ok: false, msg: 'Quái vật chỉ được triệu hồi vào hàng Quái (ô 1-5).' };
     if (p.field[slotIdx]) return { ok: false, msg: 'Ô đã có bài.' };
     p.hand.splice(handIdx, 1);
     const slot = { kind: 'MONSTER', card, pos: faceDown ? 'DEF' : 'ATK', faceDown: !!faceDown, attacked: false, posChanged: false, star: 0, buffs: [] };
@@ -193,6 +199,7 @@
     const p = s.players[pIdx];
     const card = p.hand[handIdx];
     if (!card || card.kind !== 'TRAP') return { ok: false, msg: 'Chỉ SET được thẻ Bẫy.' };
+    if (!isSpellTrapSlot(slotIdx)) return { ok: false, msg: 'Bẫy chỉ được đặt vào hàng Phép/Bẫy (ô 6-10).' };
     if (p.field[slotIdx]) return { ok: false, msg: 'Ô đã có bài.' };
     p.hand.splice(handIdx, 1);
     p.field[slotIdx] = { kind: 'TRAP', tid: card.tid, faceDown: true };
@@ -220,8 +227,14 @@
     const slotA = a.src === 'FIELD' ? a.idx : null;
     const slotB = b.src === 'FIELD' ? b.idx : null;
     const isFieldFusion = slotA != null || slotB != null;
-    const dest = isFieldFusion ? (slotA != null ? slotA : slotB) : targetSlot;
-    if (dest == null || dest < 0 || dest > 8) return { ok: false, msg: 'Chọn ô đặt kết quả fusion.' };
+    let dest = isFieldFusion ? (slotA != null ? slotA : slotB) : targetSlot;
+    if (dest == null || !isMonsterSlot(dest)) {
+      dest = -1;
+      for (let i = 0; i < MONSTER_SLOTS; i++) {
+        if (!p.field[i] || (isFieldFusion && (i === slotA || i === slotB))) { dest = i; break; }
+      }
+      if (dest < 0) return { ok: false, msg: 'Không còn ô trống ở hàng Quái để đặt quái fusion.' };
+    }
     if (isFieldFusion && p.field[dest] && p.field[dest] !== (slotA != null ? p.field[slotA] : p.field[slotB])) {
       return { ok: false, msg: 'Field fusion phải thay đúng ô quái nguyên liệu.' };
     }
@@ -277,7 +290,7 @@
       const usedField = [], usedHand = [];
       for (const oid of need) {
         let found = null;
-        for (let si = 0; si < 9 && !found; si++) {
+        for (let si = 0; si < MONSTER_SLOTS && !found; si++) {
           const sl = p.field[si];
           if (sl && sl.kind === 'MONSTER' && sl.card.id === oid && !usedField.includes(si)) found = { src: 'F', i: si };
         }
@@ -294,8 +307,13 @@
       for (const hi of usedHand.slice().sort(function (a, b) { return b - a; })) {
         const c = p.hand.splice(hi, 1)[0]; p.graveyard.push(c);
       }
-      const empty = (targetSlot != null && !p.field[targetSlot]) ? targetSlot : p.field.findIndex(function (x) { return !x; });
-      if (empty < 0) return { ok: false, msg: 'Không có ô trống để triệu hồi ritual!' };
+      let empty = (targetSlot != null && isMonsterSlot(targetSlot) && !p.field[targetSlot]) ? targetSlot : -1;
+      if (empty < 0) {
+        for (let i = 0; i < MONSTER_SLOTS; i++) {
+          if (!p.field[i]) { empty = i; break; }
+        }
+      }
+      if (empty < 0) return { ok: false, msg: 'Không có ô trống ở hàng Quái để triệu hồi ritual!' };
       p.hand.splice(handIdx, 1);
       p.graveyard.push(card);
       const result = C.monsters[md.result];
@@ -320,21 +338,21 @@
       case 'destroyAll': {
         pushLog(s, '🕳️ ' + p.name + ' dùng ' + md.name + ' — TẤT CẢ quái bị phá hủy!', 'magic');
         fx(s, { type: 'magic', pIdx, name: md.name, mid: md.id, all: true });
-        for (let i = 0; i < 9; i++) { destroyMonster(s, pIdx, i, md.name); destroyMonster(s, enemy, i, md.name); }
+        for (let i = 0; i < MONSTER_SLOTS; i++) { destroyMonster(s, pIdx, i, md.name); destroyMonster(s, enemy, i, md.name); }
         checkWin(s);
         return { ok: true };
       }
       case 'destroyEnemyAll': {
         pushLog(s, '⚡ ' + p.name + ' dùng ' + md.name + ' — phòng thủ đối thủ bị nghiền nát!', 'magic');
         fx(s, { type: 'magic', pIdx, name: md.name, mid: md.id, all: true });
-        for (let i = 0; i < 9; i++) destroyMonster(s, enemy, i, md.name);
+        for (let i = 0; i < MONSTER_SLOTS; i++) destroyMonster(s, enemy, i, md.name);
         checkWin(s);
         return { ok: true };
       }
       case 'destroyRace': {
         const races = mfx.races || [];
         let n = 0;
-        for (let i = 0; i < 9; i++) {
+        for (let i = 0; i < MONSTER_SLOTS; i++) {
           const sl = s.players[enemy].field[i];
           if (sl && sl.kind === 'MONSTER' && races.includes(mdata(sl.card).race)) { destroyMonster(s, enemy, i, md.name); n++; }
         }
@@ -345,7 +363,7 @@
       }
       case 'flipAllEnemyDef': {
         let cnt = 0;
-        for (let i = 0; i < 9; i++) {
+        for (let i = 0; i < MONSTER_SLOTS; i++) {
           const sl = s.players[enemy].field[i];
           if (sl && sl.kind === 'MONSTER' && sl.faceDown) { sl.faceDown = false; fx(s, { type: 'flip', pIdx: enemy, slotIdx: i, name: mdata(sl.card).name }); cnt++; }
         }
@@ -354,7 +372,7 @@
         return { ok: true };
       }
       case 'flipAllEnemyAtk': {
-        for (let i = 0; i < 9; i++) {
+        for (let i = 0; i < MONSTER_SLOTS; i++) {
           const sl = s.players[enemy].field[i];
           if (sl && sl.kind === 'MONSTER' && sl.faceDown) { sl.faceDown = false; sl.pos = 'ATK'; fx(s, { type: 'flip', pIdx: enemy, slotIdx: i, name: mdata(sl.card).name }); }
         }
@@ -371,7 +389,7 @@
         return { ok: true };
       }
       case 'dragonsToDef': {
-        for (let i = 0; i < 9; i++) {
+        for (let i = 0; i < MONSTER_SLOTS; i++) {
           const sl = s.players[enemy].field[i];
           if (sl && sl.kind === 'MONSTER' && !sl.faceDown && mdata(sl.card).race === 'Dragon') { sl.pos = 'DEF'; fx(s, { type: 'flip', pIdx: enemy, slotIdx: i, name: mdata(sl.card).name }); }
         }
@@ -381,7 +399,7 @@
       }
       case 'clearTraps': {
         let n = 0;
-        for (let i = 0; i < 9; i++) {
+        for (let i = MONSTER_SLOTS; i < FIELD_SIZE; i++) {
           const sl = s.players[enemy].field[i];
           if (sl && sl.kind === 'TRAP') { toGraveyard(s, enemy, sl); s.players[enemy].field[i] = null; n++; }
         }
@@ -430,28 +448,36 @@
   /* ---------------- battle phase ---------------- */
   function canAttack(s, pIdx, slotIdx) {
     if (s.phase !== 'BATTLE' || s.winner != null) return false;
+    if (!isMonsterSlot(slotIdx)) return false;
     const p = s.players[pIdx];
     const slot = p.field[slotIdx];
     return !!slot && slot.kind === 'MONSTER' && !slot.faceDown && slot.pos === 'ATK' && !slot.attacked;
   }
 
   // Kết quả: { target: slotIdx | -1 (direct) | null (không đánh được) }
-  function attackTargets(s, pIdx, slotIdx) {
+  function attackTargets(s, pIdx, slotIdx, targetSlot) {
     const p = s.players[pIdx];
     const slot = p.field[slotIdx];
     if (!canAttack(s, pIdx, slotIdx)) return null;
-    const col = slotCol(slotIdx);
     const enemy = s.players[1 - pIdx];
-    for (let row = FRONT_ROW; row >= 0; row--) {
-      const i = row * 3 + col;
+    const enemyMonsters = [];
+    for (let i = 0; i < MONSTER_SLOTS; i++) {
       const sl = enemy.field[i];
-      if (sl && sl.kind === 'MONSTER') return { target: i, direct: false };
+      if (sl && sl.kind === 'MONSTER') enemyMonsters.push(i);
     }
-    return { target: -1, direct: true };
+    // Nếu đối thủ không còn quái vật trên hàng quái -> Đánh trực tiếp LP
+    if (enemyMonsters.length === 0) return { target: -1, direct: true };
+    // Nếu chỉ định mục tiêu hợp lệ -> đánh mục tiêu đó
+    if (targetSlot != null && isMonsterSlot(targetSlot) && enemy.field[targetSlot] && enemy.field[targetSlot].kind === 'MONSTER') {
+      return { target: targetSlot, direct: false };
+    }
+    // Mặc định: đối diện cùng cột nếu có, nếu không thì lấy quái đầu tiên
+    if (enemyMonsters.includes(slotIdx)) return { target: slotIdx, direct: false };
+    return { target: enemyMonsters[0], direct: false };
   }
 
-  function doAttack(s, pIdx, slotIdx) {
-    const t = attackTargets(s, pIdx, slotIdx);
+  function doAttack(s, pIdx, slotIdx, targetSlot) {
+    const t = attackTargets(s, pIdx, slotIdx, targetSlot);
     if (!t) return { ok: false, msg: 'Quái này không thể tấn công.' };
     const p = s.players[pIdx], enemyIdx = 1 - pIdx, e = s.players[enemyIdx];
     const aslot = p.field[slotIdx];
@@ -489,7 +515,7 @@
         return { ok: true, negated: true };
       }
       if (tfx.kind === 'stripEquips') {
-        for (var bi = 0; bi < 9; bi++) {
+        for (var bi = 0; bi < MONSTER_SLOTS; bi++) {
           var bsl = p.field[bi];
           if (bsl && bsl.kind === 'MONSTER' && (bsl.buffs || []).length) {
             for (var bk = 0; bk < bsl.buffs.length; bk++) p.graveyard.push({ kind: 'MAGIC', mid: bsl.buffs[bk].mid, used: true });
@@ -624,7 +650,7 @@
       case 'FUSION': return fuse(s, pIdx, action.a, action.b, action.targetSlot);
       case 'CHANGE_POS': return changePos(s, pIdx, action.slotIdx);
       case 'SET_STAR': return setStar(s, pIdx, action.slotIdx, action.starIdx);
-      case 'ATTACK': return doAttack(s, pIdx, action.slotIdx);
+      case 'ATTACK': return doAttack(s, pIdx, action.slotIdx, action.targetSlot);
       case 'BATTLE_PHASE': return { ok: startBattlePhase(s) };
       case 'END': return { ok: endTurn(s) };
       default: return { ok: false, msg: 'Unknown action' };
@@ -633,6 +659,8 @@
 
   FM.engine = {
     LP_START, HAND_MAX, FRONT_ROW,
+    MONSTER_SLOTS, SPELL_SLOTS, FIELD_SIZE,
+    isMonsterSlot, isSpellTrapSlot,
     newDuel, perform, drainFx,
     effAtk, effDef, isMon, mdata, monsterCount,
     canAttack, attackTargets, peekFusion,

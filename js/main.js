@@ -37,11 +37,18 @@
       $('btn-togglelog').textContent = lp.classList.contains('hidden') ? '📜' : '📜✖';
     };
 
+    // Mobile drawer sidebar
+    const btnCloseSb = $('btn-close-sidebar');
+    if (btnCloseSb) btnCloseSb.onclick = () => UI.closeSidebarMobile();
+    const sbBackdrop = $('sidebar-backdrop');
+    if (sbBackdrop) sbBackdrop.onclick = () => UI.closeSidebarMobile();
+
     // Esc = hủy thao tác đang làm
     document.addEventListener('keydown', ev => {
       if (ev.key === 'Escape') {
         const ov = $('overlay');
         if (!ov.classList.contains('hidden')) { ov.classList.add('hidden'); ov.innerHTML = ''; }
+        UI.closeSidebarMobile();
       }
     });
 

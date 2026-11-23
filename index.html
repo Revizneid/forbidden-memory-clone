@@ -2,9 +2,9 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Forbidden Memory — Web Clone</title>
-<link rel="stylesheet" href="css/style.css?v=ux2">
+<link rel="stylesheet" href="css/style.css?v=fm2row">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐉</text></svg>">
 </head>
 <body>
@@ -52,10 +52,15 @@
           </div>
         </div>
         <aside id="sidebar">
+          <div class="sidebar-header mobile-only">
+            <span>Chi Tiết Thẻ & Thao Tác</span>
+            <button id="btn-close-sidebar" class="sidebar-close-btn" type="button">✕ Đóng</button>
+          </div>
           <div id="preview"></div>
           <div id="actionbar"></div>
         </aside>
       </div>
+      <div id="sidebar-backdrop" class="sidebar-backdrop hidden"></div>
 
       <div id="hand-area">
         <div id="player-info" class="duelist-info player">
@@ -111,12 +116,12 @@
     <div id="toast" class="hidden"></div>
   </div>
 
-  <script src="js/cards_full.js?v=fm722"></script>
-  <script src="js/cards.js?v=fm722"></script>
-  <script src="js/engine.js?v=fm722"></script>
-  <script src="js/ai.js?v=fm722"></script>
-  <script src="js/fx.js?v=fm722"></script>
-  <script src="js/ui.js?v=fm722"></script>
-  <script src="js/main.js?v=fm722"></script>
+  <script src="js/cards_full.js?v=fm2row"></script>
+  <script src="js/cards.js?v=fm2row"></script>
+  <script src="js/engine.js?v=fm2row"></script>
+  <script src="js/ai.js?v=fm2row"></script>
+  <script src="js/fx.js?v=fm2row"></script>
+  <script src="js/ui.js?v=fm2row"></script>
+  <script src="js/main.js?v=fm2row"></script>
 </body>
 </html>

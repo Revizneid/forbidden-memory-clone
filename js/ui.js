@@ -56,6 +56,7 @@
     return C.traps[card.tid].name;
   }
   function iconOf(card) {
+    if (C.cardIcon) return C.cardIcon(card);
     if (card.kind === 'MONSTER') return C.raceIcon(C.monsters[card.id].race);
     if (card.kind === 'MAGIC') return C.magics[card.mid] ? C.magics[card.mid].icon : '✨';
     return C.traps[card.tid] ? C.traps[card.tid].icon : '🪤';
@@ -71,9 +72,10 @@
     const md = card.kind === 'MAGIC' ? C.magics[card.mid] : null;
     const td = card.kind === 'TRAP' ? C.traps[card.tid] : null;
     const attrBg = m ? C.attrColor(m.attr) : (card.kind === 'MAGIC' ? '#2e86de' : '#c2457e');
+    const icon = C.cardIcon ? C.cardIcon(card) : (m ? C.raceIcon(m.race) : md ? md.icon : td.icon);
     el.innerHTML =
       `<div class="cname">${m ? m.name : md ? md.name : td.name}</div>` +
-      `<div class="cart" style="${m ? `background: radial-gradient(circle at 50% 35%, rgba(255,255,255,.8), ${C.attrColor(m.attr)}66)` : ''}">${m ? C.raceIcon(m.race) : md ? md.icon : td.icon}</div>` +
+      `<div class="cart" style="${m ? `background: radial-gradient(circle at 50% 35%, rgba(255,255,255,.8), ${C.attrColor(m.attr)}66)` : ''}">${icon}</div>` +
       `<div class="cstats">${m ? `<span class="catk">ATK ${m.atk}</span><span class="cdef">DEF ${m.def}</span>` : `<span>${card.kind === 'MAGIC' ? '✨ PHÉP' : card.kind === 'TRAP' ? '🪤 BẪY' : '👁 RITUAL'}</span><span></span>`}${m && m.stars ? `<span class="cstar">${C.starIcon(C.starName(m.stars[0]))}</span>` : ''}</div>` +
       `<div class="cbadge" style="background:${attrBg}">${m ? m.attr : card.kind === 'MAGIC' ? 'MAGIC' : 'TRAP'}</div>`;
     return el;
@@ -141,9 +143,17 @@
     const p = S.players[pIdx];
     const g = gridEl(pIdx);
     g.innerHTML = '';
-    for (let i = 0; i < 9; i++) {
+    // Layout FM gốc: mỗi bên 2 hàng x 5 cột = 10 ô
+    // Người chơi: Hàng 0 = Quái vật (0..4), Hàng 1 = Phép/Bẫy (5..9)
+    // Đối thủ: Hàng 0 = Phép/Bẫy (5..9), Hàng 1 = Quái vật (0..4) (đối diện hàng quái người chơi)
+    const slotIndices = pIdx === 0
+      ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+      : [5, 6, 7, 8, 9, 0, 1, 2, 3, 4];
+
+    for (let k = 0; k < slotIndices.length; k++) {
+      const i = slotIndices[k];
       const cell = document.createElement('div');
-      cell.className = 'slotcell';
+      cell.className = 'slotcell ' + (i < 5 ? 'slot-monster' : 'slot-spelltrap');
       cell.dataset.i = i;
       const sl = p.field[i];
       if (sl) {
@@ -180,10 +190,15 @@
           if (mode === 'equipTarget' && pending.handIdx != null && equipMatch(pending.handIdx, pIdx, i)) el.classList.add('targetable');
           if (mode === 'fieldSel' && selField === i) el.classList.add('selected');
         }
-        if (myTurnBattle() && E.canAttack(S, 0, i)) el.classList.add('attackable');
+        if (myTurnBattle()) {
+          if (pIdx === 0 && E.canAttack(S, 0, i)) el.classList.add('attackable');
+          if (mode === 'battleTarget' && pIdx === 0 && pending.attackerSlot === i) el.classList.add('selected');
+          if (mode === 'battleTarget' && pIdx === 1 && sl.kind === 'MONSTER') el.classList.add('targetable');
+        }
         if (mode === 'enemyTarget' && pIdx === 1 && sl.kind === 'MONSTER' && !sl.faceDown) el.classList.add('targetable');
-      } else if (myTurnMain() && (mode === 'trapSlot' || mode === 'summonSlot' || mode === 'fuseSlot')) {
-        cell.classList.add('empty-target');
+      } else if (myTurnMain()) {
+        if ((mode === 'summonSlot' || mode === 'fuseSlot') && i < 5) cell.classList.add('empty-target');
+        else if (mode === 'trapSlot' && i >= 5) cell.classList.add('empty-target');
       }
       cell.addEventListener('click', () => onSlotClick(pIdx, i));
       g.appendChild(cell);
@@ -235,8 +250,20 @@
 
     if (!S || S.winner != null) { hint('Trận đấu kết thúc.'); return; }
     if (S.active === 1) { hint('🤖 ' + S.players[1].name + ' đang suy nghĩ...'); return; }
+    if (mode === 'battleTarget' && pending.attackerSlot != null) {
+      const atkSl = S.players[0].field[pending.attackerSlot];
+      const aName = atkSl ? E.mdata(atkSl.card).name : 'Quái';
+      hint('⚔ ' + aName + ' sẵn sàng! Nhấp vào một quái đối thủ để chọn mục tiêu.');
+      addBtn('🎯 Tấn Công Quái Cùng Cột (mặc định)', () => {
+        const as = pending.attackerSlot;
+        resetMode();
+        doAttack(as, null);
+      }, 'primary');
+      addBtn('✖ Huỷ Đòn Đánh', resetMode);
+      return;
+    }
     if (S.phase === 'BATTLE') {
-      hint('⚔ Battle Phase — chọn quái có viền sáng để TẤN CÔNG. Cột trống = đánh thẳng LP!');
+      hint('⚔ Battle Phase — chọn quái viền vàng để tấn công. Có thể chọn mục tiêu bất kỳ quái đối thủ!');
       addBtn('⏭ Kết Thúc Lượt', () => doEndTurn(), 'primary');
       return;
     }
@@ -368,7 +395,7 @@
     const s0 = saved.s;
     if (!Array.isArray(s0.players) || s0.players.length !== 2) return false;
     for (const p of s0.players) {
-      if (!Array.isArray(p.deck) || !Array.isArray(p.hand) || !Array.isArray(p.field) || p.field.length !== 9 || !Array.isArray(p.graveyard) || typeof p._total !== 'number') return false;
+      if (!Array.isArray(p.deck) || !Array.isArray(p.hand) || !Array.isArray(p.field) || p.field.length !== 10 || !Array.isArray(p.graveyard) || typeof p._total !== 'number') return false;
       const onField = p.field.filter(Boolean).length;
       if (p.deck.length + p.hand.length + onField + p.graveyard.length !== p._total) return false;
     }
@@ -401,10 +428,20 @@
     return null;
   }
 
+  function openSidebarMobile() {
+    const sb = $('sidebar'); if (sb) sb.classList.add('open');
+    const sbb = $('sidebar-backdrop'); if (sbb) sbb.classList.remove('hidden');
+  }
+  function closeSidebarMobile() {
+    const sb = $('sidebar'); if (sb) sb.classList.remove('open');
+    const sbb = $('sidebar-backdrop'); if (sbb) sbb.classList.add('hidden');
+  }
+
   function showPreview(card, note) {
     // Mỗi preview mới huỷ timer của preview cũ — tránh preview mới bị preview cũ xoá mất
     previewSel = { card, note };
     renderPreview(previewSel);
+    openSidebarMobile();
     clearTimeout(previewTimer);
     previewTimer = setTimeout(() => { previewSel = null; renderPreview(null); }, 4000);
   }
@@ -413,33 +450,34 @@
   function isPlayable(card) {
     if (!S || S.winner != null) return false;
     const p = S.players[0];
-    const hasEmpty = p.field.some(x => !x);
-    if (card.kind === 'MONSTER') return hasEmpty;
-    if (card.kind === 'TRAP') return hasEmpty;
+    const hasMonsterEmpty = [0, 1, 2, 3, 4].some(i => !p.field[i]);
+    const hasTrapEmpty = [5, 6, 7, 8, 9].some(i => !p.field[i]);
+    if (card.kind === 'MONSTER') return hasMonsterEmpty;
+    if (card.kind === 'TRAP') return hasTrapEmpty;
     const md = C.magics[card.mid];
     if (!md) return false;
     const mfx = md.fx || {};
     if (mfx.kind === 'equip') {
       const allowed = md.races || md.compat || [];
-      return p.field.some(sl => sl && sl.kind === 'MONSTER' && !sl.faceDown && (typeof md.match === 'function' ? md.match(E.mdata(sl.card)) : allowed.includes(E.mdata(sl.card).race)));
+      return p.field.slice(0, 5).some(sl => sl && sl.kind === 'MONSTER' && !sl.faceDown && (typeof md.match === 'function' ? md.match(E.mdata(sl.card)) : allowed.includes(E.mdata(sl.card).race)));
     }
     if (mfx.kind === 'terrain') return !S.players.some(pl => pl.terrains.includes(md.id));
     if (mfx.kind === 'ritual') {
       const need = (md.offerings || []).slice();
       const pool = {};
       p.hand.forEach(c => { if (E.isMon(c)) pool[c.id] = (pool[c.id] || 0) + 1; });
-      p.field.forEach(sl => { if (sl && sl.kind === 'MONSTER') pool[sl.card.id] = (pool[sl.card.id] || 0) + 1; });
-      return hasEmpty && need.every(oid => (pool[oid] || 0) >= 1);
+      p.field.slice(0, 5).forEach(sl => { if (sl && sl.kind === 'MONSTER') pool[sl.card.id] = (pool[sl.card.id] || 0) + 1; });
+      return hasMonsterEmpty && need.every(oid => (pool[oid] || 0) >= 1);
     }
-    if (mfx.kind === 'forceDef' || mfx.kind === 'dragonsToDef') return S.players[1].field.some(sl => sl && sl.kind === 'MONSTER' && !sl.faceDown);
-    if (mfx.kind === 'flipAllEnemyDef' || mfx.kind === 'flipAllEnemyAtk') return S.players[1].field.some(sl => sl && sl.kind === 'MONSTER' && sl.faceDown);
-    if (mfx.kind === 'clearTraps') return S.players[1].field.some(sl => sl && sl.kind === 'TRAP');
-    if (mfx.kind === 'destroyRace') return S.players[1].field.some(sl => sl && sl.kind === 'MONSTER' && !sl.faceDown && (mfx.races || []).includes(E.mdata(sl.card).race));
+    if (mfx.kind === 'forceDef' || mfx.kind === 'dragonsToDef') return S.players[1].field.slice(0, 5).some(sl => sl && sl.kind === 'MONSTER' && !sl.faceDown);
+    if (mfx.kind === 'flipAllEnemyDef' || mfx.kind === 'flipAllEnemyAtk') return S.players[1].field.slice(0, 5).some(sl => sl && sl.kind === 'MONSTER' && sl.faceDown);
+    if (mfx.kind === 'clearTraps') return S.players[1].field.slice(5, 10).some(sl => sl && sl.kind === 'TRAP');
+    if (mfx.kind === 'destroyRace') return S.players[1].field.slice(0, 5).some(sl => sl && sl.kind === 'MONSTER' && !sl.faceDown && (mfx.races || []).includes(E.mdata(sl.card).race));
     if (mfx.kind === 'destroyEnemyAll') return E.monsterCount(S.players[1]) > 0;
     return true; // heal/damage/destroyAll
   }
 
-  function resetMode() { mode = 'idle'; selHand = -1; selField = -1; pending = {}; previewSel = null; renderAll(); }
+  function resetMode() { mode = 'idle'; selHand = -1; selField = -1; pending = {}; previewSel = null; closeSidebarMobile(); renderAll(); }
   function myTurnMain() { return S && S.winner == null && S.phase === 'MAIN' && S.active === 0 && !aiRunning; }
   function myTurnBattle() { return S && S.winner == null && S.phase === 'BATTLE' && S.active === 0 && !aiRunning; }
   function equipMatch(handIdx, pIdx, slotIdx) {
@@ -478,7 +516,7 @@
     const card = S.players[0].hand[i];
     sfx.select();
     if (mode === 'handSel' && selHand === i) { resetMode(); return; }
-    mode = 'handSel'; selHand = i; selField = -1; renderAll();
+    mode = 'handSel'; selHand = i; selField = -1; openSidebarMobile(); renderAll();
   }
 
   function onSlotClick(pIdx, i) {
@@ -494,6 +532,16 @@
     }
     if (pIdx === 1) {
       const es = S.players[1].field[i];
+      if (mode === 'battleTarget') {
+        if (es && es.kind === 'MONSTER') {
+          const atkSlot = pending.attackerSlot;
+          resetMode();
+          doAttack(atkSlot, i);
+          return;
+        }
+        toast('🎯 Chọn quái vật đối thủ để tấn công!');
+        return;
+      }
       if (mode === 'enemyTarget') {
         if (es && es.kind === 'MONSTER' && !es.faceDown) {
           E.perform(S, { type: 'MAGIC', handIdx: pending.handIdx, targetSlot: i });
@@ -512,26 +560,57 @@
 
     // Battle phase: tấn công
     if (myTurnBattle()) {
-      if (sl && sl.kind === 'MONSTER' && E.canAttack(S, 0, i)) { doAttack(i); }
-      else if (sl && sl.kind === 'MONSTER' && !sl.faceDown) { showPreview(sl.card, 'Quái của bạn'); }
+      if (mode === 'battleTarget') {
+        if (sl && sl.kind === 'MONSTER' && E.canAttack(S, 0, i)) {
+          // chuyển sang chọn quái này tấn công
+          pending.attackerSlot = i;
+          renderAll();
+          return;
+        }
+        resetMode();
+        return;
+      }
+      if (sl && sl.kind === 'MONSTER' && E.canAttack(S, 0, i)) {
+        // Kiểm tra đối thủ có quái không
+        const enemyMonsters = [0, 1, 2, 3, 4].filter(idx => S.players[1].field[idx] && S.players[1].field[idx].kind === 'MONSTER');
+        if (enemyMonsters.length === 0) {
+          doAttack(i, null);
+        } else {
+          mode = 'battleTarget';
+          pending = { attackerSlot: i };
+          toast('🎯 Chọn một quái đối thủ để tấn công');
+          renderAll();
+        }
+      } else if (sl && sl.kind === 'MONSTER' && !sl.faceDown) {
+        showPreview(sl.card, 'Quái của bạn');
+      }
       return;
     }
 
     // Main phase theo mode
-    if (mode === 'summonSlot' && !sl) {
-      E.perform(S, { type: 'SUMMON', handIdx: pending.handIdx, slotIdx: i, faceDown: pending.faceDown });
-      resetMode(); postAction(); return;
+    if (mode === 'summonSlot') {
+      if (i >= 5) { toast('⚠️ Quái vật chỉ được triệu hồi ở hàng Quái (trên)!'); return; }
+      if (!sl) {
+        E.perform(S, { type: 'SUMMON', handIdx: pending.handIdx, slotIdx: i, faceDown: pending.faceDown });
+        resetMode(); postAction(); return;
+      }
     }
-    if (mode === 'trapSlot' && !sl) {
-      E.perform(S, { type: 'SET_TRAP', handIdx: pending.handIdx, slotIdx: i });
-      resetMode(); postAction(); return;
+    if (mode === 'trapSlot') {
+      if (i < 5) { toast('⚠️ Bẫy chỉ được đặt ở hàng Phép/Bẫy (dưới)!'); return; }
+      if (!sl) {
+        E.perform(S, { type: 'SET_TRAP', handIdx: pending.handIdx, slotIdx: i });
+        resetMode(); postAction(); return;
+      }
     }
-    if (mode === 'fuseSlot' && !sl && pending.fuseAB) {
-      const { a, b } = pending.fuseAB;
-      const r = E.perform(S, { type: 'FUSION', a, b, targetSlot: i });
-      pending = {};
-      if (!r.ok) toast('❌ ' + (r.msg || 'Fusion thất bại'));
-      resetMode(); postAction(r); return;
+    if (mode === 'fuseSlot') {
+      if (i >= 5) { toast('⚠️ Quái vật chỉ được triệu hồi ở hàng Quái (trên)!'); return; }
+      if (!sl && pending.fuseAB) {
+        const { a, b } = pending.fuseAB;
+        const r = E.perform(S, { type: 'FUSION', a, b, targetSlot: i });
+        pending = {};
+        if (!r.ok) toast('❌ ' + (r.msg || 'Fusion thất bại'));
+        resetMode(); postAction(r); return;
+      }
     }
     if (mode === 'fusing' && sl && sl.kind === 'MONSTER' && !sl.faceDown && validFuseB(0, i)) {
       const a = pending.a;
@@ -547,6 +626,24 @@
       resetMode(); postAction(); return;
     }
     if (mode === 'fieldSel' && selField === i) { resetMode(); return; }
+
+    // idle/other: chọn quái trên sân
+    if (sl) {
+      sfx.select();
+      if (sl.kind === 'MONSTER') {
+        if (!sl.faceDown) previewSel = null;
+        mode = 'fieldSel'; selField = i; selHand = -1;
+        if (!sl.faceDown) showPreviewInstant(sl.card);
+        openSidebarMobile();
+        renderAll();
+      } else {
+        showPreview({ kind: 'TRAP', tid: sl.tid }, 'Bẫy đã SET (ẩn cho đối thủ)');
+      }
+    } else {
+      if (mode === 'fusing') toast('↩ Đã huỷ fusion');
+      resetMode();
+    }
+  }
 
     // idle/other: chọn quái trên sân
     if (sl) {
@@ -618,12 +715,12 @@
       return `<div style='font-size:13px;padding:2px'>${ok ? '✅' : '❌'} ${m ? m.name : '?'} (${m ? m.atk + '/' + m.def : ''})</div>`;
     }).join('');
     const result = C.monsters[md.result];
-    const empty = S.players[0].field.some(x => !x);
+    const empty = S.players[0].field.slice(0, 5).some(x => !x);
     openModal(`
       <h1 style='font-size:24px'>👁 RITUAL</h1>
       <div class='msub'>${md.name}</div>
       <div>${rows}</div>
-      <div class='msub'>→ Triệu hồi <b>${result.name}</b> (${result.atk}/${result.def}) · ${empty ? 'còn ô trống ✅' : 'KHÔNG còn ô trống ❌'}</div>
+      <div class='msub'>→ Triệu hồi <b>${result.name}</b> (${result.atk}/${result.def}) · ${empty ? 'còn ô quái trống ✅' : 'KHÔNG còn ô quái trống ❌'}</div>
       <div class='mbtns'>
         <button class='primary' id='rit-ok' ${empty ? '' : 'disabled'}>✔ Xác Nhận</button>
         <button id='rit-no'>✖ Huỷ</button>
@@ -647,9 +744,9 @@
     if (md.id === 'dianKeto') sfx.heal(); else sfx.magic();
   }
 
-  function doAttack(slotIdx) {
+  function doAttack(slotIdx, targetSlot) {
     sfx.attack();
-    const r = E.perform(S, { type: 'ATTACK', slotIdx });
+    const r = E.perform(S, { type: 'ATTACK', slotIdx, targetSlot });
     postAction(r);
   }
 
@@ -1036,11 +1133,11 @@
           <li><b>Battle Phase:</b> mỗi quái ATK ngửa được tấn công 1 lần.</li>
           <li><b>Draw Phase:</b> rút 1 bài ở ĐẦU mỗi lượt. Tay tối đa <b>5 bài</b> — nếu tay đầy 5/5 thì <b>bỏ lượt rút</b> (luật FM gốc), hãy chơi bớt bài.</li>
         </ul>
-        <h3>🗺 Sân 3×3 &amp; tấn công</h3>
+        <h3>🗺 Sàn Đấu 2 Hàng (FM gốc 1999)</h3>
         <ul>
-          <li>Mỗi bên có lưới <b>3×3</b>; hàng gần đối thủ là <b>hàng trước</b>.</li>
-          <li>Quái đánh <b>quái phía trước cùng cột</b> (ưu tiên gần nhất). Cột trống → <b>đánh trực tiếp LP</b>!</li>
-          <li>Quái úp là tường chắn cột — set quái yếu úp để chặn đòn direct.</li>
+          <li>Mỗi bên có <b>2 hàng</b>: hàng trên là <b>5 ô Quái Vật</b> (đối diện nhau ở giữa sân), hàng dưới là <b>5 ô Phép &amp; Bẫy</b>.</li>
+          <li>Quái vật có thể <b>chọn tấn công</b> bất kỳ quái nào của đối thủ. Nếu đối thủ không còn quái → <b>đánh trực tiếp LP</b>!</li>
+          <li>Quái úp (DEF) là tường chắn đòn tấn công trực tiếp. Bẫy đặt ở hàng dưới tự kích hoạt khi đối thủ hành động.</li>
         </ul>
         <h3>⚔ Tính sát thương</h3>
         <ul>
@@ -1187,6 +1284,8 @@
   UI.showFusionTable = showFusionTable;
   UI.toggleMute = function () { muted = !muted; return muted; };
   UI.closeModal = closeModal;
+  UI.openSidebarMobile = openSidebarMobile;
+  UI.closeSidebarMobile = closeSidebarMobile;
   UI.handlePhaseAction = function (kind) {
     if (!S || S.winner != null || S.active !== 0 || aiRunning) return;
     if (kind === 'battle' && S.phase === 'MAIN') {

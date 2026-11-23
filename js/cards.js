@@ -59,6 +59,22 @@
     starBeats: (a, b) => !!a && !!b && STAR_BEATS[a] === b,
     starName: function (i) { return F.starNames[i]; },
     raceIcon: r => RACE_ICONS[r] || '❔',
+    cardIcon: function (card) {
+      if (!card) return '❓';
+      if (card.kind === 'MONSTER') {
+        const m = M[card.id];
+        return (m && m.icon) || (m && RACE_ICONS[m.race]) || '🐉';
+      }
+      if (card.kind === 'MAGIC') {
+        const md = magics[card.mid];
+        return (md && md.icon) || '✨';
+      }
+      if (card.kind === 'TRAP') {
+        const td = traps[card.tid];
+        return (td && td.icon) || '🪤';
+      }
+      return '🃏';
+    },
     attrColor: a => ATTR_COLORS[a] || '#999',
     fusionKey: (a, b) => { const lo = Math.min(a, b), hi = Math.max(a, b); return lo + '|' + hi; },
     idOf(name) {
