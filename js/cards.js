@@ -81,6 +81,38 @@
       const hit = byName[String(name).toLowerCase().replace(/[^a-z0-9]/g, '')];
       return hit != null ? hit : null;
     },
+    byCode(code) {
+      if (!code) return null;
+      const cleanCode = String(code).replace(/[^0-9]/g, '').padStart(8, '0');
+      for (const k in M) if (M[k].code === cleanCode) return { key: String(M[k].id), kind: 'MONSTER', id: M[k].id, data: M[k] };
+      for (const k in magics) if (magics[k].code === cleanCode) return { key: k, kind: 'MAGIC', mid: k, data: magics[k] };
+      for (const k in traps) if (traps[k].code === cleanCode) return { key: k, kind: 'TRAP', tid: k, data: traps[k] };
+      return null;
+    },
+    allCards() {
+      const list = [];
+      for (const k in M) list.push({ key: String(M[k].id), kind: 'MONSTER', id: M[k].id, data: M[k] });
+      for (const k in magics) list.push({ key: k, kind: 'MAGIC', mid: k, data: magics[k] });
+      for (const k in traps) list.push({ key: k, kind: 'TRAP', tid: k, data: traps[k] });
+      return list;
+    },
+    cardData(ref) {
+      if (!ref) return null;
+      if (typeof ref === 'string' || typeof ref === 'number') {
+        const str = String(ref);
+        if (str.startsWith('fm')) {
+          if (traps[str]) return { key: str, kind: 'TRAP', tid: str, data: traps[str] };
+          if (magics[str]) return { key: str, kind: 'MAGIC', mid: str, data: magics[str] };
+        }
+        const num = Number(str);
+        if (M[num]) return { key: str, kind: 'MONSTER', id: num, data: M[num] };
+        return null;
+      }
+      if (ref.kind === 'MONSTER') return { key: String(ref.id), kind: 'MONSTER', id: ref.id, data: M[ref.id] };
+      if (ref.kind === 'MAGIC') return { key: ref.mid, kind: 'MAGIC', mid: ref.mid, data: magics[ref.mid] };
+      if (ref.kind === 'TRAP') return { key: ref.tid, kind: 'TRAP', tid: ref.tid, data: traps[ref.tid] };
+      return null;
+    },
     /* Fusion: bảng thật (24956 cặp) trước -> fallback cùng race (nâng bậc) */
     lookup(aId, bId) {
       if (!M[aId] || !M[bId]) return null;

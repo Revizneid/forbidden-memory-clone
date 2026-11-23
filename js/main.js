@@ -21,6 +21,12 @@
       FM.ui.startDuel(FM.ui.getSelectedConfig());
     };
     $('btn-menu-help').onclick = () => UI.showHelp();
+    const btnMenuDeck = $('btn-menu-deck');
+    if (btnMenuDeck) btnMenuDeck.onclick = () => UI.showDeckEditor();
+    const btnMenuShop = $('btn-menu-shop');
+    if (btnMenuShop) btnMenuShop.onclick = () => UI.showCardShop();
+    const btnEditDeck = $('btn-edit-current-deck');
+    if (btnEditDeck) btnEditDeck.onclick = () => UI.showDeckEditor();
 
     // Topbar buttons
     $('btn-fusionlist').onclick = () => UI.showFusionTable();

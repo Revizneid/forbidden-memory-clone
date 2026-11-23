@@ -1060,6 +1060,11 @@
     maybeGameOver();
   }
 
+  /* ---------------- Helper string sanitize ---------------- */
+  function escapeHtml(s) {
+    return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
   /* ---------------- Game over ---------------- */
   function maybeGameOver() {
     if (!S || S.winner == null || S._overShown) return;
@@ -1080,17 +1085,80 @@
       const prog = UI.getProgress();
       if (!prog.includes(cfg.duelist.id)) { prog.push(cfg.duelist.id); localStorage.setItem('fm_unlock_v1', JSON.stringify(prog)); }
     }
+
+    if (won && FM.player) {
+      const reward = FM.player.calculateDuelReward(S, cfg.duelist);
+      let dropCardHtml = '';
+      if (reward.dropCard && reward.dropCard.data) {
+        const d = reward.dropCard.data;
+        const kind = reward.dropCard.kind;
+        const dropCardObj = { kind, id: reward.dropCard.id, mid: reward.dropCard.mid, tid: reward.dropCard.tid };
+        const icon = C.cardIcon ? C.cardIcon(dropCardObj) : (d.attr ? '🐉' : '✨');
+        dropCardHtml = `
+          <div class="drop-card-container">
+            <div class="drop-label">🎁 CHIẾN LỢI PHẨM (ĂN BÀI ĐỐI THỦ)</div>
+            <div class="drop-card-center">
+              <div class="card ${kind === 'MAGIC' ? 'magic' : kind === 'TRAP' ? 'trap' : ''} newfx">
+                <div class="cname">${d.name}</div>
+                <div class="cart">${icon}</div>
+                <div class="cstats">${kind === 'MONSTER' ? `<span class="catk">ATK ${d.atk}</span><span class="cdef">DEF ${d.def}</span>` : `<span>${kind === 'MAGIC' ? '✨ PHÉP' : '🪤 BẪY'}</span>`}</div>
+                <div class="cbadge">${d.attr || kind}</div>
+              </div>
+            </div>
+            <div class="drop-meta">
+              <b>${d.name}</b> ${kind === 'MONSTER' ? `(ATK ${d.atk} / DEF ${d.def})` : ''}
+              <div class="drop-note">✅ Đã được tự động chuyển vào <b>Rương Bài (Trunk)</b> của bạn!</div>
+            </div>
+          </div>
+        `;
+      }
+
+      openModal(`
+        <h1 class="win">🏆 CHIẾN THẮNG!</h1>
+        <div class="rank-container">
+          <span class="rank-title">RANK CHIẾN ĐẤU</span>
+          <span class="rank-stamp rank-${reward.rank}">${reward.rank}</span>
+        </div>
+        <div class="msub">${S.players[1].name} đã gục ngã trước bạn!</div>
+        ${unlockMsg}
+        <div class="reward-box">
+          <div class="reward-stars-earned">
+            <span class="rw-star-icon">⭐</span>
+            <span class="rw-star-text">+<b>${reward.starsWon}</b> Star Chips</span>
+            <span class="rw-star-total">(Tổng tích luỹ: <b>${reward.totalStars}</b> ⭐)</span>
+          </div>
+          ${dropCardHtml}
+        </div>
+        <div class="msub" style="margin-top:10px;font-size:12px">LP cuối: Bạn <b>${S.players[0].lp}</b> — ${S.players[1].name} <b>${S.players[1].lp}</b> · Số lượt: ${S.turnNo}</div>
+        <div class="mbtns">
+          <button class="primary" id="go-rematch">⚔ Đấu Lại</button>
+          <button id="go-deck">🃏 Xếp Bài (Deck / Trunk)</button>
+          <button id="go-shop">🏪 Tiệm Bài (Card Shop)</button>
+          <button id="go-menu">🚪 Về Menu</button>
+        </div>
+      `, true);
+
+      $('go-rematch').onclick = () => { closeModal(); UI.startDuel(cfg); };
+      $('go-deck').onclick = () => { closeModal(); UI.showDeckEditor(); };
+      $('go-shop').onclick = () => { closeModal(); UI.showCardShop(); };
+      $('go-menu').onclick = () => { closeModal(); UI.showMenu(); };
+      return;
+    }
+
     openModal(`
-      <h1 class="${won ? 'win' : 'lose'}">${won ? '🏆 CHIẾN THẮNG!' : '💀 THẤT BẠI'}</h1>
-      <div class="msub">${won ? S.players[1].name + ' đã gục ngã trước bạn!' : S.players[1].name + ' đã đánh bại bạn. Hãy thử lại!'}</div>
-      ${unlockMsg}
+      <h1 class="lose">💀 THẤT BẠI</h1>
+      <div class="msub">${S.players[1].name} đã đánh bại bạn. Hãy nâng cấp bộ bài và thử lại!</div>
       <div class="msub">LP cuối: Bạn <b>${S.players[0].lp}</b> — ${S.players[1].name} <b>${S.players[1].lp}</b> · Số lượt: ${S.turnNo}</div>
       <div class="mbtns">
         <button class="primary" id="go-rematch">⚔ Đấu Lại</button>
+        <button id="go-deck">🃏 Xếp Bài (Deck / Trunk)</button>
+        <button id="go-shop">🏪 Tiệm Bài (Card Shop)</button>
         <button id="go-menu">🚪 Về Menu</button>
       </div>
     `);
     $('go-rematch').onclick = () => { closeModal(); UI.startDuel(cfg); };
+    $('go-deck').onclick = () => { closeModal(); UI.showDeckEditor(); };
+    $('go-shop').onclick = () => { closeModal(); UI.showCardShop(); };
     $('go-menu').onclick = () => { closeModal(); UI.showMenu(); };
   }
 
@@ -1156,6 +1224,535 @@
     `, true);
   }
 
+  /* =========================================================================
+   * GIAO DIỆN DECK BUILDER (TRUNK & 40-CARD MAIN DECK)
+   * ========================================================================= */
+  function cardKeyOf(c) {
+    if (!c) return null;
+    if (typeof c === 'string' || typeof c === 'number') return String(c);
+    if (c.kind === 'MONSTER') return String(c.id);
+    if (c.kind === 'MAGIC') return c.mid;
+    if (c.kind === 'TRAP') return c.tid;
+    return null;
+  }
+
+  function showDeckEditor() {
+    const P = FM.player;
+    if (!P) return;
+    let deck = P.getDeck().slice();
+    let trunk = Object.assign({}, P.getTrunk());
+
+    let trunkFilter = 'ALL';
+    let trunkSearch = '';
+
+    function renderEditorModal() {
+      openModal(`
+        <div class="deck-editor">
+          <div class="de-header">
+            <h2>🃏 QUẢN LÝ BỘ BÀI &amp; RƯƠNG (DECK &amp; TRUNK)</h2>
+            <div class="de-stats">
+              <span class="de-deck-stat ${deck.length === 40 ? 'ok' : 'warn'}">Bộ bài: <b>${deck.length}/40</b> lá</span>
+              <span class="de-star-stat">⭐ <b>${P.getStars()}</b> Star Chips</span>
+            </div>
+          </div>
+          <div class="de-body">
+            <!-- CỘT BỘ BÀI ĐANG CHỌN (MAIN DECK) -->
+            <div class="de-section de-deck-col">
+              <div class="de-sec-title">
+                <span>🎴 BỘ BÀI THI ĐẤU (${deck.length}/40)</span>
+                <span class="de-sec-hint">Nhấp vào thẻ để đưa về Rương bài</span>
+              </div>
+              <div id="de-deck-grid" class="de-grid de-deck-grid"></div>
+            </div>
+
+            <!-- CỘT RƯƠNG BÀI (TRUNK) -->
+            <div class="de-section de-trunk-col">
+              <div class="de-sec-title">
+                <span>📦 RƯƠNG BÀI (TRUNK)</span>
+                <span class="de-sec-hint">Nhấp vào thẻ để thêm vào Deck (tối đa 3 lá trùng)</span>
+              </div>
+              <div class="de-filter-bar">
+                <input id="de-search-input" type="text" placeholder="🔍 Tìm tên thẻ, hệ, race..." value="${escapeHtml(trunkSearch)}">
+                <div class="de-filter-pills">
+                  <button class="pill ${trunkFilter === 'ALL' ? 'sel' : ''}" data-f="ALL">Tất cả</button>
+                  <button class="pill ${trunkFilter === 'MONSTER' ? 'sel' : ''}" data-f="MONSTER">Quái</button>
+                  <button class="pill ${trunkFilter === 'MAGIC' ? 'sel' : ''}" data-f="MAGIC">Phép</button>
+                  <button class="pill ${trunkFilter === 'TRAP' ? 'sel' : ''}" data-f="TRAP">Bẫy</button>
+                </div>
+              </div>
+              <div id="de-trunk-grid" class="de-grid de-trunk-grid"></div>
+            </div>
+          </div>
+
+          <div class="de-actions">
+            <button class="primary" id="de-btn-save" ${deck.length === 40 ? '' : 'disabled'}>💾 Lưu Bộ Bài (40 Lá)</button>
+            <button id="de-btn-autofill">⚡ Tự Điền Đủ 40 Lá</button>
+            <button id="de-btn-reset">🔄 Khôi Phục Deck Mẫu</button>
+            <button id="de-btn-close">✕ Đóng</button>
+          </div>
+        </div>
+      `, true);
+
+      // Event search & filter
+      const searchInput = $('de-search-input');
+      if (searchInput) {
+        searchInput.oninput = () => { trunkSearch = searchInput.value.trim().toLowerCase(); renderTrunkGrid(); };
+      }
+      document.querySelectorAll('.de-filter-pills .pill').forEach(btn => {
+        btn.onclick = () => {
+          trunkFilter = btn.dataset.f;
+          document.querySelectorAll('.de-filter-pills .pill').forEach(x => x.classList.remove('sel'));
+          btn.classList.add('sel');
+          renderTrunkGrid();
+        };
+      });
+
+      // Actions
+      $('de-btn-save').onclick = () => {
+        const res = P.saveDeck(deck, trunk);
+        if (res.ok) {
+          sfx.select();
+          toast('✅ Đã lưu bộ bài 40 lá thành công!');
+          UI.buildMenu();
+        } else {
+          toast('❌ ' + res.msg);
+        }
+      };
+
+      $('de-btn-autofill').onclick = () => {
+        if (deck.length >= 40) { toast('Bộ bài đã đủ 40 lá!'); return; }
+        const keys = Object.keys(trunk).filter(k => trunk[k] > 0);
+        for (const k of keys) {
+          while (trunk[k] > 0 && deck.length < 40) {
+            const inDeckCount = deck.filter(c => cardKeyOf(c) === k).length;
+            if (inDeckCount >= 3) break;
+            const cd = C.cardData(k);
+            if (!cd) break;
+            trunk[k]--;
+            deck.push(cd.isMonster ? { kind: 'MONSTER', id: cd.id } : cd.isMagic ? { kind: 'MAGIC', mid: cd.mid } : { kind: 'TRAP', tid: cd.tid });
+          }
+          if (deck.length >= 40) break;
+        }
+        if (deck.length < 40) toast(`Rương không đủ bài để điền đủ 40 lá! (Hiện có ${deck.length}/40)`);
+        else toast('⚡ Đã tự động điền đủ 40 lá vào bộ bài!');
+        renderDeckGrid();
+        renderTrunkGrid();
+        updateDeckCount();
+      };
+
+      $('de-btn-reset').onclick = () => {
+        if (confirm('Khôi phục bộ bài về Deck Khởi Đầu (Kiếm Sĩ Hỏa)? Các thẻ khác được chuyển về Trunk.')) {
+          P.resetDeckToPreset('flameSwordsman');
+          deck = P.getDeck().slice();
+          trunk = Object.assign({}, P.getTrunk());
+          toast('🔄 Đã khôi phục Deck Khởi Đầu!');
+          renderDeckGrid();
+          renderTrunkGrid();
+          updateDeckCount();
+          UI.buildMenu();
+        }
+      };
+
+      $('de-btn-close').onclick = () => {
+        closeModal();
+        UI.buildMenu();
+      };
+
+      renderDeckGrid();
+      renderTrunkGrid();
+    }
+
+    function updateDeckCount() {
+      const el = document.querySelector('.de-deck-stat');
+      if (el) {
+        el.className = 'de-deck-stat ' + (deck.length === 40 ? 'ok' : 'warn');
+        el.innerHTML = `Bộ bài: <b>${deck.length}/40</b> lá`;
+      }
+      const title = document.querySelector('.de-deck-col .de-sec-title span');
+      if (title) title.textContent = `🎴 BỘ BÀI THI ĐẤU (${deck.length}/40)`;
+      const saveBtn = $('de-btn-save');
+      if (saveBtn) saveBtn.disabled = (deck.length !== 40);
+    }
+
+    function renderDeckGrid() {
+      const grid = $('de-deck-grid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      if (deck.length === 0) {
+        grid.innerHTML = '<div class="de-empty">Bộ bài đang trống. Hãy nhấp thẻ từ Rương để thêm vào!</div>';
+        return;
+      }
+      deck.forEach((card, idx) => {
+        const item = document.createElement('div');
+        item.className = 'de-card-slot';
+        const el = cardEl(card, false);
+        item.appendChild(el);
+        item.onclick = () => {
+          const removed = deck.splice(idx, 1)[0];
+          const k = cardKeyOf(removed);
+          trunk[k] = (trunk[k] || 0) + 1;
+          sfx.set();
+          renderDeckGrid();
+          renderTrunkGrid();
+          updateDeckCount();
+        };
+        grid.appendChild(item);
+      });
+    }
+
+    function renderTrunkGrid() {
+      const grid = $('de-trunk-grid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      const keys = Object.keys(trunk).filter(k => trunk[k] > 0);
+      const filtered = [];
+      for (const k of keys) {
+        const cd = C.cardData(k);
+        if (!cd || !cd.data) continue;
+        const d = cd.data;
+        if (trunkFilter === 'MONSTER' && !cd.isMonster) continue;
+        if (trunkFilter === 'MAGIC' && !cd.isMagic) continue;
+        if (trunkFilter === 'TRAP' && !cd.isTrap) continue;
+        if (trunkSearch) {
+          const match = (d.name && d.name.toLowerCase().includes(trunkSearch)) ||
+                        (d.race && d.race.toLowerCase().includes(trunkSearch)) ||
+                        (d.attr && d.attr.toLowerCase().includes(trunkSearch)) ||
+                        (cd.code && cd.code.includes(trunkSearch)) ||
+                        (String(cd.id || '').includes(trunkSearch));
+          if (!match) continue;
+        }
+        filtered.push({ key: k, cd, count: trunk[k] });
+      }
+
+      // Sắp xếp: Quái ATK giảm dần, sau đó Phép/Bẫy
+      filtered.sort((a, b) => {
+        const atkA = a.cd.isMonster ? a.cd.data.atk : -1;
+        const atkB = b.cd.isMonster ? b.cd.data.atk : -1;
+        if (atkB !== atkA) return atkB - atkA;
+        return (a.cd.data.name || '').localeCompare(b.cd.data.name || '');
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '<div class="de-empty">Không có thẻ nào trong rương phù hợp với bộ lọc.</div>';
+        return;
+      }
+
+      filtered.forEach(item => {
+        const wrap = document.createElement('div');
+        wrap.className = 'de-trunk-item';
+        const cardObj = item.cd.isMonster
+          ? { kind: 'MONSTER', id: item.cd.id }
+          : item.cd.isMagic
+          ? { kind: 'MAGIC', mid: item.cd.mid }
+          : { kind: 'TRAP', tid: item.cd.tid };
+        const el = cardEl(cardObj, false);
+        wrap.appendChild(el);
+
+        const inDeckCount = deck.filter(c => cardKeyOf(c) === item.key).length;
+        const badge = document.createElement('div');
+        badge.className = 'de-item-badge';
+        badge.innerHTML = `Rương: <b>x${item.count}</b> · Deck: <b>${inDeckCount}/3</b>`;
+        wrap.appendChild(badge);
+
+        wrap.onclick = () => {
+          if (deck.length >= 40) {
+            toast('❌ Bộ bài đã đủ 40 lá! Hãy gỡ bớt thẻ khỏi Deck trước.');
+            return;
+          }
+          if (inDeckCount >= 3) {
+            toast('❌ Tối đa 3 bản sao của mỗi lá bài trong Deck!');
+            return;
+          }
+          trunk[item.key]--;
+          if (trunk[item.key] <= 0) delete trunk[item.key];
+          deck.push(cardObj);
+          sfx.select();
+          renderDeckGrid();
+          renderTrunkGrid();
+          updateDeckCount();
+        };
+        grid.appendChild(wrap);
+      });
+    }
+
+    renderEditorModal();
+  }
+
+  /* =========================================================================
+   * GIAO DIỆN CARD SHOP (CATALOG 722 LÁ + MẬT MÃ TCG 8 CHỮ SỐ)
+   * ========================================================================= */
+  function showCardShop(initialTab) {
+    const P = FM.player;
+    if (!P) return;
+    let curTab = initialTab === 'password' ? 'password' : 'catalog';
+    let catFilter = 'ALL';
+    let catSearch = '';
+    let catPage = 1;
+    const PER_PAGE = 30;
+
+    let pwInput = '';
+
+    function renderShopModal() {
+      openModal(`
+        <div class="card-shop">
+          <div class="cs-header">
+            <h2>🏪 TIỆM BÀI PHÙ THỦY (CARD SHOP)</h2>
+            <div class="cs-stars">⭐ <span id="cs-star-val">${P.getStars()}</span> <span class="cs-star-label">Star Chips</span></div>
+          </div>
+          <div class="cs-nav">
+            <button class="cs-tab ${curTab === 'catalog' ? 'active' : ''}" id="cs-tab-cat">📚 Danh Mục 722 Lá</button>
+            <button class="cs-tab ${curTab === 'password' ? 'active' : ''}" id="cs-tab-pw">🔢 Nhập Mật Mã 8 Số (Password)</button>
+            <button class="cs-close" id="cs-btn-close">✕ Đóng</button>
+          </div>
+          <div class="cs-content" id="cs-content"></div>
+        </div>
+      `, true);
+
+      $('cs-tab-cat').onclick = () => { curTab = 'catalog'; renderShopModal(); };
+      $('cs-tab-pw').onclick = () => { curTab = 'password'; renderShopModal(); };
+      $('cs-btn-close').onclick = () => { closeModal(); UI.buildMenu(); };
+
+      if (curTab === 'catalog') {
+        renderCatalogView();
+      } else {
+        renderPasswordView();
+      }
+    }
+
+    function renderCatalogView() {
+      const container = $('cs-content');
+      if (!container) return;
+      container.innerHTML = `
+        <div class="cs-cat-tools">
+          <input id="cs-cat-search" type="text" placeholder="🔍 Tìm kiếm tên thẻ, race, hệ..." value="${escapeHtml(catSearch)}">
+          <div class="cs-cat-filters">
+            <button class="pill ${catFilter === 'ALL' ? 'sel' : ''}" data-f="ALL">Tất cả</button>
+            <button class="pill ${catFilter === 'MONSTER' ? 'sel' : ''}" data-f="MONSTER">Quái</button>
+            <button class="pill ${catFilter === 'MAGIC' ? 'sel' : ''}" data-f="MAGIC">Phép</button>
+            <button class="pill ${catFilter === 'TRAP' ? 'sel' : ''}" data-f="TRAP">Bẫy</button>
+            <button class="pill ${catFilter === 'RITUAL' ? 'sel' : ''}" data-f="RITUAL">Ritual</button>
+          </div>
+        </div>
+        <div id="cs-cat-grid" class="cs-cat-grid"></div>
+        <div id="cs-cat-pagination" class="cs-pagination"></div>
+      `;
+
+      const searchInput = $('cs-cat-search');
+      if (searchInput) {
+        searchInput.oninput = () => {
+          catSearch = searchInput.value.trim().toLowerCase();
+          catPage = 1;
+          renderCatalogCards();
+        };
+      }
+      container.querySelectorAll('.cs-cat-filters .pill').forEach(btn => {
+        btn.onclick = () => {
+          catFilter = btn.dataset.f;
+          container.querySelectorAll('.cs-cat-filters .pill').forEach(x => x.classList.remove('sel'));
+          btn.classList.add('sel');
+          catPage = 1;
+          renderCatalogCards();
+        };
+      });
+
+      renderCatalogCards();
+    }
+
+    function renderCatalogCards() {
+      const grid = $('cs-cat-grid');
+      const pag = $('cs-cat-pagination');
+      if (!grid) return;
+      const all = C.allCards ? C.allCards() : [];
+      const filtered = all.filter(c => {
+        if (!c || !c.data) return false;
+        if (catFilter === 'MONSTER' && !c.isMonster) return false;
+        if (catFilter === 'MAGIC' && !c.isMagic) return false;
+        if (catFilter === 'TRAP' && !c.isTrap) return false;
+        if (catFilter === 'RITUAL' && (c.data.kind !== 'ritual')) return false;
+        if (catSearch) {
+          const d = c.data;
+          const match = (d.name && d.name.toLowerCase().includes(catSearch)) ||
+                        (d.race && d.race.toLowerCase().includes(catSearch)) ||
+                        (d.attr && d.attr.toLowerCase().includes(catSearch)) ||
+                        (c.code && c.code.includes(catSearch)) ||
+                        (String(c.id || '').includes(catSearch));
+          if (!match) return false;
+        }
+        return true;
+      });
+
+      const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
+      if (catPage > totalPages) catPage = totalPages;
+      const start = (catPage - 1) * PER_PAGE;
+      const slice = filtered.slice(start, start + PER_PAGE);
+
+      grid.innerHTML = '';
+      if (slice.length === 0) {
+        grid.innerHTML = '<div class="cs-empty">Không tìm thấy thẻ bài nào khớp với tìm kiếm.</div>';
+      } else {
+        const curStars = P.getStars();
+        slice.forEach(item => {
+          const cardDiv = document.createElement('div');
+          cardDiv.className = 'cs-card-item';
+          const cardObj = item.isMonster ? { kind: 'MONSTER', id: item.id } : item.isMagic ? { kind: 'MAGIC', mid: item.mid } : { kind: 'TRAP', tid: item.tid };
+          const el = cardEl(cardObj, false);
+          cardDiv.appendChild(el);
+
+          const cost = item.data.cost || 50;
+          const owned = P.totalOwned(item.key);
+          const meta = document.createElement('div');
+          meta.className = 'cs-item-meta';
+          meta.innerHTML = `
+            <div class="cs-item-price">⭐ <b>${cost}</b></div>
+            <div class="cs-item-owned">Đã có: <b>${owned}</b></div>
+          `;
+          const buyBtn = document.createElement('button');
+          buyBtn.className = 'primary cs-btn-buy';
+          buyBtn.innerHTML = `Mua`;
+          buyBtn.disabled = (curStars < cost);
+          buyBtn.onclick = () => {
+            const r = P.buyCard(item.key);
+            if (r.ok) {
+              sfx.win();
+              toast(`🎉 Đã mua thành công ${item.data.name}! Đã chuyển vào Rương.`);
+              const valEl = $('cs-star-val');
+              if (valEl) valEl.textContent = r.stars;
+              renderCatalogCards();
+              UI.buildMenu();
+            } else {
+              toast('❌ ' + r.msg);
+            }
+          };
+          meta.appendChild(buyBtn);
+          cardDiv.appendChild(meta);
+          grid.appendChild(cardDiv);
+        });
+      }
+
+      // Pagination controls
+      if (pag) {
+        pag.innerHTML = `
+          <button id="cs-prev" ${catPage <= 1 ? 'disabled' : ''}>« Trang Trước</button>
+          <span>Trang <b>${catPage}</b> / <b>${totalPages}</b> (${filtered.length} thẻ)</span>
+          <button id="cs-next" ${catPage >= totalPages ? 'disabled' : ''}>Trang Sau »</button>
+        `;
+        $('cs-prev').onclick = () => { if (catPage > 1) { catPage--; renderCatalogCards(); grid.scrollTop = 0; } };
+        $('cs-next').onclick = () => { if (catPage < totalPages) { catPage++; renderCatalogCards(); grid.scrollTop = 0; } };
+      }
+    }
+
+    function renderPasswordView() {
+      const container = $('cs-content');
+      if (!container) return;
+      container.innerHTML = `
+        <div class="cs-pw-view">
+          <div class="cs-pw-desc">
+            <h3>🔢 BÀN PHÍM NHẬP MẬT MÃ TCG (8 CHỮ SỐ)</h3>
+            <p>Nhập mật mã 8 số in ở góc dưới thẻ bài Yu-Gi-Oh! để tìm và mua trực tiếp bất kỳ lá bài nào!</p>
+          </div>
+          <div class="cs-pw-display-box">
+            <input id="cs-pw-input" type="text" maxlength="8" placeholder="00000000" value="${escapeHtml(pwInput)}">
+          </div>
+          <div class="cs-pw-keypad">
+            <div class="pw-row">
+              <button class="pw-key" data-k="1">1</button>
+              <button class="pw-key" data-k="2">2</button>
+              <button class="pw-key" data-k="3">3</button>
+            </div>
+            <div class="pw-row">
+              <button class="pw-key" data-k="4">4</button>
+              <button class="pw-key" data-k="5">5</button>
+              <button class="pw-key" data-k="6">6</button>
+            </div>
+            <div class="pw-row">
+              <button class="pw-key" data-k="7">7</button>
+              <button class="pw-key" data-k="8">8</button>
+              <button class="pw-key" data-k="9">9</button>
+            </div>
+            <div class="pw-row">
+              <button class="pw-key func" data-k="C">Xoá Hết</button>
+              <button class="pw-key" data-k="0">0</button>
+              <button class="pw-key func" data-k="BS">⌫ Lùi</button>
+            </div>
+          </div>
+          <div class="cs-pw-result" id="cs-pw-result"></div>
+        </div>
+      `;
+
+      const input = $('cs-pw-input');
+      const updateResult = () => {
+        pwInput = input.value.replace(/[^0-9]/g, '').slice(0, 8);
+        input.value = pwInput;
+        const resDiv = $('cs-pw-result');
+        if (pwInput.length < 8) {
+          resDiv.innerHTML = `<div class="pw-hint">Đã nhập: ${pwInput.length}/8 chữ số...</div>`;
+          return;
+        }
+        const cardMatch = C.byCode ? C.byCode(pwInput) : null;
+        if (!cardMatch) {
+          resDiv.innerHTML = `<div class="pw-error">❌ Mật mã "${pwInput}" không khớp với bất kỳ lá bài nào trong cơ sở dữ liệu 722 lá.</div>`;
+          return;
+        }
+        const d = cardMatch.data;
+        const cost = d.cost || 50;
+        const curStars = P.getStars();
+        const cardObj = cardMatch.isMonster ? { kind: 'MONSTER', id: cardMatch.id } : cardMatch.isMagic ? { kind: 'MAGIC', mid: cardMatch.mid } : { kind: 'TRAP', tid: cardMatch.tid };
+        const owned = P.totalOwned(cardMatch.key);
+
+        resDiv.innerHTML = '';
+        const foundBox = document.createElement('div');
+        foundBox.className = 'pw-found-box';
+        const el = cardEl(cardObj, false);
+        foundBox.appendChild(el);
+
+        const info = document.createElement('div');
+        info.className = 'pw-found-info';
+        info.innerHTML = `
+          <div class="pw-found-name">🎯 ${d.name}</div>
+          <div class="pw-found-type">${cardMatch.isMonster ? `${d.race} · ${d.attr} · ATK ${d.atk} / DEF ${d.def}` : `${cardMatch.kind === 'MAGIC' ? 'PHÉP' : 'BẪY'}`}</div>
+          <div class="pw-found-cost">Giá: ⭐ <b>${cost}</b> Star Chips · Đã có: <b>${owned}</b></div>
+        `;
+        const buyBtn = document.createElement('button');
+        buyBtn.className = 'primary big';
+        buyBtn.innerHTML = `🛒 Mua Thẻ Này (⭐ ${cost})`;
+        buyBtn.disabled = (curStars < cost);
+        buyBtn.onclick = () => {
+          const r = P.buyCard(cardMatch.key);
+          if (r.ok) {
+            sfx.win();
+            toast(`🎉 Đã mua thành công ${d.name}! Đã chuyển vào Rương.`);
+            const valEl = $('cs-star-val');
+            if (valEl) valEl.textContent = r.stars;
+            updateResult();
+            UI.buildMenu();
+          } else {
+            toast('❌ ' + r.msg);
+          }
+        };
+        info.appendChild(buyBtn);
+        foundBox.appendChild(info);
+        resDiv.appendChild(foundBox);
+      };
+
+      input.oninput = updateResult;
+      container.querySelectorAll('.pw-key').forEach(btn => {
+        btn.onclick = () => {
+          const k = btn.dataset.k;
+          if (k === 'C') pwInput = '';
+          else if (k === 'BS') pwInput = pwInput.slice(0, -1);
+          else if (pwInput.length < 8) pwInput += k;
+          input.value = pwInput;
+          sfx.select();
+          updateResult();
+        };
+      });
+
+      updateResult();
+    }
+
+    renderShopModal();
+  }
+
   /* ---------------- Public API ---------------- */
   UI.startDuel = function (c) {
     cfg = c;
@@ -1163,10 +1760,26 @@
     mode = 'idle'; selHand = -1; selField = -1; pending = {}; previewSel = null;
     bannerKey = '';
     const duelist = c.duelist || FM.decks.DUELISTS[0];
-    const deckList = FM.decks.DECKS[c.deckId] || FM.decks.DECKS.flameSwordsman;
+    let p0deckList;
+    if (c.deckId === 'custom' || !c.deckId) {
+      p0deckList = FM.player ? FM.player.getDeck() : FM.decks.DECKS.flameSwordsman.list;
+    } else {
+      const d = FM.decks.DECKS[c.deckId];
+      p0deckList = d ? d.list : FM.decks.DECKS.flameSwordsman.list;
+    }
+    const p0deckExpanded = Array.isArray(p0deckList) && p0deckList.length === 40 && typeof p0deckList[0] === 'object' && p0deckList[0].kind
+      ? p0deckList
+      : FM.decks.expandDeck(p0deckList);
+
+    if (p0deckExpanded.length !== 40) {
+      toast('❌ Bộ bài của bạn chưa đủ 40 lá! Hãy vào Xếp Bài để kiểm tra.');
+      UI.showDeckEditor();
+      return;
+    }
+
     S = E.newDuel({
       p0name: 'Bạn', p1name: duelist.name,
-      p0deck: deckList.list, p1deck: duelist.deck,
+      p0deck: p0deckExpanded, p1deck: duelist.deck,
       difficulty: c.difficulty,
     });
     // Môi trường đấu trường theo đối thủ + reset thời tiết
@@ -1200,6 +1813,12 @@
 
   UI.buildMenu = function () {
     const prog = UI.getProgress();
+    // Update star counter
+    const starValEl = $('player-star-count');
+    if (starValEl && FM.player) {
+      starValEl.textContent = FM.player.getStars();
+    }
+
     // duelists
     const dl = $('duelist-list');
     dl.innerHTML = '';
@@ -1220,18 +1839,38 @@
       dl.appendChild(el);
     });
     if (!UI._selDuelist) UI._selDuelist = FM.decks.DUELISTS[0];
-    // decks
+
+    // decks: Custom deck first, followed by starter presets
+    const dkl = $('deck-list');
+    dkl.innerHTML = '';
+    const playerDeck = FM.player ? FM.player.getDeck() : [];
+
+    // Custom Deck card
+    const customCard = document.createElement('div');
+    const isCustomSel = (UI._selDeck === 'custom' || !UI._selDeck);
+    customCard.className = 'deck-card' + (isCustomSel ? ' sel' : '');
+    customCard.innerHTML = `
+      <div class="dk">🎴 Bộ Bài Của Bạn (Custom Deck)</div>
+      <div class="dd">${playerDeck.length}/40 lá · Tự build từ Rương bài · Đánh thắng ăn bài</div>
+    `;
+    customCard.onclick = () => {
+      UI._selDeck = 'custom';
+      document.querySelectorAll('.deck-card').forEach(x => x.classList.remove('sel'));
+      customCard.classList.add('sel');
+      sfx.select();
+    };
+    dkl.appendChild(customCard);
+
+    // Starter presets
     const deckDescs = {
       flameSwordsman: 'Cân bằng · nhiều cặp fusion kinh điển (Flame Swordsman, Darkfire Dragon)',
       dragonMaster: 'Rồng · mountain buff, Blue-Eyes & Red-Eyes, fusion thành B. Skull Dragon',
       shadowLegion: 'Fiend/Zombie · yami + Dark Energy, triệu hồi Summoned Skull nhanh',
       stormMachine: 'Thunder/Machine · Thunder Dragon fusion thành Twin-Headed Thunder Dragon',
     };
-    const dkl = $('deck-list');
-    dkl.innerHTML = '';
     Object.entries(FM.decks.DECKS).forEach(([id, d]) => {
       const el = document.createElement('div');
-      el.className = 'deck-card' + (UI._selDeck === id || (!UI._selDeck && id === 'flameSwordsman') ? ' sel' : '');
+      el.className = 'deck-card' + (UI._selDeck === id ? ' sel' : '');
       el.innerHTML = `<div class="dk">${d.name}</div><div class="dd">${deckDescs[id] || ''}</div>`;
       el.onclick = () => {
         UI._selDeck = id;
@@ -1241,7 +1880,8 @@
       };
       dkl.appendChild(el);
     });
-    if (!UI._selDeck) UI._selDeck = 'flameSwordsman';
+    if (!UI._selDeck) UI._selDeck = 'custom';
+
     // difficulty
     const diffs = ['Dễ 😴', 'Thường 🙂', 'Khá 😏', 'Giỏi 😠', 'Ác mã 😈'];
     const dfl = $('diff-list');
@@ -1267,6 +1907,8 @@
 
   UI.showHelp = showHelp;
   UI.showFusionTable = showFusionTable;
+  UI.showDeckEditor = showDeckEditor;
+  UI.showCardShop = showCardShop;
   UI.toggleMute = function () { muted = !muted; return muted; };
   UI.closeModal = closeModal;
   UI.openSidebarMobile = openSidebarMobile;

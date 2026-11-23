@@ -4,11 +4,12 @@
 'use strict';
 require('../js/cards_full.js');
 require('../js/cards.js');
+require('../js/player.js');
 require('../js/engine.js');
 require('../js/ai.js');
 
 const FM = globalThis.FM;
-const C = FM.cards, E = FM.engine, AI = FM.ai;
+const C = FM.cards, E = FM.engine, AI = FM.ai, P = FM.player;
 
 let failures = 0;
 function assert(cond, msg) {
@@ -142,6 +143,72 @@ function simGame(deckA, deckB, diffA, diffB, maxTurns = 120) {
   // damage = (2500 + 500 star) - 800 = 2200
   assert(dmg === 2200, 'Guardian star damage: expect 2200 (2500+500-800), got ' + dmg);
   console.log('  star battle done (dmg ' + dmg + ')');
+})();
+
+/* --- Feature 3: Deck Builder, Trunk, Shop & Duel Drops --- */
+(function playerFeatures() {
+  console.log('== Player Profile, Trunk, Shop & Drops ==');
+  // 1. Database codes and costs
+  const beId = C.idOf('Blue-eyes White Dragon');
+  const beCode = C.monsters[beId].code;
+  assert(beCode && beCode.length === 8, 'Blue-eyes có mã 8 số: ' + beCode);
+  const foundBe = C.byCode(beCode);
+  assert(foundBe && foundBe.id === beId, 'C.byCode tìm thấy Blue-eyes theo mã ' + beCode);
+  assert(C.monsters[beId].cost <= 2500, 'Giá Blue-eyes đã cân đối hợp lý: ' + C.monsters[beId].cost);
+
+  // 2. Profile Starter
+  const prof = P.getProfile();
+  assert(prof.stars >= 50, 'Khởi đầu có ít nhất 50 Star Chips: ' + prof.stars);
+  assert(prof.deck.length === 40, 'Bộ bài chính có đúng 40 lá');
+  const trunkKeys = Object.keys(prof.trunk);
+  assert(trunkKeys.length > 0, 'Trunk có bài từ 3 deck mẫu còn lại (' + trunkKeys.length + ' loại thẻ)');
+
+  // 3. Deck Save Validation
+  const invalidDeck39 = prof.deck.slice(0, 39);
+  const r1 = P.saveDeck(invalidDeck39);
+  assert(!r1.ok, 'Từ chối lưu deck 39 lá');
+
+  // Thử tạo deck 4 bản sao cùng 1 lá
+  const testDeck4Copies = prof.deck.slice(0, 36).concat([prof.deck[0], prof.deck[0], prof.deck[0], prof.deck[0]]);
+  const r2 = P.saveDeck(testDeck4Copies);
+  assert(!r2.ok, 'Từ chối lưu deck có 4 bản sao của cùng 1 thẻ');
+
+  // Lưu deck 40 lá hợp lệ
+  const r3 = P.saveDeck(prof.deck);
+  assert(r3.ok, 'Lưu deck 40 lá hợp lệ thành công');
+
+  // 4. Shop logic
+  const initialStars = P.getStars();
+  P.addStars(100);
+  assert(P.getStars() === initialStars + 100, 'addStars +100 hoạt động');
+
+  // Mua Blue-Eyes (giá 2000) khi chỉ có 150 stars -> phải báo không đủ
+  const failBuy = P.buyCard(beId);
+  assert(!failBuy.ok && failBuy.msg.includes('Không đủ'), 'Kiểm tra chặn mua khi thiếu stars');
+
+  const affordableMonsterId = 142; // Flame Manipulator (cost 50)
+  const cardData = C.cardData(affordableMonsterId);
+  const cost = cardData.data.cost || 50;
+  const beforeBuyStars = P.getStars();
+  const trunkCountBefore = prof.trunk[String(affordableMonsterId)] || 0;
+  const buyRes = P.buyCard(affordableMonsterId);
+  assert(buyRes.ok, 'Mua thẻ thành công');
+  assert(P.getStars() === beforeBuyStars - cost, 'Trừ đúng số stars khi mua');
+  assert((prof.trunk[String(affordableMonsterId)] || 0) === trunkCountBefore + 1, 'Thẻ mua vào trunk');
+
+  // 5. Duel Drops & Reward
+  const dummyState = {
+    winner: 0,
+    turnNo: 8,
+    players: [{ lp: 7500 }, { lp: 0 }],
+  };
+  const simonDuelist = FM.decks.DUELISTS[0];
+  const reward = P.calculateDuelReward(dummyState, simonDuelist);
+  assert(reward.won === true, 'Duel reward won');
+  assert(reward.rank === 'S', 'LP 7500 turn 8 -> Rank S');
+  assert(reward.starsWon === 5, 'Rank S thưởng 5 Star Chips');
+  assert(reward.dropCard != null, 'Ăn được 1 lá bài từ đối thủ');
+  console.log('  Player Features done (Rank ' + reward.rank + ', drop: ' + (reward.dropCard && reward.dropCard.data ? reward.dropCard.data.name : '?') + ')');
 })();
 
 console.log(failures === 0 ? '\nALL TESTS PASSED ✓' : `\n${failures} FAILURES ✗`);

@@ -410,6 +410,25 @@ function resolveTrapIcon(id, name) {
   return '🪤';
 }
 
+function balanceCost(c) {
+  const orig = c.Stars || 50;
+  if (orig < 999999) return Math.max(15, Math.min(orig, 2000));
+  if (c.Type <= 19) {
+    const p = Math.max(c.Attack || 0, c.Defense || 0);
+    if (p >= 3500) return 2500;
+    if (p >= 3000) return 2000;
+    if (p >= 2500) return 1500;
+    if (p >= 2000) return 1000;
+    if (p >= 1500) return 600;
+    return 400;
+  }
+  if (c.Id === 337 || c.Id === 336 || c.Id === 672 || c.Id === 686) return 2200;
+  if (c.Type === 22) return 1200;
+  if (c.Type === 23) return 800;
+  if (c.Type === 21) return 900;
+  return 600;
+}
+
 const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 const clean = s => s.replace(/\s+/g, ' ').trim();
 
@@ -421,6 +440,8 @@ const rituals = {};
 let monsterCount = 0;
 for (const c of cards) {
   const name = clean(c.Name);
+  const cost = balanceCost(c);
+  const code = c.CardCode ? String(c.CardCode).padStart(8, '0') : '';
   if (c.Type <= 19) {
     const race = cardTypes[c.Type], attr = ATTRS[c.Attribute];
     monsters[c.Id] = {
@@ -429,6 +450,7 @@ for (const c of cards) {
       race, attr,
       atk: c.Attack, def: c.Defense,
       stars: [starNames[c.GuardianStarA], starNames[c.GuardianStarB]],
+      cost, code,
     };
     monsterCount++;
   } else if (c.Type === 20) { // Magic
@@ -436,13 +458,13 @@ for (const c of cards) {
     magic['fm' + c.Id] = Object.assign({
       id: 'fm' + c.Id, fid: c.Id, name,
       icon: resolveMagicIcon(c.Id, name, fx),
-      desc: '',
+      desc: '', cost, code,
     }, fx || { kind: 'generic' });
   } else if (c.Type === 21) { // Trap
     const fx = TRAP_FX[c.Id] || { kind: 'fake' };
     traps['fm' + c.Id] = Object.assign({
       id: 'fm' + c.Id, fid: c.Id, name,
-      icon: resolveTrapIcon(c.Id, name), desc: '',
+      icon: resolveTrapIcon(c.Id, name), desc: '', cost, code,
     }, fx);
   } else if (c.Type === 22 && c.Ritual) { // Ritual
     const r = Array.isArray(c.Ritual) ? c.Ritual[0] : c.Ritual;
@@ -450,7 +472,7 @@ for (const c of cards) {
       id: 'fm' + c.Id, fid: c.Id, name,
       icon: resolveRitualIcon(c.Id, name), kind: 'ritual',
       offerings: [r.Card1, r.Card2, r.Card3], result: r.Result,
-      desc: '',
+      desc: '', cost, code,
     };
   } else if (c.Type === 23) { // Equip
     const compat = equipTypes[c.Id] || [];
@@ -458,7 +480,7 @@ for (const c of cards) {
       id: 'fm' + c.Id, fid: c.Id, name,
       icon: resolveEquipIcon(c.Id, name), kind: 'equip', atk: EQUIP_BONUS[c.Id] != null ? EQUIP_BONUS[c.Id] : 300,
       races: compat,
-      desc: '',
+      desc: '', cost, code,
     };
   }
 }

@@ -77,6 +77,17 @@ Kết quả chuẩn: `ALL TESTS PASSED ✓` (200 games, 0 timeout).
   - Quái vật mang Guardian Star khắc chế đối thủ được **+500 ATK/DEF** ngay trong giao tranh! Có thể chủ động chuyển đổi giữa 2 sao của quái trên sân.
 - **Triệu hồi Nghi thức (Ritual Summon)**: Hi sinh đúng 3 nguyên liệu (trên tay hoặc trên sân) để triệu hồi các quái thú tối thượng (Gate Guardian, Black Luster Soldier, Magician of Black Chaos...).
 - **Bẫy & Hiệu ứng đặc biệt**: Bẫy phản đòn (Bear Trap, Acid Trap Hole, Widespread Ruin, Just Desserts, Bad Reaction to Simochi phản hồi máu thành sát thương...).
+- **🃏 Quản lý Bộ bài & Rương (Deck Builder & Trunk)**:
+  - Khởi đầu với 1 trong 4 deck mẫu làm Custom Deck, các lá từ 3 deck còn lại được chuyển vào **Rương bài (Trunk)** + tặng 50 Star Chips.
+  - Bộ bài thi đấu đúng 40 lá, tối đa 3 bản sao của cùng một thẻ bài.
+  - Giao diện 2 cột (hoặc xếp chồng responsive trên mobile), nhấp chuyển bài tức thì giữa Deck và Trunk, có bộ lọc theo hệ/loại và công cụ tìm kiếm.
+- **🎁 Ăn bài đối thủ & Tích Star Chips (Duel Drops)**:
+  - Sau mỗi chiến thắng, hệ thống tính **Rank (S/A/B/C/D)** dựa trên LP còn lại và số lượt thi đấu.
+  - Thưởng **Star Chips**: Rank S (+5 ⭐), A (+4 ⭐), B (+3 ⭐), C (+2 ⭐), D (+1 ⭐).
+  - Rút ngẫu nhiên **1 lá bài từ chính deck đối thủ** vừa hạ gục và tự động chuyển vào Rương bài.
+- **🏪 Tiệm Bài Phù Thủy (Card Shop)**:
+  - **Danh mục 722 lá**: Tìm kiếm, lọc loại thẻ (Quái, Phép, Bẫy, Ritual) và mua bài bằng Star Chips với mức giá hợp lý (đã cân đối từ dữ liệu gốc).
+  - **Bàn phím Mật Mã TCG 8 số (Password Terminal)**: Nhập 8 chữ số in ở góc dưới thẻ bài thật ngoài đời để tra cứu và mua trực tiếp bất kỳ thẻ bài nào!
 
 ## 📂 Cấu trúc
 
@@ -84,18 +95,19 @@ Kết quả chuẩn: `ALL TESTS PASSED ✓` (200 games, 0 timeout).
 yugioh-fm-clone/
 ├── index.html          # Khung trang game
 ├── serve.py            # Server no-cache (khuyến nghị khi chạy local)
-├── css/style.css       # Giao diện PS1-dark, thẻ CSS-drawn, arena themes, FX overlays
+├── css/style.css       # Giao diện PS1-dark, thẻ CSS-drawn, arena themes, FX overlays, Deck & Shop modals
 ├── js/
 │   ├── cards_full.js   # Database 722 lá FM gốc + 24.956 fusion (sinh tự động)
-│   ├── cards.js        # Loader DB + Guardian Star + deck presets + tương khắc
+│   ├── cards.js        # Loader DB + Guardian Star + deck presets + tra cứu code/giá
+│   ├── player.js       # Quản lý Profile người chơi: Trunk, Custom Deck, Star Chips, Shop, Duel Drops
 │   ├── engine.js       # State machine trận đấu: Guardian Star, Ritual, Spell/Trap dispatch, Battle
 │   ├── ai.js           # AI đối thủ tối ưu cho 722 lá + Ritual + Equip + Trap
 │   ├── fx.js           # Canvas FX engine: particle, lightning, vortex, arena/terrain ambience, shake
-│   ├── ui.js           # Render UI, chọn Guardian Star, xác nhận Ritual, Fusion modal, âm thanh
+│   ├── ui.js           # Render UI, Deck Editor, Card Shop, Thưởng chiến thắng, Fusion modal, âm thanh
 │   └── main.js         # Wiring menu + khởi tạo
 ├── scripts/
 │   └── build_cards.js  # Script sinh cards_full.js từ raw database
 └── test/
-    ├── engine_test.js  # Test tự động: DB verification, 200 ván AI vs AI, Ritual smoke, Star battle
+    ├── engine_test.js  # Test tự động: DB verification, 200 ván AI vs AI, Ritual smoke, Star battle, Player features
     └── debug_flow.js   # Script debug flow trận đấu
 ```

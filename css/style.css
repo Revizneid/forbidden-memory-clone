@@ -301,6 +301,38 @@ button.big { font-size: 18px; padding: 12px 30px; }
 .menu-actions { display: flex; gap: 12px; justify-content: center; margin: 26px 0 10px; }
 .menu-progress { color: var(--dim); font-size: 12.5px; }
 
+/* Player Hub Profile Bar */
+.player-profile-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  background: linear-gradient(135deg, rgba(45,35,70,.85), rgba(25,20,40,.9));
+  border: 1px solid var(--gold); border-radius: 12px;
+  padding: 10px 18px; margin-bottom: 20px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.35), inset 0 0 16px rgba(212,175,55,.1);
+}
+.profile-stars {
+  font-size: 18px; font-weight: 800; color: var(--gold2);
+  display: flex; align-items: center; gap: 6px;
+}
+.profile-stars .star-label { font-size: 13px; color: var(--dim); font-weight: 600; }
+.profile-actions { display: flex; gap: 10px; }
+.btn-deck-edit, .btn-shop {
+  font-size: 13px; font-weight: 700; padding: 7px 14px;
+}
+.btn-deck-edit { border-color: #3498db; color: #85c1e9; }
+.btn-deck-edit:hover { background: #1a365d; border-color: #5dade2; color: #fff; }
+.btn-shop { border-color: var(--gold); color: var(--gold2); }
+.btn-shop:hover { background: #4a3d1e; border-color: #f5b041; color: #fff; }
+
+.sec-header {
+  display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
+}
+.sec-header h2 { margin-bottom: 0 !important; }
+.text-btn {
+  background: transparent; border: 1px solid #5a4f7d; padding: 4px 10px; font-size: 12px;
+  color: var(--gold2); border-radius: 6px; cursor: pointer;
+}
+.text-btn:hover { border-color: var(--gold); background: rgba(212,175,55,.15); }
+
 /* ================= OVERLAY / MODAL ================= */
 .overlay {
   position: fixed; inset: 0; background: rgba(5,4,10,.82); z-index: 200;
@@ -324,6 +356,191 @@ button.big { font-size: 18px; padding: 12px 30px; }
 .fusion-table .frow { display: flex; align-items: center; gap: 6px; font-size: 12px; padding: 3px 0; border-bottom: 1px dashed #33304a; }
 .fusion-table .fres { color: var(--gold2); font-weight: 700; margin-left: auto; }
 .fusion-table .farrow { color: var(--dim); }
+
+/* ================= VICTORY REWARDS & RANK STAMP ================= */
+.rank-container {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  margin: 6px 0 12px;
+}
+.rank-title { font-size: 11px; letter-spacing: 3px; color: var(--dim); font-weight: 800; }
+.rank-stamp {
+  font-size: 48px; font-weight: 900; line-height: 1; padding: 4px 18px;
+  border-radius: 8px; border: 3px solid; letter-spacing: 4px; display: inline-block;
+  margin-top: 4px; text-transform: uppercase; transform: rotate(-3deg);
+  animation: stampPop .4s cubic-bezier(.175,.885,.32,1.275);
+}
+@keyframes stampPop { 0% { transform: scale(2) rotate(15deg); opacity: 0; } 100% { transform: scale(1) rotate(-3deg); opacity: 1; } }
+.rank-stamp.rank-S { color: #f1c40f; border-color: #f1c40f; text-shadow: 0 0 20px rgba(241,196,15,.8); box-shadow: 0 0 16px rgba(241,196,15,.4); }
+.rank-stamp.rank-A { color: #2ecc71; border-color: #2ecc71; text-shadow: 0 0 16px rgba(46,204,113,.7); }
+.rank-stamp.rank-B { color: #3498db; border-color: #3498db; }
+.rank-stamp.rank-C { color: #e67e22; border-color: #e67e22; }
+.rank-stamp.rank-D { color: #95a5a6; border-color: #95a5a6; }
+
+.reward-box {
+  background: rgba(18,15,30,.85); border: 1px solid #483d6a; border-radius: 12px;
+  padding: 14px; margin: 12px 0;
+}
+.reward-stars-earned {
+  font-size: 16px; font-weight: 700; color: var(--gold2); display: flex; align-items: center; justify-content: center; gap: 6px;
+  margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px dashed #3a3355;
+}
+.rw-star-icon { font-size: 22px; }
+.rw-star-total { font-size: 12.5px; color: var(--dim); font-weight: 500; }
+
+.drop-card-container { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.drop-label { font-size: 11px; letter-spacing: 2px; color: var(--gold2); font-weight: 800; }
+.drop-card-center { display: flex; justify-content: center; margin: 4px 0; }
+.drop-card-center .card { transform: scale(1.1); box-shadow: 0 0 25px rgba(212,175,55,.6); }
+.drop-meta { font-size: 13.5px; margin-top: 4px; }
+.drop-note { font-size: 12px; color: #2ecc71; margin-top: 2px; }
+
+/* ================= DECK BUILDER & TRUNK ================= */
+.deck-editor {
+  display: flex; flex-direction: column; width: 88vw; max-width: 960px; height: 84vh; text-align: left;
+}
+.de-header {
+  display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px;
+  border-bottom: 1px solid #3a3355; flex-wrap: wrap; gap: 10px;
+}
+.de-header h2 { font-size: 20px; color: var(--gold2); margin: 0; }
+.de-stats { display: flex; gap: 14px; align-items: center; font-size: 14px; }
+.de-deck-stat.ok { color: #2ecc71; font-weight: 700; }
+.de-deck-stat.warn { color: #f39c12; font-weight: 700; }
+.de-star-stat { color: var(--gold2); font-weight: 700; }
+
+.de-body {
+  flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; min-height: 0; margin: 12px 0;
+}
+.de-section {
+  display: flex; flex-direction: column; background: rgba(14,12,24,.75);
+  border: 1px solid #3a3355; border-radius: 10px; padding: 10px; min-height: 0;
+}
+.de-sec-title {
+  display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 800;
+  color: var(--gold2); padding-bottom: 6px; border-bottom: 1px solid #29243d;
+}
+.de-sec-hint { font-size: 11px; color: var(--dim); font-weight: normal; }
+
+.de-filter-bar {
+  display: flex; gap: 8px; margin: 8px 0; flex-wrap: wrap; align-items: center;
+}
+.de-filter-bar input, .cs-cat-tools input {
+  flex: 1; min-width: 140px; background: #1c1830; border: 1px solid #4a3e6a; border-radius: 6px;
+  padding: 6px 10px; color: #fff; font-size: 12.5px;
+}
+.de-filter-bar input:focus, .cs-cat-tools input:focus { border-color: var(--gold); outline: none; }
+.de-filter-pills, .cs-cat-filters { display: flex; gap: 4px; }
+.pill {
+  font-size: 11px; padding: 4px 8px; border-radius: 12px; background: #221d36; border: 1px solid #423860; color: var(--text);
+}
+.pill:hover { border-color: var(--gold); }
+.pill.sel { background: linear-gradient(#3a2f14, #241d0a); border-color: var(--gold); color: var(--gold2); font-weight: 700; }
+
+.de-grid {
+  flex: 1; overflow-y: auto; display: flex; flex-wrap: wrap; gap: 6px; padding: 6px 2px; align-content: flex-start;
+}
+.de-card-slot { position: relative; cursor: pointer; transition: transform .12s; }
+.de-card-slot:hover { transform: scale(1.05); }
+.de-card-slot .card, .de-trunk-item .card {
+  --slot: 52px;
+}
+.de-trunk-item {
+  position: relative; cursor: pointer; display: flex; flex-direction: column; align-items: center;
+  transition: transform .12s;
+}
+.de-trunk-item:hover { transform: scale(1.05); }
+.de-item-badge {
+  font-size: 9px; font-weight: 800; color: #fff; background: rgba(0,0,0,.75);
+  border-radius: 4px; padding: 1px 4px; margin-top: 2px; white-space: nowrap;
+}
+.de-empty {
+  width: 100%; text-align: center; color: var(--dim); font-size: 13px; margin-top: 40px;
+}
+.de-actions {
+  display: flex; gap: 10px; justify-content: flex-end; padding-top: 10px; border-top: 1px solid #3a3355; flex-wrap: wrap;
+}
+
+/* ================= CARD SHOP ================= */
+.card-shop {
+  display: flex; flex-direction: column; width: 88vw; max-width: 960px; height: 84vh; text-align: left;
+}
+.cs-header {
+  display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; flex-wrap: wrap; gap: 8px;
+}
+.cs-header h2 { font-size: 20px; color: var(--gold2); margin: 0; }
+.cs-stars { font-size: 16px; font-weight: 800; color: var(--gold2); }
+.cs-star-label { font-size: 12px; color: var(--dim); }
+
+.cs-nav {
+  display: flex; gap: 8px; border-bottom: 1px solid #3a3355; padding-bottom: 8px; margin-bottom: 8px; align-items: center;
+}
+.cs-tab {
+  background: #1c1830; border: 1px solid #4a3e6a; color: var(--text); padding: 7px 16px; font-size: 13px; font-weight: 700; border-radius: 6px;
+}
+.cs-tab.active {
+  background: linear-gradient(#3a2f14, #241d0a); border-color: var(--gold); color: var(--gold2);
+}
+.cs-close { margin-left: auto; }
+
+.cs-content { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+.cs-cat-tools { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; align-items: center; }
+.cs-cat-grid {
+  flex: 1; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+  gap: 10px; padding: 4px; align-content: flex-start;
+}
+.cs-card-item {
+  display: flex; flex-direction: column; align-items: center; background: rgba(22,18,36,.8);
+  border: 1px solid #3d345a; border-radius: 8px; padding: 8px 6px; text-align: center;
+}
+.cs-card-item .card { --slot: 54px; }
+.cs-item-meta { width: 100%; margin-top: 6px; display: flex; flex-direction: column; gap: 2px; }
+.cs-item-price { font-size: 12.5px; font-weight: 800; color: var(--gold2); }
+.cs-item-owned { font-size: 10.5px; color: var(--dim); }
+.cs-btn-buy { font-size: 11.5px; padding: 4px 8px; margin-top: 4px; }
+
+.cs-pagination {
+  display: flex; justify-content: space-between; align-items: center; padding-top: 8px;
+  border-top: 1px solid #3a3355; font-size: 13px; color: var(--dim);
+}
+.cs-pagination button { font-size: 12px; padding: 5px 12px; }
+
+/* Password View */
+.cs-pw-view {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  max-width: 480px; margin: 0 auto; width: 100%; text-align: center;
+}
+.cs-pw-desc h3 { font-size: 16px; color: var(--gold2); margin-bottom: 4px; }
+.cs-pw-desc p { font-size: 12px; color: var(--dim); margin-bottom: 12px; }
+.cs-pw-display-box { margin-bottom: 12px; width: 100%; }
+#cs-pw-input {
+  width: 100%; font-size: 28px; font-weight: 900; letter-spacing: 8px; text-align: center;
+  background: #141124; border: 2px solid var(--gold); border-radius: 8px; color: var(--gold2);
+  padding: 8px; font-family: monospace;
+}
+.cs-pw-keypad {
+  display: flex; flex-direction: column; gap: 6px; width: 100%; max-width: 320px; margin-bottom: 14px;
+}
+.pw-row { display: flex; gap: 6px; width: 100%; }
+.pw-key {
+  flex: 1; height: 44px; font-size: 18px; font-weight: 800; background: #231d38;
+  border: 1px solid #4c406e; border-radius: 6px; color: #fff;
+}
+.pw-key:hover { border-color: var(--gold); background: #342c52; }
+.pw-key.func { font-size: 12px; background: #2f2238; border-color: #634358; }
+.pw-key.func:hover { border-color: #e74c3c; }
+
+.cs-pw-result { width: 100%; min-height: 90px; }
+.pw-hint { font-size: 12px; color: var(--dim); margin-top: 8px; }
+.pw-error { font-size: 12.5px; color: #e74c3c; margin-top: 8px; }
+.pw-found-box {
+  display: flex; align-items: center; gap: 14px; background: rgba(30,24,50,.85);
+  border: 1px solid var(--gold); border-radius: 10px; padding: 10px 14px; text-align: left;
+}
+.pw-found-box .card { --slot: 56px; }
+.pw-found-info { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+.pw-found-name { font-size: 15px; font-weight: 800; color: var(--gold2); }
+.pw-found-type { font-size: 12px; color: var(--dim); }
+.pw-found-cost { font-size: 13px; font-weight: 700; color: var(--gold2); margin: 3px 0 6px; }
 
 #toast {
   position: fixed; top: 70px; left: 50%; transform: translateX(-50%);
@@ -797,6 +1014,51 @@ button.big { font-size: 18px; padding: 12px 30px; }
   .modal .msub { font-size: 12px; margin-bottom: 12px; }
   .modal.help h3 { font-size: 13.5px; margin: 10px 0 4px; }
   .modal.help p, .modal.help li { font-size: 11.5px; line-height: 1.5; }
+
+  /* Profile Bar mobile */
+  .player-profile-bar {
+    flex-direction: column; gap: 8px; align-items: stretch; text-align: center; padding: 10px;
+  }
+  .profile-stars { justify-content: center; }
+  .profile-actions { display: flex; width: 100%; gap: 6px; }
+  .profile-actions button { flex: 1; padding: 8px 4px; font-size: 11.5px; }
+
+  /* Deck Editor mobile */
+  .deck-editor, .card-shop {
+    width: 95vw; height: 90vh;
+  }
+  .de-body {
+    grid-template-columns: 1fr;
+  }
+  .de-deck-col {
+    max-height: 38vh;
+  }
+  .de-trunk-col {
+    max-height: 44vh;
+  }
+  .de-actions {
+    justify-content: center;
+  }
+  .de-actions button {
+    flex: 1 1 45%; font-size: 11.5px; padding: 6px;
+  }
+
+  /* Shop mobile */
+  .cs-cat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .cs-tab {
+    padding: 6px 10px; font-size: 11px;
+  }
+  #cs-pw-input {
+    font-size: 20px; letter-spacing: 5px;
+  }
+  .pw-key {
+    height: 38px; font-size: 16px;
+  }
+  .rank-stamp {
+    font-size: 38px;
+  }
 }
 
 @media (max-width: 420px) {

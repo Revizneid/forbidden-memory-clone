@@ -88,13 +88,24 @@
         <h1 class="game-title">FORBIDDEN <span>MEMORY</span></h1>
         <div class="game-sub">— Web Clone · Đấu với máy · Fusion theo lối PS1 1999 —</div>
 
+        <div class="player-profile-bar">
+          <div class="profile-stars">⭐ <span id="player-star-count">50</span> <span class="star-label">Star Chips</span></div>
+          <div class="profile-actions">
+            <button id="btn-menu-deck" class="btn-deck-edit" type="button">🃏 Xếp Bài (Deck / Trunk)</button>
+            <button id="btn-menu-shop" class="btn-shop" type="button">🏪 Tiệm Bài (Card Shop)</button>
+          </div>
+        </div>
+
         <section class="menu-sec">
           <h2>1. Chọn đối thủ</h2>
           <div id="duelist-list" class="duelist-list"></div>
         </section>
 
         <section class="menu-sec">
-          <h2>2. Chọn deck của bạn</h2>
+          <div class="sec-header">
+            <h2>2. Chọn deck của bạn</h2>
+            <button id="btn-edit-current-deck" class="secondary text-btn" type="button">✏ Chỉnh sửa bộ bài</button>
+          </div>
           <div id="deck-list" class="deck-list"></div>
         </section>
 
@@ -116,12 +127,13 @@
     <div id="toast" class="hidden"></div>
   </div>
 
-  <script src="js/cards_full.js?v=fm_fix2"></script>
-  <script src="js/cards.js?v=fm_fix2"></script>
-  <script src="js/engine.js?v=fm_fix2"></script>
-  <script src="js/ai.js?v=fm_fix2"></script>
-  <script src="js/fx.js?v=fm_fix2"></script>
-  <script src="js/ui.js?v=fm_fix2"></script>
-  <script src="js/main.js?v=fm_fix2"></script>
+  <script src="js/cards_full.js?v=fm_feat3"></script>
+  <script src="js/cards.js?v=fm_feat3"></script>
+  <script src="js/player.js?v=fm_feat3"></script>
+  <script src="js/engine.js?v=fm_feat3"></script>
+  <script src="js/ai.js?v=fm_feat3"></script>
+  <script src="js/fx.js?v=fm_feat3"></script>
+  <script src="js/ui.js?v=fm_feat3"></script>
+  <script src="js/main.js?v=fm_feat3"></script>
 </body>
 </html>
