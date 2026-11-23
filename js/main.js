@@ -54,6 +54,14 @@
       btnCreateRoom.onclick = async () => {
         btnCreateRoom.disabled = true;
         btnCreateRoom.textContent = '⏳ Đang tạo phòng...';
+        const hStatus = $('host-status');
+        const hText = $('host-status-text');
+        const hDot = hStatus ? hStatus.querySelector('.status-dot') : null;
+        if (hDot) hDot.className = 'status-dot pulsing';
+        if (hText) hText.textContent = 'Đang chờ người chơi 2 kết nối...';
+        const btnStart = $('btn-start-online');
+        if (btnStart) btnStart.classList.add('hidden');
+        guestPlayerInfo = null;
         try {
           const code = await FM.net.createRoom();
           $('host-room-code').textContent = code;
@@ -61,7 +69,8 @@
           btnCreateRoom.textContent = '🔄 Đổi Mã Phòng Mới';
           btnCreateRoom.disabled = false;
         } catch (err) {
-          alert('Không thể tạo phòng: ' + (err.message || err));
+          if (hDot) hDot.className = 'status-dot error';
+          if (hText) hText.textContent = 'Lỗi tạo phòng: ' + (err.message || err);
           btnCreateRoom.disabled = false;
           btnCreateRoom.textContent = 'Tạo Phòng Mới';
         }
@@ -98,12 +107,19 @@
         if (!code) { alert('Vui lòng nhập mã phòng!'); return; }
         const jStatus = $('join-status');
         const jText = $('join-status-text');
+        const jDot = jStatus ? jStatus.querySelector('.status-dot') : null;
         if (jStatus) jStatus.classList.remove('hidden');
+        if (jDot) jDot.className = 'status-dot pulsing';
         if (jText) jText.textContent = 'Đang kết nối tới phòng ' + code + '...';
         btnJoinRoom.disabled = true;
         try {
-          await FM.net.joinRoom(code);
+          const myDeck = UI.getOnlineDeck();
+          await FM.net.joinRoom(code, {
+            name: 'Người chơi 2 (Bạn)',
+            deck: myDeck,
+          });
         } catch (err) {
+          if (jDot) jDot.className = 'status-dot error';
           if (jText) jText.textContent = 'Lỗi kết nối: ' + (err.message || err);
           btnJoinRoom.disabled = false;
         }
@@ -123,21 +139,42 @@
     if (FM.net) {
       FM.net.on('connected', data => {
         if (data.isHost) {
-          if (data.peerInfo) {
-            guestPlayerInfo = data.peerInfo;
-            const hText = $('host-status-text');
-            if (hText) hText.textContent = `✅ ${data.peerInfo.name || 'Người chơi 2'} đã kết nối và sẵn sàng!`;
-            if (btnStartOnline) btnStartOnline.classList.remove('hidden');
+          guestPlayerInfo = data.peerInfo;
+          const hStatus = $('host-status');
+          const hDot = hStatus ? hStatus.querySelector('.status-dot') : null;
+          const hText = $('host-status-text');
+          if (hDot) hDot.className = 'status-dot ready';
+          if (hText) hText.textContent = `✅ ${data.peerInfo?.name || 'Người chơi 2'} đã kết nối thành công!`;
+          if (btnStartOnline) {
+            btnStartOnline.classList.remove('hidden');
+            btnStartOnline.focus();
           }
         } else {
-          // Guest báo sẵn sàng kèm deck
+          const jStatus = $('join-status');
+          const jDot = jStatus ? jStatus.querySelector('.status-dot') : null;
           const jText = $('join-status-text');
-          if (jText) jText.textContent = '✅ Đã kết nối với Host! Đang chờ Host bắt đầu...';
-          FM.net.sendGuestReady({
-            name: 'Người chơi 2 (Bạn)',
-            deck: UI.getOnlineDeck(),
-          });
+          if (jStatus) jStatus.classList.remove('hidden');
+          if (jDot) jDot.className = 'status-dot ready';
+          if (jText) jText.textContent = '✅ Đã vào phòng thành công! Đang chờ Chủ phòng bắt đầu ván đấu...';
         }
+      });
+
+      FM.net.on('error', err => {
+        console.error('[Main] FM.net error:', err);
+        const jStatus = $('join-status');
+        const jDot = jStatus ? jStatus.querySelector('.status-dot') : null;
+        const jText = $('join-status-text');
+        if (jStatus) jStatus.classList.remove('hidden');
+        if (jDot) jDot.className = 'status-dot error';
+        if (jText) jText.textContent = '⚠️ ' + (err.message || err);
+        if (btnJoinRoom) btnJoinRoom.disabled = false;
+
+        const hStatus = $('host-status');
+        const hDot = hStatus ? hStatus.querySelector('.status-dot') : null;
+        const hText = $('host-status-text');
+        if (hDot) hDot.className = 'status-dot error';
+        if (hText) hText.textContent = '⚠️ ' + (err.message || err);
+        if (btnCreateRoom) btnCreateRoom.disabled = false;
       });
 
       FM.net.on('start', payload => UI.startOnlineDuelAsGuest(payload));
@@ -145,8 +182,10 @@
       FM.net.on('sync', payload => UI.onRemoteSync(payload));
       FM.net.on('emoji', em => UI.showFloatingEmoji(em, false));
       FM.net.on('disconnect', () => {
-        alert('⚠️ Đối thủ đã ngắt kết nối!');
+        alert('⚠️ Đối thủ đã ngắt kết nối hoặc phòng đã đóng!');
         UI.showMenu();
+        if (btnJoinRoom) btnJoinRoom.disabled = false;
+        if (btnCreateRoom) btnCreateRoom.disabled = false;
       });
     }
 

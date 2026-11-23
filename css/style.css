@@ -490,11 +490,22 @@ button.big { font-size: 18px; padding: 12px 30px; }
   border-radius: 50%;
   background: #27ae60;
   display: inline-block;
+  flex-shrink: 0;
 }
 .status-dot.pulsing {
   background: #f39c12;
   box-shadow: 0 0 8px #f39c12;
   animation: pulseDot 1.2s infinite ease-in-out;
+}
+.status-dot.ready {
+  background: #2ecc71;
+  box-shadow: 0 0 10px #2ecc71;
+  animation: none;
+}
+.status-dot.error {
+  background: #e74c3c;
+  box-shadow: 0 0 10px #e74c3c;
+  animation: none;
 }
 @keyframes pulseDot {
   0%, 100% { transform: scale(0.9); opacity: 0.6; }
