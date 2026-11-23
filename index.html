@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Forbidden Memory — Web Clone</title>
-<link rel="stylesheet" href="css/style.css?v=fm_feat5">
+<link rel="stylesheet" href="css/style.css?v=fm_feat6">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐉</text></svg>">
 </head>
 <body>
@@ -75,6 +75,14 @@
         <div id="phasebar">
           <button id="btn-battle" class="primary">⚔ Battle Phase</button>
           <button id="btn-endturn" class="primary">⏭ Kết Thúc Lượt</button>
+          <div id="online-reaction-bar" class="reaction-bar hidden">
+            <button class="emoji-btn" data-e="🐉" title="Rồng">🐉</button>
+            <button class="emoji-btn" data-e="⚔️" title="Chiến">⚔️</button>
+            <button class="emoji-btn" data-e="🛡️" title="Thủ">🛡️</button>
+            <button class="emoji-btn" data-e="🔥" title="Lửa">🔥</button>
+            <button class="emoji-btn" data-e="😎" title="Ngầu">😎</button>
+            <button class="emoji-btn" data-e="😱" title="Sốc">😱</button>
+          </div>
         </div>
       </div>
 
@@ -98,7 +106,8 @@
 
         <div class="mode-tabs">
           <button id="tab-mode-ai" class="mode-tab-btn active" type="button">🤖 Đấu Với Máy</button>
-          <button id="tab-mode-2p" class="mode-tab-btn" type="button">👥 2 Người Đấu (PvP Hotseat)</button>
+          <button id="tab-mode-online" class="mode-tab-btn" type="button">🌐 Đấu Online (2 Máy)</button>
+          <button id="tab-mode-2p" class="mode-tab-btn" type="button">👥 Cùng 1 Máy</button>
         </div>
 
         <div id="sec-ai-wrap">
@@ -119,6 +128,59 @@
             <h2>3. Độ khó của máy</h2>
             <div id="diff-list" class="diff-list"></div>
           </section>
+
+          <div class="menu-actions">
+            <button id="btn-start" class="primary big">⚔ VÀO TRẬN (LP 8000)</button>
+            <button id="btn-menu-help" class="secondary">❔ Luật chơi</button>
+          </div>
+        </div>
+
+        <div id="sec-online-wrap" class="hidden">
+          <section class="menu-sec">
+            <div class="sec-header">
+              <h2>1. Chọn bộ bài của bạn</h2>
+              <button id="btn-edit-online-deck" class="secondary text-btn" type="button">✏ Chỉnh sửa bộ bài</button>
+            </div>
+            <div id="deck-list-online" class="deck-list"></div>
+          </section>
+
+          <section class="menu-sec">
+            <h2>2. Kết nối 2 thiết bị (Online PvP P2P)</h2>
+            <div class="online-box-grid">
+              <!-- Tạo phòng -->
+              <div class="online-card host-card">
+                <div class="oc-title">🏠 Máy 1: Tạo Phòng Đấu</div>
+                <p class="oc-desc">Tạo mã phòng và gửi link hoặc mã cho bạn bè cùng chơi trên máy khác.</p>
+                <button id="btn-create-room" class="primary" type="button">Tạo Phòng Mới</button>
+                <div id="host-room-info" class="room-info hidden">
+                  <div class="room-code-badge">
+                    Mã phòng: <b id="host-room-code">-----</b>
+                    <button id="btn-copy-code" class="text-btn" type="button">📋 Copy Mã</button>
+                  </div>
+                  <div class="room-link-box">
+                    <button id="btn-copy-link" class="secondary" type="button">🔗 Copy Link Mời Đấu</button>
+                  </div>
+                  <div id="host-status" class="online-status waiting">
+                    <span class="status-dot pulsing"></span> <span id="host-status-text">Đang chờ người chơi 2 kết nối...</span>
+                  </div>
+                  <button id="btn-start-online" class="primary big hidden" type="button">⚔ BẮT ĐẦU VÁN ĐẤU (LP 8000)</button>
+                </div>
+              </div>
+
+              <!-- Vào phòng -->
+              <div class="online-card join-card">
+                <div class="oc-title">🚀 Máy 2: Vào Phòng Đấu</div>
+                <p class="oc-desc">Nhập mã phòng từ Máy 1 để tham gia trận đấu ngay lập tức.</p>
+                <div class="join-input-row">
+                  <input type="text" id="input-room-code" placeholder="Nhập 5 số phòng..." maxlength="10" autocomplete="off">
+                  <button id="btn-join-room" class="primary" type="button">Vào Phòng</button>
+                </div>
+                <div id="join-status" class="online-status hidden">
+                  <span class="status-dot"></span> <span id="join-status-text">Đang kết nối...</span>
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
 
         <div id="sec-2p-wrap" class="hidden">
@@ -134,12 +196,12 @@
             <h2>2. Chọn Deck Người Chơi 2 (P2)</h2>
             <div id="deck-list-p2" class="deck-list"></div>
           </section>
+
+          <div class="menu-actions">
+            <button id="btn-start-2p" class="primary big">⚔ BẮT ĐẦU ĐẤU 2 NGƯỜI (LP 8000)</button>
+          </div>
         </div>
 
-        <div class="menu-actions">
-          <button id="btn-start" class="primary big">⚔ VÀO TRẬN (LP 8000)</button>
-          <button id="btn-menu-help" class="secondary">❔ Luật chơi</button>
-        </div>
         <div id="menu-progress" class="menu-progress"></div>
       </div>
     </div>
@@ -149,13 +211,15 @@
     <div id="toast" class="hidden"></div>
   </div>
 
-  <script src="js/cards_full.js?v=fm_feat5"></script>
-  <script src="js/cards.js?v=fm_feat5"></script>
-  <script src="js/player.js?v=fm_feat5"></script>
-  <script src="js/engine.js?v=fm_feat5"></script>
-  <script src="js/ai.js?v=fm_feat5"></script>
-  <script src="js/fx.js?v=fm_feat5"></script>
-  <script src="js/ui.js?v=fm_feat5"></script>
-  <script src="js/main.js?v=fm_feat5"></script>
+  <script src="js/peer.min.js?v=fm_feat6"></script>
+  <script src="js/cards_full.js?v=fm_feat6"></script>
+  <script src="js/cards.js?v=fm_feat6"></script>
+  <script src="js/player.js?v=fm_feat6"></script>
+  <script src="js/engine.js?v=fm_feat6"></script>
+  <script src="js/ai.js?v=fm_feat6"></script>
+  <script src="js/net.js?v=fm_feat6"></script>
+  <script src="js/fx.js?v=fm_feat6"></script>
+  <script src="js/ui.js?v=fm_feat6"></script>
+  <script src="js/main.js?v=fm_feat6"></script>
 </body>
 </html>

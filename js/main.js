@@ -18,6 +18,8 @@
     // Game Mode Tabs
     const tabAi = $('tab-mode-ai');
     if (tabAi) tabAi.onclick = () => UI.setGameMode('ai');
+    const tabOnline = $('tab-mode-online');
+    if (tabOnline) tabOnline.onclick = () => UI.setGameMode('online');
     const tab2p = $('tab-mode-2p');
     if (tab2p) tab2p.onclick = () => UI.setGameMode('2p');
 
@@ -26,6 +28,13 @@
       localStorage.removeItem('fm_duel_v1');
       FM.ui.startDuel(FM.ui.getSelectedConfig());
     };
+    const btnStart2p = $('btn-start-2p');
+    if (btnStart2p) {
+      btnStart2p.onclick = () => {
+        localStorage.removeItem('fm_duel_v1');
+        FM.ui.startDuel(FM.ui.getSelectedConfig());
+      };
+    }
     $('btn-menu-help').onclick = () => UI.showHelp();
     const btnMenuDeck = $('btn-menu-deck');
     if (btnMenuDeck) btnMenuDeck.onclick = () => UI.showDeckEditor();
@@ -35,6 +44,134 @@
     if (btnEditDeck) btnEditDeck.onclick = () => UI.showDeckEditor();
     const btnEditP1Deck = $('btn-edit-p1-deck');
     if (btnEditP1Deck) btnEditP1Deck.onclick = () => UI.showDeckEditor();
+    const btnEditOnlineDeck = $('btn-edit-online-deck');
+    if (btnEditOnlineDeck) btnEditOnlineDeck.onclick = () => UI.showDeckEditor();
+
+    /* ---------------- Online Multiplayer Wiring ---------------- */
+    let guestPlayerInfo = null;
+    const btnCreateRoom = $('btn-create-room');
+    if (btnCreateRoom && FM.net) {
+      btnCreateRoom.onclick = async () => {
+        btnCreateRoom.disabled = true;
+        btnCreateRoom.textContent = '⏳ Đang tạo phòng...';
+        try {
+          const code = await FM.net.createRoom();
+          $('host-room-code').textContent = code;
+          $('host-room-info').classList.remove('hidden');
+          btnCreateRoom.textContent = '🔄 Đổi Mã Phòng Mới';
+          btnCreateRoom.disabled = false;
+        } catch (err) {
+          alert('Không thể tạo phòng: ' + (err.message || err));
+          btnCreateRoom.disabled = false;
+          btnCreateRoom.textContent = 'Tạo Phòng Mới';
+        }
+      };
+    }
+
+    const btnCopyCode = $('btn-copy-code');
+    if (btnCopyCode) {
+      btnCopyCode.onclick = () => {
+        const code = $('host-room-code').textContent;
+        navigator.clipboard.writeText(code).then(() => {
+          btnCopyCode.textContent = '✅ Đã Copy!';
+          setTimeout(() => { btnCopyCode.textContent = '📋 Copy Mã'; }, 1500);
+        });
+      };
+    }
+
+    const btnCopyLink = $('btn-copy-link');
+    if (btnCopyLink && FM.net) {
+      btnCopyLink.onclick = () => {
+        const link = FM.net.getShareUrl();
+        navigator.clipboard.writeText(link).then(() => {
+          btnCopyLink.textContent = '✅ Đã Copy Link Mời Đấu!';
+          setTimeout(() => { btnCopyLink.textContent = '🔗 Copy Link Mời Đấu'; }, 1500);
+        });
+      };
+    }
+
+    const btnJoinRoom = $('btn-join-room');
+    if (btnJoinRoom && FM.net) {
+      btnJoinRoom.onclick = async () => {
+        const input = $('input-room-code');
+        const code = input ? input.value.trim() : '';
+        if (!code) { alert('Vui lòng nhập mã phòng!'); return; }
+        const jStatus = $('join-status');
+        const jText = $('join-status-text');
+        if (jStatus) jStatus.classList.remove('hidden');
+        if (jText) jText.textContent = 'Đang kết nối tới phòng ' + code + '...';
+        btnJoinRoom.disabled = true;
+        try {
+          await FM.net.joinRoom(code);
+        } catch (err) {
+          if (jText) jText.textContent = 'Lỗi kết nối: ' + (err.message || err);
+          btnJoinRoom.disabled = false;
+        }
+      };
+    }
+
+    const btnStartOnline = $('btn-start-online');
+    if (btnStartOnline) {
+      btnStartOnline.onclick = () => {
+        if (!guestPlayerInfo) { alert('Chưa có người chơi 2 tham gia!'); return; }
+        const p0deck = UI.getOnlineDeck();
+        const p1deck = guestPlayerInfo.deck || FM.decks.DECKS.dragonMaster.list;
+        UI.startOnlineDuelAsHost(p0deck, p1deck, guestPlayerInfo.name);
+      };
+    }
+
+    if (FM.net) {
+      FM.net.on('connected', data => {
+        if (data.isHost) {
+          if (data.peerInfo) {
+            guestPlayerInfo = data.peerInfo;
+            const hText = $('host-status-text');
+            if (hText) hText.textContent = `✅ ${data.peerInfo.name || 'Người chơi 2'} đã kết nối và sẵn sàng!`;
+            if (btnStartOnline) btnStartOnline.classList.remove('hidden');
+          }
+        } else {
+          // Guest báo sẵn sàng kèm deck
+          const jText = $('join-status-text');
+          if (jText) jText.textContent = '✅ Đã kết nối với Host! Đang chờ Host bắt đầu...';
+          FM.net.sendGuestReady({
+            name: 'Người chơi 2 (Bạn)',
+            deck: UI.getOnlineDeck(),
+          });
+        }
+      });
+
+      FM.net.on('start', payload => UI.startOnlineDuelAsGuest(payload));
+      FM.net.on('action', action => UI.onRemoteAction(action));
+      FM.net.on('sync', payload => UI.onRemoteSync(payload));
+      FM.net.on('emoji', em => UI.showFloatingEmoji(em, false));
+      FM.net.on('disconnect', () => {
+        alert('⚠️ Đối thủ đã ngắt kết nối!');
+        UI.showMenu();
+      });
+    }
+
+    // Reaction emojis
+    document.querySelectorAll('.emoji-btn').forEach(btn => {
+      btn.onclick = () => {
+        const emoji = btn.dataset.e;
+        if (FM.net && UI.isOnline) FM.net.sendEmoji(emoji);
+        UI.showFloatingEmoji(emoji, true);
+      };
+    });
+
+    // Tự động vào phòng khi link có ?room=XXXX
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const roomParam = urlParams.get('room');
+      if (roomParam) {
+        UI.setGameMode('online');
+        const inp = $('input-room-code');
+        if (inp) inp.value = roomParam;
+        setTimeout(() => {
+          if (btnJoinRoom) btnJoinRoom.click();
+        }, 600);
+      }
+    } catch (e) {}
 
     // Topbar buttons
     $('btn-fusionlist').onclick = () => UI.showFusionTable();

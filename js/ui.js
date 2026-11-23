@@ -81,20 +81,42 @@
     return el;
   }
 
-  /* ---------------- DOM refs / slot mapping ---------------- */
-  function gridEl(pIdx) { return pIdx === 0 ? $('player-grid') : $('enemy-grid'); }
-  function slotEl(pIdx, slotIdx) { return gridEl(pIdx).querySelector(`[data-i="${slotIdx}"]`); }
+  /* ---------------- Perspective & DOM refs / slot mapping ---------------- */
+  UI.myPlayerIndex = 0;   // 0: P1 (hoặc chơi máy), 1: P2 (khách online)
+  UI.isOnline = false;
+
+  function myIdx() { return UI.myPlayerIndex || 0; }
+  function oppIdx() { return 1 - myIdx(); }
+  function isMyTurn() { return S && S.winner == null && S.active === myIdx(); }
+  function isCurrentHuman() {
+    if (UI.isOnline) return isMyTurn();
+    return S && S.winner == null && !S.players[S.active].isAI && !aiRunning;
+  }
+
+  function toVisual(pIdx) { return pIdx === myIdx() ? 0 : 1; }
+  function fromVisual(vIdx) { return vIdx === 0 ? myIdx() : oppIdx(); }
+
+  function gridEl(vIdx) { return vIdx === 0 ? $('player-grid') : $('enemy-grid'); }
+  function slotEl(pIdx, slotIdx) {
+    const vIdx = toVisual(pIdx);
+    return gridEl(vIdx).querySelector(`[data-i="${slotIdx}"]`);
+  }
   function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
   /* ---------------- Render ---------------- */
   function renderTop() {
-    const [p0, p1] = S.players;
-    const is2P = !!S.is2P;
-    $('enemy-name').textContent = p1.name;
-    $('enemy-portrait').textContent = is2P ? '🧝' : (cfg && cfg.duelist ? cfg.duelist.portrait : '👹');
-    $('player-name').textContent = p0.name;
-    $('player-portrait').textContent = is2P ? '🧙' : '🙂';
-    for (const [p, pre] of [[p1, 'enemy'], [p0, 'player']]) {
+    const me = myIdx();
+    const opp = oppIdx();
+    const pMe = S.players[me];
+    const pOpp = S.players[opp];
+    const isOnline = UI.isOnline;
+
+    $('enemy-name').textContent = pOpp.name;
+    $('enemy-portrait').textContent = isOnline ? (opp === 0 ? '🧙' : '🧝') : (cfg && cfg.duelist ? cfg.duelist.portrait : '👹');
+    $('player-name').textContent = pMe.name;
+    $('player-portrait').textContent = isOnline ? (me === 0 ? '🧙' : '🧝') : '🙂';
+
+    for (const [p, pre] of [[pOpp, 'enemy'], [pMe, 'player']]) {
       const pct = Math.max(0, Math.min(100, (p.lp / E.LP_START) * 100));
       const fill = $(pre + '-lpfill');
       fill.style.width = pct + '%';
@@ -106,21 +128,24 @@
     }
 
     // Đánh dấu người chơi đang trong lượt
-    $('player-info').classList.toggle('active-turn', S.active === 0);
-    $('enemy-info').classList.toggle('active-turn', S.active === 1);
+    $('player-info').classList.toggle('active-turn', S.active === me);
+    $('enemy-info').classList.toggle('active-turn', S.active === opp);
     const pGrid = $('player-grid-wrap');
-    if (pGrid) pGrid.classList.toggle('active-turn', S.active === 0);
+    if (pGrid) pGrid.classList.toggle('active-turn', S.active === me);
     const eGrid = $('enemy-grid-wrap');
-    if (eGrid) eGrid.classList.toggle('active-turn', S.active === 1);
+    if (eGrid) eGrid.classList.toggle('active-turn', S.active === opp);
 
     $('turn-num').textContent = 'Lượt ' + S.turnNo;
     const ph = $('phase-ind');
     ph.textContent = S.phase === 'BATTLE' ? 'Battle Phase' : S.phase === 'MAIN' ? 'Main Phase' : 'Kết thúc';
     ph.className = S.phase === 'BATTLE' ? 'phase-battle' : 'phase-main';
-    // hand rows cho người chơi không trong lượt (trên đỉnh)
-    const opp = 1 - S.active;
+
+    // hand rows cho đối thủ (trên đỉnh)
     const eh = $('enemy-handrow'); eh.innerHTML = '';
-    for (let i = 0; i < S.players[opp].hand.length; i++) { const d = document.createElement('div'); d.className = 'mini-back'; eh.appendChild(d); }
+    for (let i = 0; i < pOpp.hand.length; i++) {
+      const d = document.createElement('div'); d.className = 'mini-back'; eh.appendChild(d);
+    }
+
     // terrains
     const ts = $('terrain-strip'); ts.innerHTML = '';
     const seen = new Set();
@@ -143,27 +168,23 @@
     bannerKey = key;
     const bn = $('turn-banner');
     if (!bn) return;
-    const isMe = S.active === 0;
-    if (S.is2P) {
-      $('turn-banner-text').textContent = '⚡ LƯỢT CỦA ' + S.players[S.active].name.toUpperCase();
-      bn.classList.toggle('enemy', S.active === 1);
-    } else {
-      $('turn-banner-text').textContent = isMe ? '⚡ LƯỢT CỦA BẠN' : '☠ LƯỢT CỦA ' + S.players[1].name.toUpperCase();
-      bn.classList.toggle('enemy', !isMe);
-    }
+    const isMyTurnNow = S.active === myIdx();
+    $('turn-banner-text').textContent = isMyTurnNow ? '⚡ LƯỢT CỦA BẠN' : '☠ LƯỢT CỦA ' + S.players[oppIdx()].name.toUpperCase();
+    bn.classList.toggle('enemy', !isMyTurnNow);
     bn.classList.remove('hidden');
     clearTimeout(bn._h);
     bn._h = setTimeout(() => bn.classList.add('hidden'), 1250);
   }
 
-  function renderGrid(pIdx) {
+  function renderGrid(vIdx) {
+    const pIdx = fromVisual(vIdx);
     const p = S.players[pIdx];
-    const g = gridEl(pIdx);
+    const g = gridEl(vIdx);
     g.innerHTML = '';
     // Layout FM gốc: mỗi bên 2 hàng x 5 cột = 10 ô
     // Người chơi: Hàng 0 = Quái vật (0..4), Hàng 1 = Phép/Bẫy (5..9)
     // Đối thủ: Hàng 0 = Phép/Bẫy (5..9), Hàng 1 = Quái vật (0..4) (đối diện hàng quái người chơi)
-    const slotIndices = pIdx === 0
+    const slotIndices = vIdx === 0
       ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
       : [5, 6, 7, 8, 9, 0, 1, 2, 3, 4];
 
@@ -205,25 +226,27 @@
         if (myTurnMain()) {
           if (mode === 'fusing' && validFuseB(pIdx, i)) el.classList.add('targetable');
           if (mode === 'equipTarget' && pending.handIdx != null && equipMatch(pending.handIdx, pIdx, i)) el.classList.add('targetable');
-          if (mode === 'fieldSel' && selField === i) el.classList.add('selected');
+          if (mode === 'fieldSel' && selField === i && vIdx === 0) el.classList.add('selected');
         }
         if (myTurnBattle()) {
-          if (pIdx === 0 && E.canAttack(S, 0, i)) el.classList.add('attackable');
-          if (mode === 'battleTarget' && pIdx === 0 && pending.attackerSlot === i) el.classList.add('selected');
-          if (mode === 'battleTarget' && pIdx === 1 && sl.kind === 'MONSTER') el.classList.add('targetable');
+          if (vIdx === 0 && E.canAttack(S, myIdx(), i)) el.classList.add('attackable');
+          if (mode === 'battleTarget' && vIdx === 0 && pending.attackerSlot === i) el.classList.add('selected');
+          if (mode === 'battleTarget' && vIdx === 1 && sl.kind === 'MONSTER') el.classList.add('targetable');
         }
-        if (mode === 'enemyTarget' && pIdx === 1 && sl.kind === 'MONSTER' && !sl.faceDown) el.classList.add('targetable');
+        if (mode === 'enemyTarget' && vIdx === 1 && sl.kind === 'MONSTER' && !sl.faceDown) el.classList.add('targetable');
       } else if (myTurnMain()) {
-        if ((mode === 'summonSlot' || mode === 'fuseSlot') && i < 5) cell.classList.add('empty-target');
-        else if (mode === 'trapSlot' && i >= 5) cell.classList.add('empty-target');
+        if (vIdx === 0) {
+          if ((mode === 'summonSlot' || mode === 'fuseSlot') && i < 5) cell.classList.add('empty-target');
+          else if (mode === 'trapSlot' && i >= 5) cell.classList.add('empty-target');
+        }
       }
-      cell.addEventListener('click', () => onSlotClick(pIdx, i));
+      cell.addEventListener('click', () => onSlotClick(vIdx, i));
       g.appendChild(cell);
     }
   }
 
   function renderHand() {
-    const me = S ? S.active : 0;
+    const me = myIdx();
     const p = S ? S.players[me] : null;
     const h = $('player-hand');
     h.innerHTML = '';
@@ -525,7 +548,7 @@
   /* ---------------- Human actions ---------------- */
   function onHandClick(i) {
     if (!myTurnMain()) return;
-    const me = S.active;
+    const me = myIdx();
     if (mode === 'summonSlot' || mode === 'trapSlot' || mode === 'fuseSlot' || mode === 'equipTarget') {
       toast('↩ Huỷ thao tác đang chọn ô');
       resetMode();
@@ -545,20 +568,20 @@
     mode = 'handSel'; selHand = i; selField = -1; openSidebarMobile(); renderAll();
   }
 
-  function onSlotClick(pIdx, i) {
-    const me = S ? S.active : 0;
-    const opp = 1 - me;
+  function onSlotClick(vIdx, i) {
+    const me = myIdx();
+    const opp = oppIdx();
     if (!myTurnMain() && !myTurnBattle()) {
-      // xem bài đối thủ (ngửa)
-      const sl = S.players[pIdx].field[i];
+      // xem bài (ngửa)
+      const sl = S.players[vIdx === 0 ? me : opp].field[i];
       if (sl && sl.kind === 'MONSTER' && !sl.faceDown) {
-        showPreview(sl.card, 'Thẻ trên sân');
+        showPreview(sl.card, vIdx === 0 ? 'Thẻ của bạn' : 'Thẻ của đối thủ');
       } else if (sl && sl.kind === 'TRAP') {
         toast('🂠 Bẫy đã SET (ẩn)');
       }
       return;
     }
-    if (pIdx === opp) {
+    if (vIdx === 1) { // Sân đối thủ
       const es = S.players[opp].field[i];
       if (mode === 'battleTarget') {
         if (es && es.kind === 'MONSTER') {
@@ -572,8 +595,7 @@
       }
       if (mode === 'enemyTarget') {
         if (es && es.kind === 'MONSTER' && !es.faceDown) {
-          E.perform(S, { type: 'MAGIC', handIdx: pending.handIdx, targetSlot: i });
-          resetMode(); postAction();
+          dispatchAction({ type: 'MAGIC', handIdx: pending.handIdx, targetSlot: i });
           return;
         }
         toast('🎯 Chọn quái NGỦA của đối thủ làm mục tiêu');
@@ -583,6 +605,8 @@
       else if (es && es.kind === 'TRAP') toast('🂠 Bẫy đã SET (ẩn)');
       return;
     }
+
+    // vIdx === 0: Sân của bạn
     const p = S.players[me];
     const sl = p.field[i];
 
@@ -618,25 +642,24 @@
     if (mode === 'summonSlot') {
       if (i >= 5) { toast('⚠️ Quái vật chỉ được triệu hồi ở hàng Quái (trên)!'); return; }
       if (!sl) {
-        E.perform(S, { type: 'SUMMON', handIdx: pending.handIdx, slotIdx: i, faceDown: pending.faceDown });
-        resetMode(); postAction(); return;
+        dispatchAction({ type: 'SUMMON', handIdx: pending.handIdx, slotIdx: i, faceDown: pending.faceDown });
+        return;
       }
     }
     if (mode === 'trapSlot') {
       if (i < 5) { toast('⚠️ Bẫy chỉ được đặt ở hàng Phép/Bẫy (dưới)!'); return; }
       if (!sl) {
-        E.perform(S, { type: 'SET_TRAP', handIdx: pending.handIdx, slotIdx: i });
-        resetMode(); postAction(); return;
+        dispatchAction({ type: 'SET_TRAP', handIdx: pending.handIdx, slotIdx: i });
+        return;
       }
     }
     if (mode === 'fuseSlot') {
       if (i >= 5) { toast('⚠️ Quái vật chỉ được triệu hồi ở hàng Quái (trên)!'); return; }
       if (!sl && pending.fuseAB) {
         const { a, b } = pending.fuseAB;
-        const r = E.perform(S, { type: 'FUSION', a, b, targetSlot: i });
         pending = {};
-        if (!r.ok) toast('❌ ' + (r.msg || 'Fusion thất bại'));
-        resetMode(); postAction(r); return;
+        dispatchAction({ type: 'FUSION', a, b, targetSlot: i });
+        return;
       }
     }
     if (mode === 'fusing' && sl && sl.kind === 'MONSTER' && !sl.faceDown && validFuseB(me, i)) {
@@ -649,8 +672,8 @@
       return;
     }
     if (mode === 'equipTarget' && equipMatch(pending.handIdx, me, i)) {
-      E.perform(S, { type: 'MAGIC', handIdx: pending.handIdx, targetSlot: i });
-      resetMode(); postAction(); return;
+      dispatchAction({ type: 'MAGIC', handIdx: pending.handIdx, targetSlot: i });
+      return;
     }
     if (mode === 'fieldSel' && selField === i) { resetMode(); return; }
 
@@ -697,9 +720,7 @@
       closeModal();
       sfx.fusion();
       if (fieldSlot != null) {
-        const r = E.perform(S, { type: 'FUSION', a, b, targetSlot: fieldSlot });
-        if (!r.ok) toast('❌ ' + (r.msg || 'Fusion thất bại'));
-        resetMode(); postAction(r);
+        dispatchAction({ type: 'FUSION', a, b, targetSlot: fieldSlot });
       } else {
         mode = 'fuseSlot'; pending = { fuseAB: { a, b } }; renderAll();
         toast('👉 Chọn một ô trống để đặt ' + result.name);
@@ -709,12 +730,12 @@
   }
 
   function cardOf(src) {
-    const me = S ? S.active : 0;
+    const me = myIdx();
     return src.src === 'HAND' ? S.players[me].hand[src.idx] : S.players[me].field[src.idx].card;
   }
 
   function confirmRitual(handIdx) {
-    const me = S.active;
+    const me = myIdx();
     const card = S.players[me].hand[handIdx];
     const md = C.magics[card.mid];
     if (!md || md.kind !== 'ritual') return;
@@ -745,28 +766,52 @@
     $('rit-no').onclick = () => { closeModal(); renderAll(); };
   }
 
+  function dispatchAction(action) {
+    if (UI.isOnline && myIdx() === 1) {
+      // Guest gửi action cho Host qua WebRTC
+      FM.net.sendAction(action);
+      resetMode();
+      return { ok: true };
+    }
+    // Host hoặc Chơi đơn
+    const r = E.perform(S, action);
+    if (r && r.ok === false) {
+      toast('❌ ' + (r.msg || 'Thao tác không hợp lệ'));
+      resetMode();
+      renderAll();
+      return r;
+    }
+    resetMode();
+    if (UI.isOnline && myIdx() === 0) {
+      const fxEvents = E.drainFx(S);
+      FM.net.syncState(S, fxEvents);
+      startFxThenDirect(fxEvents).then(() => {
+        renderAll();
+        maybeGameOver();
+      });
+      return r;
+    }
+    postAction(r);
+    return r;
+  }
+
   function doMagic(handIdx, targetSlot) {
-    const me = S.active;
+    const me = myIdx();
     const card = S.players[me].hand[handIdx];
     if (!card) return;
     const md = C.magics[card.mid];
-    const r = E.perform(S, { type: 'MAGIC', handIdx, targetSlot });
-    if (!r.ok) { toast('❌ ' + (r.msg || 'Không dùng được')); return; }
-    resetMode();
-    postAction(r);
-    if (md.id === 'dianKeto') sfx.heal(); else sfx.magic();
+    if (md && md.id === 'dianKeto') sfx.heal(); else sfx.magic();
+    dispatchAction({ type: 'MAGIC', handIdx, targetSlot });
   }
 
   function doAttack(slotIdx, targetSlot) {
     sfx.attack();
-    const r = E.perform(S, { type: 'ATTACK', slotIdx, targetSlot });
-    postAction(r);
+    dispatchAction({ type: 'ATTACK', slotIdx, targetSlot });
   }
 
   function doEndTurn() {
     resetMode();
-    E.perform(S, { type: 'END' });
-    postAction();
+    dispatchAction({ type: 'END' });
   }
 
   /* Sau mỗi action: animate fx rồi render; khởi động AI nếu đến lượt máy */
@@ -775,18 +820,22 @@
     startFxThen(S).then(() => {
       renderAll();
       maybeGameOver();
-      if (S && S.winner == null && S.players[S.active].isAI) startAiLoop();
+      if (!UI.isOnline && S && S.winner == null && S.players[S.active].isAI) startAiLoop();
     });
   }
 
   /* ---------------- FX animation ---------------- */
-  async function startFxThen(st) {
-    const events = E.drainFx(st);
+  async function startFxThenDirect(events) {
     let lastAttack = null;   // nhớ đòn đánh mới nhất cho hiệu ứng bẫy
-    for (const ev of events) {
+    for (const ev of (events || [])) {
       await applyFx(ev, lastAttack);
       if (ev.type === 'attack') lastAttack = ev;
     }
+  }
+
+  async function startFxThen(st) {
+    const events = E.drainFx(st);
+    await startFxThenDirect(events);
   }
 
   function overlayDiv(cls, atEl, html) {
@@ -1099,6 +1148,22 @@
   function maybeGameOver() {
     if (!S || S.winner == null || S._overShown) return;
     S._overShown = true;
+    if (UI.isOnline) {
+      const won = S.winner === myIdx();
+      (won ? sfx.win : sfx.lose)();
+      const meName = S.players[myIdx()].name;
+      const oppName = S.players[oppIdx()].name;
+      openModal(`
+        <h1 class="${won ? 'win' : 'lose'}">${won ? '🏆 BẠN CHIẾN THẮNG!' : '💀 BẠN THẤT BẠI!'}</h1>
+        <div class="msub">${won ? 'Chúc mừng! Bạn đã xuất sắc đánh bại đối thủ online!' : 'Rất tiếc! Đối thủ đã giành chiến thắng lần này.'}</div>
+        <div class="msub" style="margin-top:10px;font-size:13px">LP cuối: ${escapeHtml(meName)} <b>${S.players[myIdx()].lp}</b> — ${escapeHtml(oppName)} <b>${S.players[oppIdx()].lp}</b> · Số lượt: ${S.turnNo}</div>
+        <div class="mbtns" style="margin-top:20px">
+          <button class="primary" id="go-menu">🏠 Về Menu Chính</button>
+        </div>
+      `, true);
+      $('go-menu').onclick = () => { closeModal(); UI.showMenu(); };
+      return;
+    }
     const is2P = !!S.is2P;
     if (is2P) {
       sfx.win();
@@ -1816,19 +1881,23 @@
   UI._gameMode = 'ai';
   UI.setGameMode = function (mode) {
     UI._gameMode = mode;
+    const isAi = mode === 'ai';
+    const isOnline = mode === 'online';
     const is2P = mode === '2p';
+
     const tabAi = $('tab-mode-ai');
+    const tabOnline = $('tab-mode-online');
     const tab2p = $('tab-mode-2p');
-    if (tabAi) tabAi.classList.toggle('active', !is2P);
+    if (tabAi) tabAi.classList.toggle('active', isAi);
+    if (tabOnline) tabOnline.classList.toggle('active', isOnline);
     if (tab2p) tab2p.classList.toggle('active', is2P);
+
     const secAi = $('sec-ai-wrap');
+    const secOnline = $('sec-online-wrap');
     const sec2p = $('sec-2p-wrap');
-    if (secAi) secAi.classList.toggle('hidden', is2P);
+    if (secAi) secAi.classList.toggle('hidden', !isAi);
+    if (secOnline) secOnline.classList.toggle('hidden', !isOnline);
     if (sec2p) sec2p.classList.toggle('hidden', !is2P);
-    const btnStart = $('btn-start');
-    if (btnStart) {
-      btnStart.textContent = is2P ? '⚔ BẮT ĐẦU ĐẤU 2 NGƯỜI (LP 8000)' : '⚔ VÀO TRẬN (LP 8000)';
-    }
   };
 
   UI.startDuel = function (c) {
@@ -1908,6 +1977,10 @@
   UI.showMenu = function () {
     session += 1;
     aiRunning = false; S = null;
+    UI.isOnline = false;
+    UI.myPlayerIndex = 0;
+    const rbar = $('online-reaction-bar');
+    if (rbar) rbar.classList.add('hidden');
     $('battle').classList.add('hidden');
     $('menu').classList.remove('hidden');
     UI.buildMenu();
@@ -1996,7 +2069,11 @@
     if (!UI._selDeck) UI._selDeck = 'custom';
     renderDeckListTo('deck-list', UI._selDeck, id => { UI._selDeck = id; });
 
-    // 2P deck lists
+    // Online deck list
+    if (!UI._selDeckOnline) UI._selDeckOnline = 'custom';
+    renderDeckListTo('deck-list-online', UI._selDeckOnline, id => { UI._selDeckOnline = id; });
+
+    // 2P (Hotseat) deck lists
     if (!UI._selDeckP1) UI._selDeckP1 = 'custom';
     if (!UI._selDeckP2) UI._selDeckP2 = 'dragonMaster';
     renderDeckListTo('deck-list-p1', UI._selDeckP1, id => { UI._selDeckP1 = id; });
@@ -2034,6 +2111,110 @@
     };
   };
 
+  UI.getOnlineDeck = function () {
+    const deckId = UI._selDeckOnline || 'custom';
+    if (deckId === 'custom') {
+      return FM.player ? FM.player.getDeck() : FM.decks.DECKS.flameSwordsman.list;
+    }
+    const d = FM.decks.DECKS[deckId];
+    return d ? d.list : FM.decks.DECKS.flameSwordsman.list;
+  };
+
+  UI.startOnlineDuelAsHost = function (p0deckList, p1deckList, p1name) {
+    session += 1;
+    mode = 'idle'; selHand = -1; selField = -1; pending = {}; previewSel = null;
+    bannerKey = '';
+    UI.isOnline = true;
+    UI.myPlayerIndex = 0;
+
+    const p0deckExpanded = FM.decks.expandDeck(p0deckList);
+    const p1deckExpanded = FM.decks.expandDeck(p1deckList);
+
+    S = E.newDuel({
+      p0name: 'Bạn (P1)',
+      p1name: p1name || 'Đối thủ (P2)',
+      p0deck: p0deckExpanded,
+      p1deck: p1deckExpanded,
+      is2P: true,
+      p1isAI: false,
+    });
+
+    if (FM.fx && FM.fx.boot) {
+      FM.fx.boot();
+      FM.fx.setArena('temple');
+      FM.fx.setWeather(null);
+    }
+
+    // Gửi START_DUEL kèm state ban đầu cho Guest
+    FM.net.sendStartDuel({
+      state: S,
+      hostName: 'Đối thủ (P1)',
+      guestName: 'Bạn (P2)',
+    });
+
+    $('menu').classList.add('hidden');
+    $('battle').classList.remove('hidden');
+    const rbar = $('online-reaction-bar');
+    if (rbar) rbar.classList.remove('hidden');
+    renderAll();
+    toast('⚔ TRẬN ĐẤU ONLINE BẮT ĐẦU — Lượt của bạn trước!');
+  };
+
+  UI.startOnlineDuelAsGuest = function (payload) {
+    session += 1;
+    mode = 'idle'; selHand = -1; selField = -1; pending = {}; previewSel = null;
+    bannerKey = '';
+    UI.isOnline = true;
+    UI.myPlayerIndex = 1; // Khách luôn là P2
+    S = payload.state;
+
+    if (FM.fx && FM.fx.boot) {
+      FM.fx.boot();
+      FM.fx.setArena('temple');
+      FM.fx.setWeather(null);
+    }
+
+    $('menu').classList.add('hidden');
+    $('battle').classList.remove('hidden');
+    const rbar = $('online-reaction-bar');
+    if (rbar) rbar.classList.remove('hidden');
+    renderAll();
+    toast('⚔ TRẬN ĐẤU ONLINE BẮT ĐẦU — Đang chờ P1 đi trước!');
+  };
+
+  UI.onRemoteAction = function (action) {
+    if (!S || S.winner != null || S.active !== 1) return;
+    const r = E.perform(S, action);
+    const fxEvents = E.drainFx(S);
+    FM.net.syncState(S, fxEvents);
+    startFxThenDirect(fxEvents).then(() => {
+      renderAll();
+      maybeGameOver();
+    });
+  };
+
+  UI.onRemoteSync = function (payload) {
+    if (!payload || !payload.state) return;
+    S = payload.state;
+    startFxThenDirect(payload.fx || []).then(() => {
+      renderAll();
+      maybeGameOver();
+    });
+  };
+
+  UI.showFloatingEmoji = function (emoji, isMe) {
+    const el = document.createElement('div');
+    el.className = 'floating-emoji';
+    el.textContent = emoji;
+    const anchor = $(isMe ? 'player-portrait' : 'enemy-portrait') || document.body;
+    const rect = anchor.getBoundingClientRect();
+    el.style.left = (rect.left + rect.width / 2) + 'px';
+    el.style.top = (rect.top + rect.height / 2) + 'px';
+    document.body.appendChild(el);
+    sfx.select();
+    setTimeout(() => el.remove(), 2100);
+  };
+
   UI.showHelp = showHelp;
   UI.showFusionTable = showFusionTable;
   UI.showDeckEditor = showDeckEditor;
@@ -2045,9 +2226,7 @@
   UI.handlePhaseAction = function (kind) {
     if (!S || S.winner != null || !isCurrentHuman()) return;
     if (kind === 'battle' && S.phase === 'MAIN') {
-      E.perform(S, { type: 'BATTLE_PHASE' });
-      resetMode();
-      postAction();
+      dispatchAction({ type: 'BATTLE_PHASE' });
     } else if (kind === 'endturn' && S.phase === 'MAIN') {
       doEndTurn();
     }
