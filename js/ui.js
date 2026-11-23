@@ -89,9 +89,11 @@
   /* ---------------- Render ---------------- */
   function renderTop() {
     const [p0, p1] = S.players;
+    const is2P = !!S.is2P;
     $('enemy-name').textContent = p1.name;
-    $('enemy-portrait').textContent = cfg && cfg.duelist ? cfg.duelist.portrait : '👹';
+    $('enemy-portrait').textContent = is2P ? '🧝' : (cfg && cfg.duelist ? cfg.duelist.portrait : '👹');
     $('player-name').textContent = p0.name;
+    $('player-portrait').textContent = is2P ? '🧙' : '🙂';
     for (const [p, pre] of [[p1, 'enemy'], [p0, 'player']]) {
       const pct = Math.max(0, Math.min(100, (p.lp / E.LP_START) * 100));
       const fill = $(pre + '-lpfill');
@@ -102,13 +104,23 @@
       $(pre === 'player' ? 'player-handcount' : 'enemy-hand').textContent = '✋ ' + p.hand.length;
       $(pre + '-grave').textContent = '⚰️ ' + p.graveyard.length;
     }
+
+    // Đánh dấu người chơi đang trong lượt
+    $('player-info').classList.toggle('active-turn', S.active === 0);
+    $('enemy-info').classList.toggle('active-turn', S.active === 1);
+    const pGrid = $('player-grid-wrap');
+    if (pGrid) pGrid.classList.toggle('active-turn', S.active === 0);
+    const eGrid = $('enemy-grid-wrap');
+    if (eGrid) eGrid.classList.toggle('active-turn', S.active === 1);
+
     $('turn-num').textContent = 'Lượt ' + S.turnNo;
     const ph = $('phase-ind');
     ph.textContent = S.phase === 'BATTLE' ? 'Battle Phase' : S.phase === 'MAIN' ? 'Main Phase' : 'Kết thúc';
     ph.className = S.phase === 'BATTLE' ? 'phase-battle' : 'phase-main';
-    // hand rows
+    // hand rows cho người chơi không trong lượt (trên đỉnh)
+    const opp = 1 - S.active;
     const eh = $('enemy-handrow'); eh.innerHTML = '';
-    for (let i = 0; i < S.players[1].hand.length; i++) { const d = document.createElement('div'); d.className = 'mini-back'; eh.appendChild(d); }
+    for (let i = 0; i < S.players[opp].hand.length; i++) { const d = document.createElement('div'); d.className = 'mini-back'; eh.appendChild(d); }
     // terrains
     const ts = $('terrain-strip'); ts.innerHTML = '';
     const seen = new Set();
@@ -132,8 +144,13 @@
     const bn = $('turn-banner');
     if (!bn) return;
     const isMe = S.active === 0;
-    $('turn-banner-text').textContent = isMe ? '⚡ LƯỢT CỦA BẠN' : '☠ LƯỢT CỦA ' + S.players[1].name.toUpperCase();
-    bn.classList.toggle('enemy', !isMe);
+    if (S.is2P) {
+      $('turn-banner-text').textContent = '⚡ LƯỢT CỦA ' + S.players[S.active].name.toUpperCase();
+      bn.classList.toggle('enemy', S.active === 1);
+    } else {
+      $('turn-banner-text').textContent = isMe ? '⚡ LƯỢT CỦA BẠN' : '☠ LƯỢT CỦA ' + S.players[1].name.toUpperCase();
+      bn.classList.toggle('enemy', !isMe);
+    }
     bn.classList.remove('hidden');
     clearTimeout(bn._h);
     bn._h = setTimeout(() => bn.classList.add('hidden'), 1250);
@@ -206,20 +223,21 @@
   }
 
   function renderHand() {
-    const p = S.players[0];
+    const me = S ? S.active : 0;
+    const p = S ? S.players[me] : null;
     const h = $('player-hand');
     h.innerHTML = '';
+    if (!p) return;
     p.hand.forEach((card, i) => {
       const el = cardEl(card, false);
       if (myTurnMain()) {
         // highlight bài chơi được ngay (UX: nhìn là biết bài nào dùng được)
         if (isPlayable(card)) el.classList.add('playable');
         if (mode === 'handSel' && selHand === i) el.classList.add('selected');
-        if (mode === 'fusing' && pending.a && pending.a.src === 'FIELD' && card.kind === 'MONSTER') el.classList.add('targetable');
-        if (mode === 'fusing' && pending.a && pending.a.src === 'HAND' && card.kind === 'MONSTER') el.classList.add('targetable');
+        if (mode === 'fusing' && pending.a && (pending.a.src === 'FIELD' || pending.a.src === 'HAND') && card.kind === 'MONSTER') el.classList.add('targetable');
         el.addEventListener('click', ev => { ev.stopPropagation(); onHandClick(i); });
       } else {
-        el.addEventListener('click', ev => { ev.stopPropagation(); showPreview(card, 'Bài trên tay của bạn'); });
+        el.addEventListener('click', ev => { ev.stopPropagation(); showPreview(card, 'Bài trên tay (' + p.name + ')'); });
       }
       h.appendChild(el);
     });
@@ -249,9 +267,10 @@
     const hint = t => { const d = document.createElement('div'); d.style.cssText = 'font-size:11.5px;color:#8b86a0;line-height:1.5;padding:2px'; d.textContent = t; ab.appendChild(d); };
 
     if (!S || S.winner != null) { hint('Trận đấu kết thúc.'); return; }
-    if (S.active === 1) { hint('🤖 ' + S.players[1].name + ' đang suy nghĩ...'); return; }
+    const me = S.active;
+    if (S.players[me].isAI) { hint('🤖 ' + S.players[me].name + ' đang suy nghĩ...'); return; }
     if (mode === 'battleTarget' && pending.attackerSlot != null) {
-      const atkSl = S.players[0].field[pending.attackerSlot];
+      const atkSl = S.players[me].field[pending.attackerSlot];
       const aName = atkSl ? E.mdata(atkSl.card).name : 'Quái';
       hint('⚔ ' + aName + ' sẵn sàng! Nhấp vào một quái đối thủ để chọn mục tiêu.');
       addBtn('🎯 Tấn Công Quái Cùng Cột (mặc định)', () => {
@@ -263,13 +282,13 @@
       return;
     }
     if (S.phase === 'BATTLE') {
-      hint('⚔ Battle Phase — chọn quái viền vàng để tấn công. Có thể chọn mục tiêu bất kỳ quái đối thủ!');
+      hint('⚔ Battle Phase (' + S.players[me].name + ') — chọn quái viền vàng để tấn công. Có thể chọn mục tiêu bất kỳ quái đối thủ!');
       addBtn('⏭ Kết Thúc Lượt', () => doEndTurn(), 'primary');
       return;
     }
     // MAIN, lượt người chơi
     if (mode === 'handSel' && selHand >= 0) {
-      const card = S.players[0].hand[selHand];
+      const card = S.players[me].hand[selHand];
       hint('Đã chọn: ' + nameOf(card));
       if (card.kind === 'MONSTER') {
         addBtn('⬆ Triệu Hồi ATK', () => enterSummonSlot(false), 'primary');
@@ -308,7 +327,7 @@
       hint('Chọn ô TRỐNG để triệu hồi kết quả fusion.');
       addBtn('✖ Huỷ', resetMode);
     } else if (mode === 'fieldSel' && selField >= 0) {
-      const sl = S.players[0].field[selField];
+      const sl = S.players[me].field[selField];
       if (sl && sl.kind === 'MONSTER') {
         hint('Quái: ' + E.mdata(sl.card).name + (sl.faceDown ? ' (úp)' : sl.pos === 'ATK' ? ' (ATK)' : ' (DEF)'));
         if (!sl.faceDown && E.mdata(sl.card).stars && E.mdata(sl.card).stars[1]) addBtn('⭐ Đổi Guardian Star (hiện: ' + C.starName(E.mdata(sl.card).stars[sl.star || 0]) + ')', () => { E.perform(S, { type: 'SET_STAR', slotIdx: selField }); postAction(); }, 'primary');
@@ -317,7 +336,7 @@
       }
       addBtn('✖ Bỏ chọn', resetMode);
     } else {
-      hint('▶ Main Phase: chọn bài trên tay để triệu hồi / set / fusion / dùng phép.');
+      hint('▶ Main Phase (' + S.players[me].name + '): chọn bài trên tay để triệu hồi / set / fusion / dùng phép.');
     }
   }
 
@@ -371,8 +390,9 @@
     renderLog();
     renderActionBar();
     renderPreview(previewCard());
-    $('btn-battle').classList.toggle('hidden', !(S && S.phase === 'MAIN' && S.active === 0 && S.winner == null));
-    $('btn-endturn').classList.toggle('hidden', !(S && S.phase === 'MAIN' && S.active === 0 && S.winner == null));
+    const isHuman = isCurrentHuman();
+    $('btn-battle').classList.toggle('hidden', !(isHuman && S.phase === 'MAIN'));
+    $('btn-endturn').classList.toggle('hidden', !(isHuman && S.phase === 'MAIN'));
     saveDuel();
   }
 
@@ -415,7 +435,7 @@
     $('battle').classList.remove('hidden');
     renderAll();
     toast('🔄 Đã khôi phục trận đang đánh — ' + cfg.duelist.name);
-    if (S.winner == null && S.active === 1) startAiLoop();
+    if (S.winner == null && S.players[S.active].isAI) startAiLoop();
     return true;
   };
 
@@ -423,8 +443,9 @@
   let previewTimer = 0;
   function previewCard() {
     if (previewSel) return previewSel;
-    if (mode === 'handSel' && selHand >= 0) { const c = S.players[0].hand[selHand]; return c ? { card: c } : null; }
-    if (selField >= 0) { const sl = S.players[0].field[selField]; if (sl && sl.kind === 'MONSTER' && !sl.faceDown) return { card: sl.card }; }
+    const me = S ? S.active : 0;
+    if (mode === 'handSel' && selHand >= 0) { const c = S.players[me].hand[selHand]; return c ? { card: c } : null; }
+    if (selField >= 0) { const sl = S.players[me].field[selField]; if (sl && sl.kind === 'MONSTER' && !sl.faceDown) return { card: sl.card }; }
     return null;
   }
 
@@ -449,7 +470,10 @@
   /* ---------------- Mode helpers ---------------- */
   function isPlayable(card) {
     if (!S || S.winner != null) return false;
-    const p = S.players[0];
+    const me = S.active;
+    const opp = 1 - me;
+    const p = S.players[me];
+    const oppP = S.players[opp];
     const hasMonsterEmpty = [0, 1, 2, 3, 4].some(i => !p.field[i]);
     const hasTrapEmpty = [5, 6, 7, 8, 9].some(i => !p.field[i]);
     if (card.kind === 'MONSTER') return hasMonsterEmpty;
@@ -469,19 +493,20 @@
       p.field.slice(0, 5).forEach(sl => { if (sl && sl.kind === 'MONSTER') pool[sl.card.id] = (pool[sl.card.id] || 0) + 1; });
       return hasMonsterEmpty && need.every(oid => (pool[oid] || 0) >= 1);
     }
-    if (mfx.kind === 'forceDef' || mfx.kind === 'dragonsToDef') return S.players[1].field.slice(0, 5).some(sl => sl && sl.kind === 'MONSTER' && !sl.faceDown);
-    if (mfx.kind === 'flipAllEnemyDef' || mfx.kind === 'flipAllEnemyAtk') return S.players[1].field.slice(0, 5).some(sl => sl && sl.kind === 'MONSTER' && sl.faceDown);
-    if (mfx.kind === 'clearTraps') return S.players[1].field.slice(5, 10).some(sl => sl && sl.kind === 'TRAP');
-    if (mfx.kind === 'destroyRace') return S.players[1].field.slice(0, 5).some(sl => sl && sl.kind === 'MONSTER' && !sl.faceDown && (mfx.races || []).includes(E.mdata(sl.card).race));
-    if (mfx.kind === 'destroyEnemyAll') return E.monsterCount(S.players[1]) > 0;
+    if (mfx.kind === 'forceDef' || mfx.kind === 'dragonsToDef') return oppP.field.slice(0, 5).some(sl => sl && sl.kind === 'MONSTER' && !sl.faceDown);
+    if (mfx.kind === 'flipAllEnemyDef' || mfx.kind === 'flipAllEnemyAtk') return oppP.field.slice(0, 5).some(sl => sl && sl.kind === 'MONSTER' && sl.faceDown);
+    if (mfx.kind === 'clearTraps') return oppP.field.slice(5, 10).some(sl => sl && sl.kind === 'TRAP');
+    if (mfx.kind === 'destroyRace') return oppP.field.slice(0, 5).some(sl => sl && sl.kind === 'MONSTER' && !sl.faceDown && (mfx.races || []).includes(E.mdata(sl.card).race));
+    if (mfx.kind === 'destroyEnemyAll') return E.monsterCount(oppP) > 0;
     return true; // heal/damage/destroyAll
   }
 
   function resetMode() { mode = 'idle'; selHand = -1; selField = -1; pending = {}; previewSel = null; closeSidebarMobile(); renderAll(); }
-  function myTurnMain() { return S && S.winner == null && S.phase === 'MAIN' && S.active === 0 && !aiRunning; }
-  function myTurnBattle() { return S && S.winner == null && S.phase === 'BATTLE' && S.active === 0 && !aiRunning; }
+  function isCurrentHuman() { return S && S.winner == null && !S.players[S.active].isAI && !aiRunning; }
+  function myTurnMain() { return isCurrentHuman() && S.phase === 'MAIN'; }
+  function myTurnBattle() { return isCurrentHuman() && S.phase === 'BATTLE'; }
   function equipMatch(handIdx, pIdx, slotIdx) {
-    const card = S.players[0].hand[handIdx];
+    const card = S.players[S.active].hand[handIdx];
     if (!card || card.kind !== 'MAGIC') return false;
     const md = C.magics[card.mid];
     const sl = S.players[pIdx].field[slotIdx];
@@ -500,6 +525,7 @@
   /* ---------------- Human actions ---------------- */
   function onHandClick(i) {
     if (!myTurnMain()) return;
+    const me = S.active;
     if (mode === 'summonSlot' || mode === 'trapSlot' || mode === 'fuseSlot' || mode === 'equipTarget') {
       toast('↩ Huỷ thao tác đang chọn ô');
       resetMode();
@@ -508,30 +534,32 @@
       // chọn nguyên liệu B từ tay
       if (i === pending.a.idx && pending.a.src === 'HAND') { resetMode(); return; }
       const a = pending.a;
-      const result = E.peekFusion(S, 0, a, { src: 'HAND', idx: i });
+      const result = E.peekFusion(S, me, a, { src: 'HAND', idx: i });
       if (!result) { toast('❌ Hai thẻ này không hợp nhất được!'); sfx.set(); return; }
       confirmFusion(a, { src: 'HAND', idx: i }, result);
       return;
     }
-    const card = S.players[0].hand[i];
+    const card = S.players[me].hand[i];
     sfx.select();
     if (mode === 'handSel' && selHand === i) { resetMode(); return; }
     mode = 'handSel'; selHand = i; selField = -1; openSidebarMobile(); renderAll();
   }
 
   function onSlotClick(pIdx, i) {
+    const me = S ? S.active : 0;
+    const opp = 1 - me;
     if (!myTurnMain() && !myTurnBattle()) {
       // xem bài đối thủ (ngửa)
       const sl = S.players[pIdx].field[i];
       if (sl && sl.kind === 'MONSTER' && !sl.faceDown) {
-        showPreview(sl.card, 'Thẻ của đối thủ');
+        showPreview(sl.card, 'Thẻ trên sân');
       } else if (sl && sl.kind === 'TRAP') {
         toast('🂠 Bẫy đã SET (ẩn)');
       }
       return;
     }
-    if (pIdx === 1) {
-      const es = S.players[1].field[i];
+    if (pIdx === opp) {
+      const es = S.players[opp].field[i];
       if (mode === 'battleTarget') {
         if (es && es.kind === 'MONSTER') {
           const atkSlot = pending.attackerSlot;
@@ -555,14 +583,13 @@
       else if (es && es.kind === 'TRAP') toast('🂠 Bẫy đã SET (ẩn)');
       return;
     }
-    const p = S.players[0];
+    const p = S.players[me];
     const sl = p.field[i];
 
     // Battle phase: tấn công
     if (myTurnBattle()) {
       if (mode === 'battleTarget') {
-        if (sl && sl.kind === 'MONSTER' && E.canAttack(S, 0, i)) {
-          // chuyển sang chọn quái này tấn công
+        if (sl && sl.kind === 'MONSTER' && E.canAttack(S, me, i)) {
           pending.attackerSlot = i;
           renderAll();
           return;
@@ -570,9 +597,9 @@
         resetMode();
         return;
       }
-      if (sl && sl.kind === 'MONSTER' && E.canAttack(S, 0, i)) {
+      if (sl && sl.kind === 'MONSTER' && E.canAttack(S, me, i)) {
         // Kiểm tra đối thủ có quái không
-        const enemyMonsters = [0, 1, 2, 3, 4].filter(idx => S.players[1].field[idx] && S.players[1].field[idx].kind === 'MONSTER');
+        const enemyMonsters = [0, 1, 2, 3, 4].filter(idx => S.players[opp].field[idx] && S.players[opp].field[idx].kind === 'MONSTER');
         if (enemyMonsters.length === 0) {
           doAttack(i, null);
         } else {
@@ -612,16 +639,16 @@
         resetMode(); postAction(r); return;
       }
     }
-    if (mode === 'fusing' && sl && sl.kind === 'MONSTER' && !sl.faceDown && validFuseB(0, i)) {
+    if (mode === 'fusing' && sl && sl.kind === 'MONSTER' && !sl.faceDown && validFuseB(me, i)) {
       const a = pending.a;
       if (a.src === 'FIELD' && a.idx === i) return;
       const b = { src: 'FIELD', idx: i };
-      const result = E.peekFusion(S, 0, a, b);
+      const result = E.peekFusion(S, me, a, b);
       if (!result) { toast('❌ Hai thẻ này không hợp nhất được!'); sfx.set(); return; }
       confirmFusion(a, b, result);
       return;
     }
-    if (mode === 'equipTarget' && equipMatch(pending.handIdx, 0, i)) {
+    if (mode === 'equipTarget' && equipMatch(pending.handIdx, me, i)) {
       E.perform(S, { type: 'MAGIC', handIdx: pending.handIdx, targetSlot: i });
       resetMode(); postAction(); return;
     }
@@ -682,23 +709,25 @@
   }
 
   function cardOf(src) {
-    return src.src === 'HAND' ? S.players[0].hand[src.idx] : S.players[0].field[src.idx].card;
+    const me = S ? S.active : 0;
+    return src.src === 'HAND' ? S.players[me].hand[src.idx] : S.players[me].field[src.idx].card;
   }
 
   function confirmRitual(handIdx) {
-    const card = S.players[0].hand[handIdx];
+    const me = S.active;
+    const card = S.players[me].hand[handIdx];
     const md = C.magics[card.mid];
     if (!md || md.kind !== 'ritual') return;
     const pool = {};
-    S.players[0].hand.forEach(c => { if (E.isMon(c)) pool[c.id] = (pool[c.id] || 0) + 1; });
-    S.players[0].field.forEach(sl => { if (sl && sl.kind === 'MONSTER') pool[sl.card.id] = (pool[sl.card.id] || 0) + 1; });
+    S.players[me].hand.forEach(c => { if (E.isMon(c)) pool[c.id] = (pool[c.id] || 0) + 1; });
+    S.players[me].field.forEach(sl => { if (sl && sl.kind === 'MONSTER') pool[sl.card.id] = (pool[sl.card.id] || 0) + 1; });
     const rows = (md.offerings || []).map(oid => {
       const m = C.monsters[oid];
       const ok = (pool[oid] || 0) >= 1;
       return `<div style='font-size:13px;padding:2px'>${ok ? '✅' : '❌'} ${m ? m.name : '?'} (${m ? m.atk + '/' + m.def : ''})</div>`;
     }).join('');
     const result = C.monsters[md.result];
-    const empty = S.players[0].field.slice(0, 5).some(x => !x);
+    const empty = S.players[me].field.slice(0, 5).some(x => !x);
     openModal(`
       <h1 style='font-size:24px'>👁 RITUAL</h1>
       <div class='msub'>${md.name}</div>
@@ -717,7 +746,8 @@
   }
 
   function doMagic(handIdx, targetSlot) {
-    const card = S.players[0].hand[handIdx];
+    const me = S.active;
+    const card = S.players[me].hand[handIdx];
     if (!card) return;
     const md = C.magics[card.mid];
     const r = E.perform(S, { type: 'MAGIC', handIdx, targetSlot });
@@ -745,7 +775,7 @@
     startFxThen(S).then(() => {
       renderAll();
       maybeGameOver();
-      if (S && S.winner == null && S.active === 1) startAiLoop();
+      if (S && S.winner == null && S.players[S.active].isAI) startAiLoop();
     });
   }
 
@@ -1069,21 +1099,38 @@
   function maybeGameOver() {
     if (!S || S.winner == null || S._overShown) return;
     S._overShown = true;
+    const is2P = !!S.is2P;
+    if (is2P) {
+      sfx.win();
+      const winnerName = S.players[S.winner].name;
+      openModal(`
+        <h1 class="win">🏆 ${escapeHtml(winnerName.toUpperCase())} CHIẾN THẮNG!</h1>
+        <div class="msub">Trận đấu PvP 2 người kết thúc đầy kịch tính!</div>
+        <div class="msub" style="margin-top:10px;font-size:13px">LP cuối: ${escapeHtml(S.players[0].name)} <b>${S.players[0].lp}</b> — ${escapeHtml(S.players[1].name)} <b>${S.players[1].lp}</b> · Số lượt: ${S.turnNo}</div>
+        <div class="mbtns" style="margin-top:20px">
+          <button class="primary" id="go-rematch">⚔ Đấu Lại</button>
+          <button id="go-deck">🃏 Xếp Bài</button>
+          <button id="go-menu">🏠 Về Menu</button>
+        </div>
+      `, true);
+      $('go-rematch').onclick = () => { closeModal(); UI.startDuel(cfg); };
+      $('go-deck').onclick = () => { closeModal(); UI.showDeckEditor(); };
+      $('go-menu').onclick = () => { closeModal(); UI.showMenu(); };
+      return;
+    }
     const won = S.winner === 0;
     (won ? sfx.win : sfx.lose)();
     let unlockMsg = '';
-    if (won && cfg.campaign && cfg.duelist) {
+    if (won && cfg && cfg.duelist) {
       const ds = FM.decks.DUELISTS;
       const idx = ds.findIndex(d => d.id === cfg.duelist.id);
       const prog = UI.getProgress();
-      if (!prog.includes(cfg.duelist.id)) prog.push(cfg.duelist.id);
-      localStorage.setItem('fm_unlock_v1', JSON.stringify(prog));
+      if (!prog.includes(cfg.duelist.id)) {
+        prog.push(cfg.duelist.id);
+        localStorage.setItem('fm_unlock_v1', JSON.stringify(prog));
+      }
       const next = ds[idx + 1];
-      unlockMsg = `<div class="msub">🔓 Bạn đã hạ <b>${cfg.duelist.name}</b>!${next ? ' Mục tiêu tiếp theo: <b>' + next.name + '</b>' : ' Bạn đã chinh phục TẤT CẢ đối thủ!'}</div>`;
-    }
-    if (won && cfg.duelist && !cfg.campaign) {
-      const prog = UI.getProgress();
-      if (!prog.includes(cfg.duelist.id)) { prog.push(cfg.duelist.id); localStorage.setItem('fm_unlock_v1', JSON.stringify(prog)); }
+      unlockMsg = `<div class="msub">🔓 Bạn đã hạ <b>${cfg.duelist.name}</b>!${next ? ' Đã mở khóa đối thủ tiếp theo: <b>' + next.name + '</b>!' : ' Bạn đã chinh phục TẤT CẢ đối thủ!'}</div>`;
     }
 
     if (won && FM.player) {
@@ -1766,12 +1813,32 @@
   }
 
   /* ---------------- Public API ---------------- */
+  UI._gameMode = 'ai';
+  UI.setGameMode = function (mode) {
+    UI._gameMode = mode;
+    const is2P = mode === '2p';
+    const tabAi = $('tab-mode-ai');
+    const tab2p = $('tab-mode-2p');
+    if (tabAi) tabAi.classList.toggle('active', !is2P);
+    if (tab2p) tab2p.classList.toggle('active', is2P);
+    const secAi = $('sec-ai-wrap');
+    const sec2p = $('sec-2p-wrap');
+    if (secAi) secAi.classList.toggle('hidden', is2P);
+    if (sec2p) sec2p.classList.toggle('hidden', !is2P);
+    const btnStart = $('btn-start');
+    if (btnStart) {
+      btnStart.textContent = is2P ? '⚔ BẮT ĐẦU ĐẤU 2 NGƯỜI (LP 8000)' : '⚔ VÀO TRẬN (LP 8000)';
+    }
+  };
+
   UI.startDuel = function (c) {
     cfg = c;
     session += 1;
     mode = 'idle'; selHand = -1; selField = -1; pending = {}; previewSel = null;
     bannerKey = '';
-    const duelist = c.duelist || FM.decks.DUELISTS[0];
+    const is2P = !!c.is2P;
+
+    // P0 deck (P1)
     let p0deckList;
     if (c.deckId === 'custom' || !c.deckId) {
       p0deckList = FM.player ? FM.player.getDeck() : FM.decks.DECKS.flameSwordsman.list;
@@ -1784,26 +1851,53 @@
       : FM.decks.expandDeck(p0deckList);
 
     if (p0deckExpanded.length !== 40) {
-      toast('❌ Bộ bài của bạn chưa đủ 40 lá! Hãy vào Xếp Bài để kiểm tra.');
+      toast('❌ Bộ bài của ' + (is2P ? 'Người chơi 1 (P1)' : 'bạn') + ' chưa đủ 40 lá! Hãy vào Xếp Bài để kiểm tra.');
       UI.showDeckEditor();
       return;
     }
 
+    // P1 deck (P2 hoặc AI)
+    let p1deckExpanded;
+    let duelist = null;
+    if (is2P) {
+      let p1deckList;
+      if (c.p1deckId === 'custom') {
+        p1deckList = FM.player ? FM.player.getDeck() : FM.decks.DECKS.dragonMaster.list;
+      } else {
+        const d = FM.decks.DECKS[c.p1deckId || 'dragonMaster'];
+        p1deckList = d ? d.list : FM.decks.DECKS.dragonMaster.list;
+      }
+      p1deckExpanded = Array.isArray(p1deckList) && p1deckList.length === 40 && typeof p1deckList[0] === 'object' && p1deckList[0].kind
+        ? p1deckList
+        : FM.decks.expandDeck(p1deckList);
+      if (p1deckExpanded.length !== 40) {
+        toast('❌ Bộ bài của Người chơi 2 (P2) chưa đủ 40 lá!');
+        return;
+      }
+    } else {
+      duelist = c.duelist || FM.decks.DUELISTS[0];
+      p1deckExpanded = duelist.deck;
+    }
+
     S = E.newDuel({
-      p0name: 'Bạn', p1name: duelist.name,
-      p0deck: p0deckExpanded, p1deck: duelist.deck,
+      p0name: is2P ? 'Người chơi 1 (P1)' : 'Bạn',
+      p1name: is2P ? 'Người chơi 2 (P2)' : duelist.name,
+      p0deck: p0deckExpanded,
+      p1deck: p1deckExpanded,
       difficulty: c.difficulty,
+      is2P: is2P,
     });
+
     // Môi trường đấu trường theo đối thủ + reset thời tiết
     if (FM.fx && FM.fx.boot) {
       FM.fx.boot();
-      FM.fx.setArena(ARENA_BY_DUELIST[duelist.id] || 'temple');
+      FM.fx.setArena(is2P ? 'temple' : (ARENA_BY_DUELIST[duelist.id] || 'temple'));
       FM.fx.setWeather(null);
     }
     $('menu').classList.add('hidden');
     $('battle').classList.remove('hidden');
     renderAll();
-    toast('⚔ Đấu với ' + duelist.name + ' — lượt của bạn trước!');
+    toast(is2P ? '⚔ TRẬN ĐẤU 2 NGƯỜI (PvP) BẮT ĐẦU — P1 đi trước!' : '⚔ Đấu với ' + duelist.name + ' — lượt của bạn trước!');
   };
 
   const ARENA_BY_DUELIST = {
@@ -1823,6 +1917,49 @@
     try { return JSON.parse(localStorage.getItem('fm_unlock_v1') || '[]'); } catch (e) { return []; }
   };
 
+  function renderDeckListTo(containerId, currentSel, onSelect) {
+    const el = $(containerId);
+    if (!el) return;
+    el.innerHTML = '';
+    const playerDeck = FM.player ? FM.player.getDeck() : [];
+
+    // Custom Deck card
+    const customCard = document.createElement('div');
+    const isCustomSel = (currentSel === 'custom' || !currentSel);
+    customCard.className = 'deck-card' + (isCustomSel ? ' sel' : '');
+    customCard.innerHTML = `
+      <div class="dk">🎴 Bộ Bài Của Bạn (Custom Deck)</div>
+      <div class="dd">${playerDeck.length}/40 lá · Tự build từ Rương bài</div>
+    `;
+    customCard.onclick = () => {
+      onSelect('custom');
+      el.querySelectorAll('.deck-card').forEach(x => x.classList.remove('sel'));
+      customCard.classList.add('sel');
+      sfx.select();
+    };
+    el.appendChild(customCard);
+
+    // Starter presets
+    const deckDescs = {
+      flameSwordsman: 'Cân bằng · nhiều cặp fusion (Flame Swordsman, Darkfire Dragon)',
+      dragonMaster: 'Rồng · Mountain buff, Blue-Eyes & Red-Eyes, B. Skull Dragon',
+      shadowLegion: 'Fiend/Zombie · Yami + Dark Energy, Summoned Skull',
+      stormMachine: 'Thunder/Machine · Twin-Headed Thunder Dragon',
+    };
+    Object.entries(FM.decks.DECKS).forEach(([id, d]) => {
+      const c = document.createElement('div');
+      c.className = 'deck-card' + (currentSel === id ? ' sel' : '');
+      c.innerHTML = `<div class="dk">${d.name}</div><div class="dd">${deckDescs[id] || ''}</div>`;
+      c.onclick = () => {
+        onSelect(id);
+        el.querySelectorAll('.deck-card').forEach(x => x.classList.remove('sel'));
+        c.classList.add('sel');
+        sfx.select();
+      };
+      el.appendChild(c);
+    });
+  }
+
   UI.buildMenu = function () {
     const prog = UI.getProgress();
     // Update star counter
@@ -1833,87 +1970,67 @@
 
     // duelists
     const dl = $('duelist-list');
-    dl.innerHTML = '';
-    if (!UI._selDuelist) UI._selDuelist = FM.decks.DUELISTS[0];
-    FM.decks.DUELISTS.forEach((d, i) => {
-      const el = document.createElement('div');
-      const defeated = prog.includes(d.id);
-      const unlocked = i <= Math.max(3, prog.length);
-      const isSel = UI._selDuelist.id === d.id;
-      el.className = 'duelist-card' + (isSel ? ' sel' : '') + (unlocked ? '' : ' locked');
-      el.innerHTML = `<div class="dp">${unlocked ? d.portrait : '🔒'}</div><div class="dn">${d.name}</div><div class="dd">${'⭐'.repeat(Math.min(5, d.diff + 1))}${defeated ? '<br><span style="color:#27ae60;font-weight:700">✅ Đã hạ</span>' : ''}</div>`;
-      if (unlocked) el.onclick = () => {
-        UI._selDuelist = d;
-        document.querySelectorAll('.duelist-card').forEach(x => x.classList.remove('sel'));
-        el.classList.add('sel');
-        sfx.select();
-      };
-      dl.appendChild(el);
-    });
-    if (!UI._selDuelist) UI._selDuelist = FM.decks.DUELISTS[0];
+    if (dl) {
+      dl.innerHTML = '';
+      if (!UI._selDuelist) UI._selDuelist = FM.decks.DUELISTS[0];
+      FM.decks.DUELISTS.forEach((d, i) => {
+        const el = document.createElement('div');
+        const defeated = prog.includes(d.id);
+        // Sửa logic mở khóa: 4 đối thủ đầu mặc định mở, hoặc đã thắng đối thủ này, hoặc đã thắng đối thủ liền trước!
+        const unlocked = (i <= 3) || prog.includes(d.id) || (i > 0 && prog.includes(FM.decks.DUELISTS[i - 1].id)) || (i <= prog.length);
+        const isSel = UI._selDuelist.id === d.id;
+        el.className = 'duelist-card' + (isSel ? ' sel' : '') + (unlocked ? '' : ' locked');
+        el.innerHTML = `<div class="dp">${unlocked ? d.portrait : '🔒'}</div><div class="dn">${d.name}</div><div class="dd">${'⭐'.repeat(Math.min(5, d.diff + 1))}${defeated ? '<br><span style="color:#27ae60;font-weight:700">✅ Đã hạ</span>' : ''}</div>`;
+        if (unlocked) el.onclick = () => {
+          UI._selDuelist = d;
+          document.querySelectorAll('.duelist-card').forEach(x => x.classList.remove('sel'));
+          el.classList.add('sel');
+          sfx.select();
+        };
+        dl.appendChild(el);
+      });
+      if (!UI._selDuelist) UI._selDuelist = FM.decks.DUELISTS[0];
+    }
 
-    // decks: Custom deck first, followed by starter presets
-    const dkl = $('deck-list');
-    dkl.innerHTML = '';
-    const playerDeck = FM.player ? FM.player.getDeck() : [];
-
-    // Custom Deck card
-    const customCard = document.createElement('div');
-    const isCustomSel = (UI._selDeck === 'custom' || !UI._selDeck);
-    customCard.className = 'deck-card' + (isCustomSel ? ' sel' : '');
-    customCard.innerHTML = `
-      <div class="dk">🎴 Bộ Bài Của Bạn (Custom Deck)</div>
-      <div class="dd">${playerDeck.length}/40 lá · Tự build từ Rương bài · Đánh thắng ăn bài</div>
-    `;
-    customCard.onclick = () => {
-      UI._selDeck = 'custom';
-      document.querySelectorAll('.deck-card').forEach(x => x.classList.remove('sel'));
-      customCard.classList.add('sel');
-      sfx.select();
-    };
-    dkl.appendChild(customCard);
-
-    // Starter presets
-    const deckDescs = {
-      flameSwordsman: 'Cân bằng · nhiều cặp fusion kinh điển (Flame Swordsman, Darkfire Dragon)',
-      dragonMaster: 'Rồng · mountain buff, Blue-Eyes & Red-Eyes, fusion thành B. Skull Dragon',
-      shadowLegion: 'Fiend/Zombie · yami + Dark Energy, triệu hồi Summoned Skull nhanh',
-      stormMachine: 'Thunder/Machine · Thunder Dragon fusion thành Twin-Headed Thunder Dragon',
-    };
-    Object.entries(FM.decks.DECKS).forEach(([id, d]) => {
-      const el = document.createElement('div');
-      el.className = 'deck-card' + (UI._selDeck === id ? ' sel' : '');
-      el.innerHTML = `<div class="dk">${d.name}</div><div class="dd">${deckDescs[id] || ''}</div>`;
-      el.onclick = () => {
-        UI._selDeck = id;
-        document.querySelectorAll('.deck-card').forEach(x => x.classList.remove('sel'));
-        el.classList.add('sel');
-        sfx.select();
-      };
-      dkl.appendChild(el);
-    });
+    // AI deck list
     if (!UI._selDeck) UI._selDeck = 'custom';
+    renderDeckListTo('deck-list', UI._selDeck, id => { UI._selDeck = id; });
+
+    // 2P deck lists
+    if (!UI._selDeckP1) UI._selDeckP1 = 'custom';
+    if (!UI._selDeckP2) UI._selDeckP2 = 'dragonMaster';
+    renderDeckListTo('deck-list-p1', UI._selDeckP1, id => { UI._selDeckP1 = id; });
+    renderDeckListTo('deck-list-p2', UI._selDeckP2, id => { UI._selDeckP2 = id; });
 
     // difficulty
     const diffs = ['Dễ 😴', 'Thường 🙂', 'Khá 😏', 'Giỏi 😠', 'Ác mã 😈'];
     const dfl = $('diff-list');
-    dfl.innerHTML = '';
-    diffs.forEach((t, i) => {
-      const b = document.createElement('button');
-      b.textContent = t;
-      if ((UI._selDiff == null ? 1 : UI._selDiff) === i) b.classList.add('sel');
-      b.onclick = () => { UI._selDiff = i; document.querySelectorAll('.diff-list button').forEach(x => x.classList.remove('sel')); b.classList.add('sel'); sfx.select(); };
-      dfl.appendChild(b);
-    });
-    $('menu-progress').textContent = `Tiến độ: đã hạ ${prog.length}/${FM.decks.DUELISTS.length} đối thủ · Lưu tự động trên máy này.`;
+    if (dfl) {
+      dfl.innerHTML = '';
+      diffs.forEach((t, i) => {
+        const b = document.createElement('button');
+        b.textContent = t;
+        if ((UI._selDiff == null ? 1 : UI._selDiff) === i) b.classList.add('sel');
+        b.onclick = () => { UI._selDiff = i; document.querySelectorAll('.diff-list button').forEach(x => x.classList.remove('sel')); b.classList.add('sel'); sfx.select(); };
+        dfl.appendChild(b);
+      });
+    }
+
+    const progEl = $('menu-progress');
+    if (progEl) {
+      progEl.textContent = `Tiến độ: đã hạ ${prog.length}/${FM.decks.DUELISTS.length} đối thủ · Lưu tự động trên máy này.`;
+    }
   };
 
   UI.getSelectedConfig = function () {
+    const is2P = UI._gameMode === '2p';
     return {
+      is2P,
       duelist: UI._selDuelist,
-      deckId: UI._selDeck,
+      deckId: is2P ? (UI._selDeckP1 || 'custom') : UI._selDeck,
+      p1deckId: UI._selDeckP2 || 'dragonMaster',
       difficulty: UI._selDiff == null ? 1 : UI._selDiff,
-      campaign: true,
+      campaign: !is2P,
     };
   };
 
@@ -1926,7 +2043,7 @@
   UI.openSidebarMobile = openSidebarMobile;
   UI.closeSidebarMobile = closeSidebarMobile;
   UI.handlePhaseAction = function (kind) {
-    if (!S || S.winner != null || S.active !== 0 || aiRunning) return;
+    if (!S || S.winner != null || !isCurrentHuman()) return;
     if (kind === 'battle' && S.phase === 'MAIN') {
       E.perform(S, { type: 'BATTLE_PHASE' });
       resetMode();

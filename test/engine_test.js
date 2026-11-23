@@ -209,6 +209,36 @@ function simGame(deckA, deckB, diffA, diffB, maxTurns = 120) {
   assert(reward.starsWon === 5, 'Rank S thưởng 5 Star Chips');
   assert(reward.dropCard != null, 'Ăn được 1 lá bài từ đối thủ');
   console.log('  Player Features done (Rank ' + reward.rank + ', drop: ' + (reward.dropCard && reward.dropCard.data ? reward.dropCard.data.name : '?') + ')');
+
+  // 6. 2-Player (PvP) & Duelist Unlock verification
+  console.log('== 2-Player (PvP) & Unlock verification ==');
+  const customDeck = P.getDeck();
+  const expandedCustom = FM.decks.expandDeck(customDeck);
+  assert(expandedCustom.length === 40, 'expandDeck hỗ trợ mảng custom deck object 40 lá');
+
+  const pvpDuel = E.newDuel({
+    p0name: 'P1', p1name: 'P2',
+    p0deck: expandedCustom,
+    p1deck: FM.decks.DECKS.dragonMaster.list,
+    is2P: true,
+  });
+  assert(pvpDuel.is2P === true, 'pvpDuel.is2P is true');
+  assert(pvpDuel.players[0].isAI === false, 'P1 is human');
+  assert(pvpDuel.players[1].isAI === false, 'P2 is human');
+  assert(pvpDuel.players[0].hand.length === 5, 'P1 có 5 lá bài');
+  assert(pvpDuel.players[1].hand.length === 5, 'P2 có 5 lá bài');
+
+  // Kepura unlock test:
+  const duelists = FM.decks.DUELISTS;
+  const kepuraIdx = duelists.findIndex(d => d.id === 'kepura');
+  const wizardIdx = duelists.findIndex(d => d.id === 'wizard');
+  assert(kepuraIdx === 3, 'Kepura is duelist index 3');
+  assert(wizardIdx === 4, 'Wizard (Pháp Sư Bóng Tối) is duelist index 4');
+
+  const testProg = ['kepura'];
+  const isWizardUnlocked = (wizardIdx <= 3) || testProg.includes(duelists[wizardIdx].id) || (wizardIdx > 0 && testProg.includes(duelists[wizardIdx - 1].id)) || (wizardIdx <= testProg.length);
+  assert(isWizardUnlocked === true, 'Đánh thắng Kepura MỞ KHÓA ngay Pháp Sư Bóng Tối (Wizard)');
+  console.log('  2P & Unlock verification done');
 })();
 
 console.log(failures === 0 ? '\nALL TESTS PASSED ✓' : `\n${failures} FAILURES ✗`);

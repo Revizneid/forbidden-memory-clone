@@ -151,8 +151,20 @@
    * Deck presets — tên theo FM gốc. '#fmXXX' = magic/trap/ritual FM.
    * ------------------------------------------------------------------ */
   function expandDeck(list) {
+    if (!Array.isArray(list)) return [];
+    // Nếu list đã là mảng các card object { kind, id/mid/tid } -> clone mảng
+    if (list.length > 0 && typeof list[0] === 'object' && list[0] !== null && !Array.isArray(list[0]) && list[0].kind) {
+      return list.map(c => Object.assign({}, c));
+    }
     const out = [];
-    for (const [key, n] of list) {
+    for (const item of list) {
+      if (!Array.isArray(item)) {
+        if (item && typeof item === 'object' && item.kind) {
+          out.push(Object.assign({}, item));
+        }
+        continue;
+      }
+      const [key, n] = item;
       for (let i = 0; i < n; i++) {
         if (key[0] === '#' || key[0] === '$') {
           const id = key.slice(1);

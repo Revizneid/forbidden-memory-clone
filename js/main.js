@@ -15,6 +15,12 @@
       try { localStorage.removeItem('fm_duel_v1'); } catch (e) {}
     }
 
+    // Game Mode Tabs
+    const tabAi = $('tab-mode-ai');
+    if (tabAi) tabAi.onclick = () => UI.setGameMode('ai');
+    const tab2p = $('tab-mode-2p');
+    if (tab2p) tab2p.onclick = () => UI.setGameMode('2p');
+
     // Menu actions
     $('btn-start').onclick = () => {
       localStorage.removeItem('fm_duel_v1');
@@ -27,6 +33,8 @@
     if (btnMenuShop) btnMenuShop.onclick = () => UI.showCardShop();
     const btnEditDeck = $('btn-edit-current-deck');
     if (btnEditDeck) btnEditDeck.onclick = () => UI.showDeckEditor();
+    const btnEditP1Deck = $('btn-edit-p1-deck');
+    if (btnEditP1Deck) btnEditP1Deck.onclick = () => UI.showDeckEditor();
 
     // Topbar buttons
     $('btn-fusionlist').onclick = () => UI.showFusionTable();

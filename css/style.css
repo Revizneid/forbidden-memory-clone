@@ -362,6 +362,50 @@ button.big { font-size: 18px; padding: 12px 30px; }
 }
 .text-btn:hover { border-color: var(--gold); background: rgba(212,175,55,.15); }
 
+/* Game Mode Tabs */
+.mode-tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 22px;
+  justify-content: center;
+}
+.mode-tab-btn {
+  flex: 1;
+  max-width: 280px;
+  padding: 12px 18px;
+  font-size: 14px;
+  font-weight: 800;
+  border-radius: 10px;
+  border: 2px solid #3a3355;
+  background: linear-gradient(#221d38, #171329);
+  color: var(--dim);
+  cursor: pointer;
+  transition: .18s ease;
+}
+.mode-tab-btn:hover {
+  border-color: var(--gold);
+  color: var(--text);
+  transform: translateY(-2px);
+}
+.mode-tab-btn.active {
+  border-color: var(--gold);
+  background: linear-gradient(135deg, rgba(212,175,55,.28), rgba(45,35,70,.88));
+  color: var(--gold2);
+  box-shadow: 0 0 16px rgba(212,175,55,.35);
+}
+
+/* Turn highlight for 2P mode */
+.duelist-info.active-turn {
+  box-shadow: 0 0 12px rgba(212,175,55,.6), inset 0 0 8px rgba(212,175,55,.3);
+  border: 1px solid var(--gold);
+  border-radius: 8px;
+}
+.gridwrap.active-turn .gridlabel {
+  color: var(--gold2);
+  text-shadow: 0 0 8px var(--gold);
+  font-weight: 800;
+}
+
 /* ================= OVERLAY / MODAL ================= */
 .overlay {
   position: fixed; inset: 0; background: rgba(5,4,10,.82); z-index: 200;
@@ -1006,6 +1050,14 @@ button.big { font-size: 18px; padding: 12px 30px; }
   .duelist-card .dp { font-size: 24px; }
   .duelist-card .dn { font-size: 11px; }
   .duelist-card .dd { font-size: 9px; }
+  .mode-tabs {
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .mode-tab-btn {
+    padding: 9px 8px;
+    font-size: 12px;
+  }
   .deck-list {
     grid-template-columns: repeat(2, 1fr);
     gap: 6px;

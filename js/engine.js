@@ -43,11 +43,13 @@
   }
 
   function newDuel(cfg) {
+    const p1isAI = cfg.is2P ? false : (cfg.p1isAI !== undefined ? cfg.p1isAI : true);
     const s = {
       players: [
         makePlayer(cfg.p0name || 'Bạn', cfg.p0deck, false),
-        makePlayer(cfg.p1name || 'Máy', cfg.p1deck, true),
+        makePlayer(cfg.p1name || (cfg.is2P ? 'Người chơi 2' : 'Máy'), cfg.p1deck, p1isAI),
       ],
+      is2P: !!cfg.is2P,
       difficulty: cfg.difficulty != null ? cfg.difficulty : 2,
       active: 0, turnNo: 1, phase: 'MAIN', winner: null, loser: null,
       log: [], fx: [],      // fx: animation events consumed by UI
