@@ -66,9 +66,32 @@ button.big { font-size: 18px; padding: 12px 30px; }
 }
 .card .cart {
   flex: 1; display: flex; align-items: center; justify-content: center;
-  font-size: 40px; margin: 2px 5px; border-radius: 5px;
-  background: radial-gradient(circle at 50% 35%, rgba(255,255,255,.75), rgba(120,110,90,.35));
-  border: 1px solid rgba(90,80,60,.5);
+  font-size: 32px; margin: 2px 4px; border-radius: 5px;
+  background: #090c15;
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.8), 0 0 6px rgba(0, 240, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+.card .cart-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 4px;
+  filter: contrast(1.08) saturate(1.15);
+  transition: transform .2s ease;
+}
+.card:hover .cart-img {
+  transform: scale(1.06);
+}
+.card .cart-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: inherit;
 }
 .card .cstats {
   display: flex; justify-content: space-between; align-items: center;

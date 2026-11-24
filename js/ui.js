@@ -61,6 +61,19 @@
     if (card.kind === 'MAGIC') return C.magics[card.mid] ? C.magics[card.mid].icon : '✨';
     return C.traps[card.tid] ? C.traps[card.tid].icon : '🪤';
   }
+  function cardImageId(card) {
+    if (!card) return null;
+    if (card.kind === 'MONSTER') return card.id;
+    if (card.kind === 'MAGIC') {
+      const md = C.magics[card.mid];
+      return md ? (md.fid || Number(String(card.mid).replace(/\D/g, ''))) : Number(String(card.mid).replace(/\D/g, ''));
+    }
+    if (card.kind === 'TRAP') {
+      const td = C.traps[card.tid];
+      return td ? (td.fid || Number(String(card.tid).replace(/\D/g, ''))) : Number(String(card.tid).replace(/\D/g, ''));
+    }
+    return null;
+  }
   function cardEl(card, faceDown, trapFaceDown) {
     const el = document.createElement('div');
     if (faceDown) {
@@ -73,9 +86,14 @@
     const td = card.kind === 'TRAP' ? (C.traps[card.tid] || { name: 'Bẫy #' + card.tid }) : null;
     const attrBg = m ? C.attrColor(m.attr) : (card.kind === 'MAGIC' ? '#2e86de' : '#c2457e');
     const icon = C.cardIcon ? C.cardIcon(card) : (m ? C.raceIcon(m.race) : md ? md.icon : td ? td.icon : '✨');
+    const fid = cardImageId(card);
+    const cardName = m ? m.name : md ? md.name : td ? td.name : 'Thẻ';
+    const artContent = fid
+      ? `<img class="cart-img" src="assets/cards/${fid}.png" alt="${escapeHtml(cardName)}" loading="lazy" onerror="this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='flex';"><span class="cart-fallback" style="display:none">${icon}</span>`
+      : `<span class="cart-fallback">${icon}</span>`;
     el.innerHTML =
-      `<div class="cname">${m ? m.name : md ? md.name : td ? td.name : 'Thẻ'}</div>` +
-      `<div class="cart" style="${m ? `background: radial-gradient(circle at 50% 35%, rgba(255,255,255,.8), ${C.attrColor(m.attr)}66)` : ''}">${icon}</div>` +
+      `<div class="cname">${escapeHtml(cardName)}</div>` +
+      `<div class="cart">${artContent}</div>` +
       `<div class="cstats">${m ? `<span class="catk">ATK ${m.atk}</span><span class="cdef">DEF ${m.def}</span>` : `<span>${card.kind === 'MAGIC' ? '✨ PHÉP' : card.kind === 'TRAP' ? '🪤 BẪY' : '👁 RITUAL'}</span><span></span>`}${m && m.stars ? `<span class="cstar">${C.starIcon(C.starName(m.stars[0]))}</span>` : ''}</div>` +
       `<div class="cbadge" style="background:${attrBg}">${m ? m.attr : card.kind === 'MAGIC' ? 'MAGIC' : 'TRAP'}</div>`;
     return el;
@@ -1251,13 +1269,17 @@
         const kind = reward.dropCard.kind;
         const dropCardObj = { kind, id: reward.dropCard.id, mid: reward.dropCard.mid, tid: reward.dropCard.tid };
         const icon = C.cardIcon ? C.cardIcon(dropCardObj) : (d.attr ? '🐉' : '✨');
+        const dropFid = cardImageId(dropCardObj);
+        const dropArt = dropFid
+          ? `<img class="cart-img" src="assets/cards/${dropFid}.png" alt="${escapeHtml(d.name)}" onerror="this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='flex';"><span class="cart-fallback" style="display:none">${icon}</span>`
+          : `<span class="cart-fallback">${icon}</span>`;
         dropCardHtml = `
           <div class="drop-card-container">
             <div class="drop-label">🎁 CHIẾN LỢI PHẨM (ĂN BÀI ĐỐI THỦ)</div>
             <div class="drop-card-center">
               <div class="card ${kind === 'MAGIC' ? 'magic' : kind === 'TRAP' ? 'trap' : ''} newfx">
-                <div class="cname">${d.name}</div>
-                <div class="cart">${icon}</div>
+                <div class="cname">${escapeHtml(d.name)}</div>
+                <div class="cart">${dropArt}</div>
                 <div class="cstats">${kind === 'MONSTER' ? `<span class="catk">ATK ${d.atk}</span><span class="cdef">DEF ${d.def}</span>` : `<span>${kind === 'MAGIC' ? '✨ PHÉP' : '🪤 BẪY'}</span>`}</div>
                 <div class="cbadge">${d.attr || kind}</div>
               </div>

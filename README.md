@@ -105,8 +105,12 @@ yugioh-fm-clone/
 │   ├── fx.js           # Canvas FX engine: particle, lightning, vortex, arena/terrain ambience, shake
 │   ├── ui.js           # Render UI, Deck Editor, Card Shop, Thưởng chiến thắng, Fusion modal, âm thanh
 │   └── main.js         # Wiring menu + khởi tạo
+├── assets/
+│   └── cards/          # 722 ảnh Cyberpunk card art (1.png .. 722.png)
 ├── scripts/
-│   └── build_cards.js  # Script sinh cards_full.js từ raw database
+│   ├── build_cards.js  # Script sinh cards_full.js từ raw database
+│   ├── generate_cyberpunk_cards.py # Script sinh 722 ảnh cyberpunk cho toàn bộ lá bài
+│   └── generate_cards.bat # Phím tắt 1-click chạy script tạo ảnh trên Windows
 └── test/
     ├── engine_test.js  # Test tự động: DB verification, 200 ván AI vs AI, Ritual smoke, Star battle, Player features
     └── debug_flow.js   # Script debug flow trận đấu

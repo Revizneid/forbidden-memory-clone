@@ -1,0 +1,10220 @@
+[
+  {
+    "id": 1,
+    "name": "Blue-eyes White Dragon",
+    "type": "MONSTER",
+    "race": "Dragon",
+    "attr": "LIGHT",
+    "atk": 3000,
+    "def": 2500,
+    "icon": "🐉⚡",
+    "stars": [
+      "Moon",
+      "Jupiter"
+    ],
+    "code": "89631139"
+  },
+  {
+    "id": 2,
+    "name": "Mystical Elf",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "LIGHT",
+    "atk": 800,
+    "def": 2000,
+    "icon": "🧝‍♀️✨",
+    "stars": [
+      "Moon",
+      "Saturn"
+    ],
+    "code": "15025844"
+  },
+  {
+    "id": 3,
+    "name": "Hitotsu-me Giant",
+    "type": "MONSTER",
+    "race": "Beast-Warrior",
+    "attr": "EARTH",
+    "atk": 1200,
+    "def": 1000,
+    "icon": "👁️👹",
+    "stars": [
+      "Venus",
+      "Jupiter"
+    ],
+    "code": "76184692"
+  },
+  {
+    "id": 4,
+    "name": "Baby Dragon",
+    "type": "MONSTER",
+    "race": "Dragon",
+    "attr": "WIND",
+    "atk": 1200,
+    "def": 700,
+    "icon": "🐣🐲",
+    "stars": [
+      "Pluto",
+      "Moon"
+    ],
+    "code": "88819587"
+  },
+  {
+    "id": 5,
+    "name": "Ryu-kishin",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 1000,
+    "def": 500,
+    "icon": "👿🪨",
+    "stars": [
+      "Uranus",
+      "Moon"
+    ],
+    "code": "15303296"
+  },
+  {
+    "id": 6,
+    "name": "Feral Imp",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 1300,
+    "def": 1400,
+    "icon": "😈🗡️",
+    "stars": [
+      "Venus",
+      "Saturn"
+    ],
+    "code": "41392891"
+  },
+  {
+    "id": 7,
+    "name": "Winged Dragon #1",
+    "type": "MONSTER",
+    "race": "Dragon",
+    "attr": "WIND",
+    "atk": 1400,
+    "def": 1200,
+    "icon": "🦅🐉",
+    "stars": [
+      "Uranus",
+      "Venus"
+    ],
+    "code": "87796900"
+  },
+  {
+    "id": 8,
+    "name": "Mushroom Man",
+    "type": "MONSTER",
+    "race": "Plant",
+    "attr": "EARTH",
+    "atk": 800,
+    "def": 600,
+    "icon": "🍄🌱",
+    "stars": [
+      "Saturn",
+      "Moon"
+    ],
+    "code": "14181608"
+  },
+  {
+    "id": 9,
+    "name": "Shadow Specter",
+    "type": "MONSTER",
+    "race": "Zombie",
+    "attr": "DARK",
+    "atk": 500,
+    "def": 200,
+    "icon": "👻🌑",
+    "stars": [
+      "Venus",
+      "Uranus"
+    ],
+    "code": "40575313"
+  },
+  {
+    "id": 10,
+    "name": "Blackland Fire Dragon",
+    "type": "MONSTER",
+    "race": "Dragon",
+    "attr": "DARK",
+    "atk": 1500,
+    "def": 800,
+    "icon": "🔥🐉",
+    "stars": [
+      "Sun",
+      "Venus"
+    ],
+    "code": "87564352"
+  },
+  {
+    "id": 11,
+    "name": "Sword Arm of Dragon",
+    "type": "MONSTER",
+    "race": "Dinosaur",
+    "attr": "EARTH",
+    "atk": 1750,
+    "def": 2030,
+    "icon": "🐉",
+    "stars": [
+      "Pluto",
+      "Venus"
+    ],
+    "code": "13069066"
+  },
+  {
+    "id": 12,
+    "name": "Swamp Battleguard",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 1800,
+    "def": 1500,
+    "icon": "⚔️🛡️",
+    "stars": [
+      "Sun",
+      "Jupiter"
+    ],
+    "code": "40453765"
+  },
+  {
+    "id": 13,
+    "name": "Tyhone",
+    "type": "MONSTER",
+    "race": "Winged Beast",
+    "attr": "WIND",
+    "atk": 1200,
+    "def": 1400,
+    "icon": "🦅🌤️",
+    "stars": [
+      "Uranus",
+      null
+    ],
+    "code": "72842870"
+  },
+  {
+    "id": 14,
+    "name": "Battle Steer",
+    "type": "MONSTER",
+    "race": "Beast-Warrior",
+    "attr": "EARTH",
+    "atk": 1800,
+    "def": 1300,
+    "icon": "🐗🌲",
+    "stars": [
+      "Venus",
+      "Pluto"
+    ],
+    "code": "18246479"
+  },
+  {
+    "id": 15,
+    "name": "Flame Swordsman",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "FIRE",
+    "atk": 1800,
+    "def": 1600,
+    "icon": "🔥⚔️",
+    "stars": [
+      "Jupiter",
+      "Moon"
+    ],
+    "code": "45231177"
+  },
+  {
+    "id": 16,
+    "name": "Time Wizard",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "LIGHT",
+    "atk": 500,
+    "def": 400,
+    "icon": "⏰🧙‍♂️",
+    "stars": [
+      null,
+      "Moon"
+    ],
+    "code": "71625222"
+  },
+  {
+    "id": 17,
+    "name": "Right Leg of the Forbidden One",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "DARK",
+    "atk": 200,
+    "def": 300,
+    "icon": "🦵✨",
+    "stars": [
+      "Sun",
+      "Saturn"
+    ],
+    "code": "08124921"
+  },
+  {
+    "id": 18,
+    "name": "Left Leg of the Forbidden One",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "DARK",
+    "atk": 200,
+    "def": 300,
+    "icon": "🦵✨",
+    "stars": [
+      "Sun",
+      "Uranus"
+    ],
+    "code": "44519536"
+  },
+  {
+    "id": 19,
+    "name": "Right Arm of the Forbidden One",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "DARK",
+    "atk": 200,
+    "def": 300,
+    "icon": "🖐️⚡",
+    "stars": [
+      "Sun",
+      "Pluto"
+    ],
+    "code": "70903634"
+  },
+  {
+    "id": 20,
+    "name": "Left Arm of the Forbidden One",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "DARK",
+    "atk": 200,
+    "def": 300,
+    "icon": "🖐️⚡",
+    "stars": [
+      "Sun",
+      "Neptune"
+    ],
+    "code": "07902349"
+  },
+  {
+    "id": 21,
+    "name": "Exodia the Forbidden",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "DARK",
+    "atk": 1000,
+    "def": 1000,
+    "icon": "🧙🪄",
+    "stars": [
+      "Sun",
+      "Mercury"
+    ],
+    "code": "33396948"
+  },
+  {
+    "id": 22,
+    "name": "Summoned Skull",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 2500,
+    "def": 1200,
+    "icon": "💀⚡",
+    "stars": [
+      "Venus",
+      "Neptune"
+    ],
+    "code": "70781052"
+  },
+  {
+    "id": 23,
+    "name": "The Wicked Worm Beast",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 1400,
+    "def": 700,
+    "icon": "🐜🌱",
+    "stars": [
+      "Pluto",
+      null
+    ],
+    "code": "06285791"
+  },
+  {
+    "id": 24,
+    "name": "Skull Servant",
+    "type": "MONSTER",
+    "race": "Zombie",
+    "attr": "DARK",
+    "atk": 300,
+    "def": 200,
+    "icon": "💀🦴",
+    "stars": [
+      "Venus",
+      "Mercury"
+    ],
+    "code": "32274490"
+  },
+  {
+    "id": 25,
+    "name": "Horn Imp",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 1300,
+    "def": 1000,
+    "icon": "😈🗡️",
+    "stars": [
+      "Venus",
+      "Sun"
+    ],
+    "code": "69669405"
+  },
+  {
+    "id": 26,
+    "name": "Battle Ox",
+    "type": "MONSTER",
+    "race": "Beast-Warrior",
+    "attr": "EARTH",
+    "atk": 1700,
+    "def": 1000,
+    "icon": "🐂🪓",
+    "stars": [
+      "Saturn",
+      "Venus"
+    ],
+    "code": "05053103"
+  },
+  {
+    "id": 27,
+    "name": "Beaver Warrior",
+    "type": "MONSTER",
+    "race": "Beast-Warrior",
+    "attr": "EARTH",
+    "atk": 1200,
+    "def": 1500,
+    "icon": "🦫🗡️",
+    "stars": [
+      "Saturn",
+      null
+    ],
+    "code": "32452818"
+  },
+  {
+    "id": 28,
+    "name": "Rock Ogre Grotto #1",
+    "type": "MONSTER",
+    "race": "Rock",
+    "attr": "EARTH",
+    "atk": 800,
+    "def": 1200,
+    "icon": "🪨⛰️",
+    "stars": [
+      "Pluto",
+      "Sun"
+    ],
+    "code": "68846917"
+  },
+  {
+    "id": 29,
+    "name": "Mountain Warrior",
+    "type": "MONSTER",
+    "race": "Beast-Warrior",
+    "attr": "EARTH",
+    "atk": 600,
+    "def": 1000,
+    "icon": "⚔️🛡️",
+    "stars": [
+      "Pluto",
+      "Jupiter"
+    ],
+    "code": "04931562"
+  },
+  {
+    "id": 30,
+    "name": "Zombie Warrior",
+    "type": "MONSTER",
+    "race": "Zombie",
+    "attr": "DARK",
+    "atk": 1200,
+    "def": 900,
+    "icon": "🗡️🌑",
+    "stars": [
+      "Venus",
+      "Jupiter"
+    ],
+    "code": "31339260"
+  },
+  {
+    "id": 31,
+    "name": "Koumori Dragon",
+    "type": "MONSTER",
+    "race": "Dragon",
+    "attr": "DARK",
+    "atk": 1500,
+    "def": 1200,
+    "icon": "🌑🐉",
+    "stars": [
+      "Venus",
+      "Saturn"
+    ],
+    "code": "67724379"
+  },
+  {
+    "id": 32,
+    "name": "Two-headed King Rex",
+    "type": "MONSTER",
+    "race": "Dinosaur",
+    "attr": "EARTH",
+    "atk": 1600,
+    "def": 1200,
+    "icon": "🦖🔥",
+    "stars": [
+      "Pluto",
+      "Mercury"
+    ],
+    "code": "94119974"
+  },
+  {
+    "id": 33,
+    "name": "Judge Man",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 2200,
+    "def": 1500,
+    "icon": "⚔️🗡️",
+    "stars": [
+      "Moon",
+      "Uranus"
+    ],
+    "code": "30113682"
+  },
+  {
+    "id": 34,
+    "name": "Saggi the Dark Clown",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "DARK",
+    "atk": 600,
+    "def": 1500,
+    "icon": "🧙✨",
+    "stars": [
+      "Sun",
+      "Venus"
+    ],
+    "code": "66602787"
+  },
+  {
+    "id": 35,
+    "name": "Dark Magician",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "DARK",
+    "atk": 2500,
+    "def": 2100,
+    "icon": "🧙‍♂️🔮",
+    "stars": [
+      "Sun",
+      "Jupiter"
+    ],
+    "code": "46986414"
+  },
+  {
+    "id": 36,
+    "name": "The Snake Hair",
+    "type": "MONSTER",
+    "race": "Zombie",
+    "attr": "DARK",
+    "atk": 1500,
+    "def": 1200,
+    "icon": "🐍🩸",
+    "stars": [
+      "Venus",
+      "Uranus"
+    ],
+    "code": "29491031"
+  },
+  {
+    "id": 37,
+    "name": "Gaia the Dragon Champion",
+    "type": "MONSTER",
+    "race": "Dragon",
+    "attr": "WIND",
+    "atk": 2600,
+    "def": 2100,
+    "icon": "🏇🐉",
+    "stars": [
+      "Uranus",
+      "Sun"
+    ],
+    "code": "66889139"
+  },
+  {
+    "id": 38,
+    "name": "Gaia the Fierce Knight",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 2300,
+    "def": 2100,
+    "icon": "🏇⚔️",
+    "stars": [
+      "Sun",
+      "Saturn"
+    ],
+    "code": "06368038"
+  },
+  {
+    "id": 39,
+    "name": "Curse of Dragon",
+    "type": "MONSTER",
+    "race": "Dragon",
+    "attr": "DARK",
+    "atk": 2000,
+    "def": 1500,
+    "icon": "🐉🔥",
+    "stars": [
+      "Uranus",
+      "Neptune"
+    ],
+    "code": "28279543"
+  },
+  {
+    "id": 40,
+    "name": "Dragon Piper",
+    "type": "MONSTER",
+    "race": "Pyro",
+    "attr": "FIRE",
+    "atk": 200,
+    "def": 1800,
+    "icon": "🔥🐉",
+    "stars": [
+      "Jupiter",
+      "Venus"
+    ],
+    "code": "55763552"
+  },
+  {
+    "id": 41,
+    "name": "Celtic Guardian",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 1400,
+    "def": 1200,
+    "icon": "🧝‍♂️🗡️",
+    "stars": [
+      "Moon",
+      "Pluto"
+    ],
+    "code": "91152256"
+  },
+  {
+    "id": 42,
+    "name": "Illusionist Faceless Mage",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "DARK",
+    "atk": 1200,
+    "def": 2200,
+    "icon": "🧙‍♂️🌑",
+    "stars": [
+      null,
+      "Jupiter"
+    ],
+    "code": "28546905"
+  },
+  {
+    "id": 43,
+    "name": "Karbonala Warrior",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 1500,
+    "def": 1200,
+    "icon": "⚔️🛡️",
+    "stars": [
+      "Pluto",
+      "Saturn"
+    ],
+    "code": "54541900"
+  },
+  {
+    "id": 44,
+    "name": "Rogue Doll",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "LIGHT",
+    "atk": 1600,
+    "def": 1000,
+    "icon": "🧙🕯️",
+    "stars": [
+      "Moon",
+      "Neptune"
+    ],
+    "code": "91939608"
+  },
+  {
+    "id": 45,
+    "name": "Oscillo Hero #2",
+    "type": "MONSTER",
+    "race": "Thunder",
+    "attr": "LIGHT",
+    "atk": 1000,
+    "def": 500,
+    "icon": "⚡🔋",
+    "stars": [
+      "Neptune",
+      "Moon"
+    ],
+    "code": "27324313"
+  },
+  {
+    "id": 46,
+    "name": "Griffore",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 1200,
+    "def": 1500,
+    "icon": "🐅🐾",
+    "stars": [
+      "Saturn",
+      "Sun"
+    ],
+    "code": "53829412"
+  },
+  {
+    "id": 47,
+    "name": "Torike",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 1200,
+    "def": 600,
+    "icon": "🐅⚡",
+    "stars": [
+      "Pluto",
+      "Moon"
+    ],
+    "code": "80813021"
+  },
+  {
+    "id": 48,
+    "name": "Sangan",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 1000,
+    "def": 600,
+    "icon": "👁️🐾",
+    "stars": [
+      "Venus",
+      "Pluto"
+    ],
+    "code": "26202165"
+  },
+  {
+    "id": 49,
+    "name": "Big Insect",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "EARTH",
+    "atk": 1200,
+    "def": 1500,
+    "icon": "🐜🌱",
+    "stars": [
+      "Saturn",
+      "Pluto"
+    ],
+    "code": "53606874"
+  },
+  {
+    "id": 50,
+    "name": "Basic Insect",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "EARTH",
+    "atk": 500,
+    "def": 700,
+    "icon": "🐜🌱",
+    "stars": [
+      "Saturn",
+      "Neptune"
+    ],
+    "code": "89091579"
+  },
+  {
+    "id": 51,
+    "name": "Armored Lizard",
+    "type": "MONSTER",
+    "race": "Reptile",
+    "attr": "EARTH",
+    "atk": 1500,
+    "def": 1200,
+    "icon": "🦎🌿",
+    "stars": [
+      "Mercury",
+      "Moon"
+    ],
+    "code": "15480588"
+  },
+  {
+    "id": 52,
+    "name": "Hercules Beetle",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "EARTH",
+    "atk": 1500,
+    "def": 2000,
+    "icon": "🐝🍯",
+    "stars": [
+      "Saturn",
+      "Mercury"
+    ],
+    "code": "52584282"
+  },
+  {
+    "id": 53,
+    "name": "Killer Needle",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "WIND",
+    "atk": 1200,
+    "def": 1000,
+    "icon": "🪲🏜️",
+    "stars": [
+      "Saturn",
+      "Moon"
+    ],
+    "code": "88979991"
+  },
+  {
+    "id": 54,
+    "name": "Gokibore",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "EARTH",
+    "atk": 1200,
+    "def": 1400,
+    "icon": "🪲🌿",
+    "stars": [
+      "Saturn",
+      "Venus"
+    ],
+    "code": "15367030"
+  },
+  {
+    "id": 55,
+    "name": "Giant Flea",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "EARTH",
+    "atk": 1500,
+    "def": 1200,
+    "icon": "🐜🌱",
+    "stars": [
+      "Saturn",
+      null
+    ],
+    "code": "41762634"
+  },
+  {
+    "id": 56,
+    "name": "Larvae Moth",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "EARTH",
+    "atk": 500,
+    "def": 400,
+    "icon": "🐜🌱",
+    "stars": [
+      "Saturn",
+      "Sun"
+    ],
+    "code": "87756343"
+  },
+  {
+    "id": 57,
+    "name": "Great Moth",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "EARTH",
+    "atk": 2600,
+    "def": 2500,
+    "icon": "🐜🌱",
+    "stars": [
+      "Saturn",
+      "Pluto"
+    ],
+    "code": "14141448"
+  },
+  {
+    "id": 58,
+    "name": "Kuriboh",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 300,
+    "def": 200,
+    "icon": "🌰✨",
+    "stars": [
+      "Sun",
+      "Uranus"
+    ],
+    "code": "40640057"
+  },
+  {
+    "id": 59,
+    "name": "Mammoth Graveyard",
+    "type": "MONSTER",
+    "race": "Dinosaur",
+    "attr": "EARTH",
+    "atk": 1200,
+    "def": 800,
+    "icon": "🐜🌱",
+    "stars": [
+      "Sun",
+      "Neptune"
+    ],
+    "code": "40374923"
+  },
+  {
+    "id": 60,
+    "name": "Great White",
+    "type": "MONSTER",
+    "race": "Fish",
+    "attr": "WATER",
+    "atk": 1600,
+    "def": 800,
+    "icon": "🐟💧",
+    "stars": [
+      "Mercury",
+      "Venus"
+    ],
+    "code": "13429800"
+  },
+  {
+    "id": 61,
+    "name": "Wolf",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 1200,
+    "def": 800,
+    "icon": "🐺🌙",
+    "stars": [
+      "Saturn",
+      "Neptune"
+    ],
+    "code": "49417509"
+  },
+  {
+    "id": 62,
+    "name": "Harpie Lady",
+    "type": "MONSTER",
+    "race": "Winged Beast",
+    "attr": "WIND",
+    "atk": 1300,
+    "def": 1400,
+    "icon": "🪶💃",
+    "stars": [
+      "Uranus",
+      "Mercury"
+    ],
+    "code": "76812113"
+  },
+  {
+    "id": 63,
+    "name": "Harpie Lady Sisters",
+    "type": "MONSTER",
+    "race": "Winged Beast",
+    "attr": "WIND",
+    "atk": 1950,
+    "def": 2100,
+    "icon": "🪶💃",
+    "stars": [
+      "Uranus",
+      "Jupiter"
+    ],
+    "code": "12206212"
+  },
+  {
+    "id": 64,
+    "name": "Tiger Axe",
+    "type": "MONSTER",
+    "race": "Beast-Warrior",
+    "attr": "EARTH",
+    "atk": 1300,
+    "def": 1100,
+    "icon": "🐅🌿",
+    "stars": [
+      "Saturn",
+      "Mercury"
+    ],
+    "code": "49791927"
+  },
+  {
+    "id": 65,
+    "name": "Silver Fang",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 1200,
+    "def": 800,
+    "icon": "🐺❄️",
+    "stars": [
+      "Saturn",
+      "Moon"
+    ],
+    "code": "90357090"
+  },
+  {
+    "id": 66,
+    "name": "Kojikocy",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 1500,
+    "def": 1200,
+    "icon": "⚔️🏹",
+    "stars": [
+      "Pluto",
+      "Venus"
+    ],
+    "code": "01184620"
+  },
+  {
+    "id": 67,
+    "name": "Perfectly Ultimate Great Moth",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "EARTH",
+    "atk": 3500,
+    "def": 3000,
+    "icon": "🐜🌱",
+    "stars": [
+      "Saturn",
+      "Venus"
+    ],
+    "code": "48579379"
+  },
+  {
+    "id": 68,
+    "name": "Garoozis",
+    "type": "MONSTER",
+    "race": "Beast-Warrior",
+    "attr": "FIRE",
+    "atk": 1800,
+    "def": 1500,
+    "icon": "🐗🐂",
+    "stars": [
+      "Jupiter",
+      null
+    ],
+    "code": "14977074"
+  },
+  {
+    "id": 69,
+    "name": "Thousand Dragon",
+    "type": "MONSTER",
+    "race": "Dragon",
+    "attr": "WIND",
+    "atk": 2400,
+    "def": 2000,
+    "icon": "🦅🐉",
+    "stars": [
+      "Jupiter",
+      "Sun"
+    ],
+    "code": "41462083"
+  },
+  {
+    "id": 70,
+    "name": "Fiend Kraken",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 1200,
+    "def": 1400,
+    "icon": "👹🔥",
+    "stars": [
+      "Mercury",
+      null
+    ],
+    "code": "77456781"
+  },
+  {
+    "id": 71,
+    "name": "Jellyfish",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 1200,
+    "def": 1500,
+    "icon": "🐟🌊",
+    "stars": [
+      "Mercury",
+      "Sun"
+    ],
+    "code": "14851496"
+  },
+  {
+    "id": 72,
+    "name": "Cocoon of Evolution",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "EARTH",
+    "atk": 0,
+    "def": 2000,
+    "icon": "🪲🌱",
+    "stars": [
+      "Saturn",
+      null
+    ],
+    "code": "40240595"
+  },
+  {
+    "id": 73,
+    "name": "Kairyu-shin",
+    "type": "MONSTER",
+    "race": "Sea Serpent",
+    "attr": "WATER",
+    "atk": 1800,
+    "def": 1500,
+    "icon": "🐉🌊",
+    "stars": [
+      "Mercury",
+      "Jupiter"
+    ],
+    "code": "76634149"
+  },
+  {
+    "id": 74,
+    "name": "Giant Soldier of Stone",
+    "type": "MONSTER",
+    "race": "Rock",
+    "attr": "EARTH",
+    "atk": 1300,
+    "def": 2000,
+    "icon": "🐜🌱",
+    "stars": [
+      "Pluto",
+      null
+    ],
+    "code": "13039848"
+  },
+  {
+    "id": 75,
+    "name": "Man-eating Plant",
+    "type": "MONSTER",
+    "race": "Plant",
+    "attr": "EARTH",
+    "atk": 800,
+    "def": 600,
+    "icon": "🐜🌱",
+    "stars": [
+      "Sun",
+      "Saturn"
+    ],
+    "code": "49127943"
+  },
+  {
+    "id": 76,
+    "name": "Krokodilus",
+    "type": "MONSTER",
+    "race": "Reptile",
+    "attr": "WATER",
+    "atk": 1100,
+    "def": 1200,
+    "icon": "🦎💧",
+    "stars": [
+      "Mercury",
+      "Saturn"
+    ],
+    "code": "76512652"
+  },
+  {
+    "id": 77,
+    "name": "Grappler",
+    "type": "MONSTER",
+    "race": "Reptile",
+    "attr": "WATER",
+    "atk": 1300,
+    "def": 1200,
+    "icon": "🦎🪵",
+    "stars": [
+      "Mercury",
+      "Uranus"
+    ],
+    "code": "02906250"
+  },
+  {
+    "id": 78,
+    "name": "Axe Raider",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 1700,
+    "def": 1150,
+    "icon": "⚔️🏆",
+    "stars": [
+      "Pluto",
+      "Sun"
+    ],
+    "code": "48305365"
+  },
+  {
+    "id": 79,
+    "name": "Megazowler",
+    "type": "MONSTER",
+    "race": "Dinosaur",
+    "attr": "EARTH",
+    "atk": 1800,
+    "def": 2000,
+    "icon": "🦉🌙",
+    "stars": [
+      "Pluto",
+      "Mercury"
+    ],
+    "code": "75390004"
+  },
+  {
+    "id": 80,
+    "name": "Uraby",
+    "type": "MONSTER",
+    "race": "Dinosaur",
+    "attr": "EARTH",
+    "atk": 1500,
+    "def": 800,
+    "icon": "🦖🔥",
+    "stars": [
+      "Pluto",
+      "Jupiter"
+    ],
+    "code": "01784619"
+  },
+  {
+    "id": 81,
+    "name": "Crawling Dragon #2",
+    "type": "MONSTER",
+    "race": "Dinosaur",
+    "attr": "EARTH",
+    "atk": 1600,
+    "def": 1200,
+    "icon": "🐉",
+    "stars": [
+      "Venus",
+      "Neptune"
+    ],
+    "code": "38289717"
+  },
+  {
+    "id": 82,
+    "name": "Red-eyes B. Dragon",
+    "type": "MONSTER",
+    "race": "Dragon",
+    "attr": "DARK",
+    "atk": 2400,
+    "def": 2000,
+    "icon": "🌑🐉",
+    "stars": [
+      "Venus",
+      "Mercury"
+    ],
+    "code": "74677422"
+  },
+  {
+    "id": 83,
+    "name": "Castle of Dark Illusions",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 920,
+    "def": 1930,
+    "icon": "👹🌑",
+    "stars": [
+      "Sun",
+      "Pluto"
+    ],
+    "code": "00062121"
+  },
+  {
+    "id": 84,
+    "name": "Reaper of the Cards",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 1380,
+    "def": 1930,
+    "icon": "👹🔥",
+    "stars": [
+      "Venus",
+      "Neptune"
+    ],
+    "code": "33066139"
+  },
+  {
+    "id": 85,
+    "name": "King of Yamimakai",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 2000,
+    "def": 1530,
+    "icon": "👹🩸",
+    "stars": [
+      "Venus",
+      "Neptune"
+    ],
+    "code": "69455834"
+  },
+  {
+    "id": 86,
+    "name": "Barox",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 1380,
+    "def": 1530,
+    "icon": "🐂⚡",
+    "stars": [
+      "Saturn",
+      "Sun"
+    ],
+    "code": "06840573"
+  },
+  {
+    "id": 87,
+    "name": "Dark Chimera",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 1610,
+    "def": 1460,
+    "icon": "👹🗡️",
+    "stars": [
+      "Sun",
+      "Mercury"
+    ],
+    "code": "32344688"
+  },
+  {
+    "id": 88,
+    "name": "Metal Guardian",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 1150,
+    "def": 2150,
+    "icon": "🗡️🌑",
+    "stars": [
+      "Venus",
+      "Sun"
+    ],
+    "code": "68339286"
+  },
+  {
+    "id": 89,
+    "name": "Catapult Turtle",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 1000,
+    "def": 2000,
+    "icon": "🐢🌊",
+    "stars": [
+      "Mercury",
+      "Moon"
+    ],
+    "code": "95727991"
+  },
+  {
+    "id": 90,
+    "name": "Gyakutenno Megami",
+    "type": "MONSTER",
+    "race": "Fairy",
+    "attr": "LIGHT",
+    "atk": 1800,
+    "def": 2000,
+    "icon": "🧚🌸",
+    "stars": [
+      "Moon",
+      "Mercury"
+    ],
+    "code": "31122090"
+  },
+  {
+    "id": 91,
+    "name": "Mystic Horseman",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 1300,
+    "def": 1550,
+    "icon": "🐎💨",
+    "stars": [
+      "Saturn",
+      "Pluto"
+    ],
+    "code": "68516705"
+  },
+  {
+    "id": 92,
+    "name": "Rabid Horseman",
+    "type": "MONSTER",
+    "race": "Beast-Warrior",
+    "attr": "EARTH",
+    "atk": 2000,
+    "def": 1700,
+    "icon": "🐎💨",
+    "stars": [
+      "Saturn",
+      "Neptune"
+    ],
+    "code": "94905343"
+  },
+  {
+    "id": 93,
+    "name": "Zanki",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 1500,
+    "def": 1700,
+    "icon": "⚔️🥊",
+    "stars": [
+      "Pluto",
+      "Saturn"
+    ],
+    "code": "30090452"
+  },
+  {
+    "id": 94,
+    "name": "Crawling Dragon",
+    "type": "MONSTER",
+    "race": "Dragon",
+    "attr": "EARTH",
+    "atk": 1600,
+    "def": 1400,
+    "icon": "🐉",
+    "stars": [
+      "Pluto",
+      "Moon"
+    ],
+    "code": "67494157"
+  },
+  {
+    "id": 95,
+    "name": "Crass Clown",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 1350,
+    "def": 1400,
+    "icon": "👹🗡️",
+    "stars": [
+      null,
+      "Saturn"
+    ],
+    "code": "93889755"
+  },
+  {
+    "id": 96,
+    "name": "Armored Zombie",
+    "type": "MONSTER",
+    "race": "Zombie",
+    "attr": "DARK",
+    "atk": 1500,
+    "def": 0,
+    "icon": "🧟🥩",
+    "stars": [
+      "Venus",
+      "Neptune"
+    ],
+    "code": "20277860"
+  },
+  {
+    "id": 97,
+    "name": "Dragon Zombie",
+    "type": "MONSTER",
+    "race": "Zombie",
+    "attr": "DARK",
+    "atk": 1600,
+    "def": 0,
+    "icon": "🌑🐉",
+    "stars": [
+      "Venus",
+      "Neptune"
+    ],
+    "code": "66672569"
+  },
+  {
+    "id": 98,
+    "name": "Clown Zombie",
+    "type": "MONSTER",
+    "race": "Zombie",
+    "attr": "DARK",
+    "atk": 1350,
+    "def": 0,
+    "icon": "🧟🥩",
+    "stars": [
+      "Venus",
+      "Neptune"
+    ],
+    "code": "92667214"
+  },
+  {
+    "id": 99,
+    "name": "Pumpking the King of Ghosts",
+    "type": "MONSTER",
+    "race": "Zombie",
+    "attr": "DARK",
+    "atk": 1800,
+    "def": 2000,
+    "icon": "👻🌑",
+    "stars": [
+      "Saturn",
+      "Mercury"
+    ],
+    "code": "29155212"
+  },
+  {
+    "id": 100,
+    "name": "Battle Warrior",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 700,
+    "def": 1000,
+    "icon": "⚔️🛡️",
+    "stars": [
+      "Pluto",
+      "Venus"
+    ],
+    "code": "55550921"
+  },
+  {
+    "id": 101,
+    "name": "Wings of Wicked Flame",
+    "type": "MONSTER",
+    "race": "Pyro",
+    "attr": "FIRE",
+    "atk": 700,
+    "def": 600,
+    "icon": "🦅🪶",
+    "stars": [
+      "Jupiter",
+      "Uranus"
+    ],
+    "code": "92944626"
+  },
+  {
+    "id": 102,
+    "name": "Mask of Darkness",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 900,
+    "def": 400,
+    "icon": "👹👁️",
+    "stars": [
+      "Sun",
+      "Venus"
+    ],
+    "code": "28933734"
+  },
+  {
+    "id": 103,
+    "name": "Job-change Mirror",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 800,
+    "def": 1300,
+    "icon": "👹🗡️",
+    "stars": [
+      "Sun",
+      "Jupiter"
+    ],
+    "code": "55337339"
+  },
+  {
+    "id": 104,
+    "name": "Curtain of the Dark Ones",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "DARK",
+    "atk": 600,
+    "def": 500,
+    "icon": "🧙🔮",
+    "stars": [
+      "Sun",
+      "Saturn"
+    ],
+    "code": "22026707"
+  },
+  {
+    "id": 105,
+    "name": "Tomozaurus",
+    "type": "MONSTER",
+    "race": "Dinosaur",
+    "attr": "EARTH",
+    "atk": 500,
+    "def": 400,
+    "icon": "🦖🌿",
+    "stars": [
+      "Pluto",
+      null
+    ],
+    "code": "46457856"
+  },
+  {
+    "id": 106,
+    "name": "Spirit of the Winds",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "WIND",
+    "atk": 1700,
+    "def": 1400,
+    "icon": "🧙✨",
+    "stars": [
+      "Uranus",
+      "Moon"
+    ],
+    "code": "54615781"
+  },
+  {
+    "id": 107,
+    "name": "Kageningen",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "DARK",
+    "atk": 800,
+    "def": 600,
+    "icon": "⚔️🔱",
+    "stars": [
+      "Venus",
+      "Jupiter"
+    ],
+    "code": "80600490"
+  },
+  {
+    "id": 108,
+    "name": "Graveyard and the Hand of Invitation",
+    "type": "MONSTER",
+    "race": "Zombie",
+    "attr": "DARK",
+    "atk": 700,
+    "def": 900,
+    "icon": "🧟🥩",
+    "stars": [
+      "Venus",
+      "Neptune"
+    ],
+    "code": "27094595"
+  },
+  {
+    "id": 109,
+    "name": "Goddess with the Third Eye",
+    "type": "MONSTER",
+    "race": "Fairy",
+    "attr": "LIGHT",
+    "atk": 1200,
+    "def": 1000,
+    "icon": "👸✨",
+    "stars": [
+      "Moon",
+      null
+    ],
+    "code": "53493204"
+  },
+  {
+    "id": 110,
+    "name": "Hero of the East",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 1100,
+    "def": 1000,
+    "icon": "⚔️🏆",
+    "stars": [
+      "Pluto",
+      "Sun"
+    ],
+    "code": "89987208"
+  },
+  {
+    "id": 111,
+    "name": "Doma The Angel of Silence",
+    "type": "MONSTER",
+    "race": "Fairy",
+    "attr": "DARK",
+    "atk": 1600,
+    "def": 1400,
+    "icon": "👼✨",
+    "stars": [
+      "Sun",
+      "Uranus"
+    ],
+    "code": "16972957"
+  },
+  {
+    "id": 112,
+    "name": "That Which Feeds on Life",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 1200,
+    "def": 1000,
+    "icon": "👹😈",
+    "stars": [
+      "Sun",
+      "Pluto"
+    ],
+    "code": "52367652"
+  },
+  {
+    "id": 113,
+    "name": "Dark Gray",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 800,
+    "def": 900,
+    "icon": "🐅🌿",
+    "stars": [
+      "Saturn",
+      "Venus"
+    ],
+    "code": "09159938"
+  },
+  {
+    "id": 114,
+    "name": "White Magical Hat",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "LIGHT",
+    "atk": 1000,
+    "def": 700,
+    "icon": "🧙✨",
+    "stars": [
+      "Moon",
+      "Jupiter"
+    ],
+    "code": "15150365"
+  },
+  {
+    "id": 115,
+    "name": "Kamion Wizard",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "DARK",
+    "atk": 1300,
+    "def": 1100,
+    "icon": "🧙‍♂️🌑",
+    "stars": [
+      "Sun",
+      "Neptune"
+    ],
+    "code": "41544074"
+  },
+  {
+    "id": 116,
+    "name": "Nightmare Scorpion",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "EARTH",
+    "atk": 900,
+    "def": 800,
+    "icon": "🪲🍃",
+    "stars": [
+      "Pluto",
+      "Mercury"
+    ],
+    "code": "88643173"
+  },
+  {
+    "id": 117,
+    "name": "Spirit of the Books",
+    "type": "MONSTER",
+    "race": "Winged Beast",
+    "attr": "WIND",
+    "atk": 1400,
+    "def": 1200,
+    "icon": "🦅🌤️",
+    "stars": [
+      "Uranus",
+      "Venus"
+    ],
+    "code": "14037717"
+  },
+  {
+    "id": 118,
+    "name": "Supporter in the Shadows",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 1000,
+    "def": 1000,
+    "icon": "⚔️🏆",
+    "stars": [
+      "Saturn",
+      null
+    ],
+    "code": "41422426"
+  },
+  {
+    "id": 119,
+    "name": "Trial of Nightmares",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 1300,
+    "def": 900,
+    "icon": "👹🗡️",
+    "stars": [
+      "Venus",
+      "Neptune"
+    ],
+    "code": "77827521"
+  },
+  {
+    "id": 120,
+    "name": "Dream Clown",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 1200,
+    "def": 900,
+    "icon": "⚔️🛡️",
+    "stars": [
+      null,
+      "Uranus"
+    ],
+    "code": "13215230"
+  },
+  {
+    "id": 121,
+    "name": "Sleeping Lion",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 700,
+    "def": 1700,
+    "icon": "🦁👑",
+    "stars": [
+      "Saturn",
+      "Moon"
+    ],
+    "code": "40200834"
+  },
+  {
+    "id": 122,
+    "name": "Yamatano Dragon Scroll",
+    "type": "MONSTER",
+    "race": "Dragon",
+    "attr": "WIND",
+    "atk": 900,
+    "def": 300,
+    "icon": "🦅🐉",
+    "stars": [
+      "Uranus",
+      null
+    ],
+    "code": "76704943"
+  },
+  {
+    "id": 123,
+    "name": "Dark Plant",
+    "type": "MONSTER",
+    "race": "Plant",
+    "attr": "DARK",
+    "atk": 300,
+    "def": 400,
+    "icon": "🐜🌱",
+    "stars": [
+      "Venus",
+      "Saturn"
+    ],
+    "code": "13193642"
+  },
+  {
+    "id": 124,
+    "name": "Ancient Tool",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "DARK",
+    "atk": 1700,
+    "def": 1400,
+    "icon": "🤖📡",
+    "stars": [
+      "Venus",
+      "Uranus"
+    ],
+    "code": "49587396"
+  },
+  {
+    "id": 125,
+    "name": "Faith Bird",
+    "type": "MONSTER",
+    "race": "Winged Beast",
+    "attr": "WIND",
+    "atk": 1500,
+    "def": 1100,
+    "icon": "🦅🪶",
+    "stars": [
+      "Moon",
+      "Saturn"
+    ],
+    "code": "75582395"
+  },
+  {
+    "id": 126,
+    "name": "Orion the Battle King",
+    "type": "MONSTER",
+    "race": "Fairy",
+    "attr": "LIGHT",
+    "atk": 1800,
+    "def": 1500,
+    "icon": "🧚🪞",
+    "stars": [
+      "Moon",
+      "Uranus"
+    ],
+    "code": "02971090"
+  },
+  {
+    "id": 127,
+    "name": "Ansatsu",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 1700,
+    "def": 1200,
+    "icon": "⚔️🎖️",
+    "stars": [
+      "Sun",
+      "Mercury"
+    ],
+    "code": "48365709"
+  },
+  {
+    "id": 128,
+    "name": "LaMoon",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "LIGHT",
+    "atk": 1200,
+    "def": 1700,
+    "icon": "🧙🔮",
+    "stars": [
+      "Moon",
+      "Pluto"
+    ],
+    "code": "75850803"
+  },
+  {
+    "id": 129,
+    "name": "Nemuriko",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "DARK",
+    "atk": 800,
+    "def": 700,
+    "icon": "🧙📜",
+    "stars": [
+      "Sun",
+      "Venus"
+    ],
+    "code": "90963488"
+  },
+  {
+    "id": 130,
+    "name": "Weather Control",
+    "type": "MONSTER",
+    "race": "Fairy",
+    "attr": "LIGHT",
+    "atk": 600,
+    "def": 400,
+    "icon": "🧚🌸",
+    "stars": [
+      "Moon",
+      "Neptune"
+    ],
+    "code": "37243151"
+  },
+  {
+    "id": 131,
+    "name": "Octoberser",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 1600,
+    "def": 1400,
+    "icon": "🌊❄️",
+    "stars": [
+      "Mercury",
+      "Venus"
+    ],
+    "code": "74637266"
+  },
+  {
+    "id": 132,
+    "name": "The 13th Grave",
+    "type": "MONSTER",
+    "race": "Zombie",
+    "attr": "DARK",
+    "atk": 1200,
+    "def": 900,
+    "icon": "🧟🥩",
+    "stars": [
+      "Venus",
+      "Neptune"
+    ],
+    "code": "00032864"
+  },
+  {
+    "id": 133,
+    "name": "Charubin the Fire Knight",
+    "type": "MONSTER",
+    "race": "Pyro",
+    "attr": "FIRE",
+    "atk": 1100,
+    "def": 800,
+    "icon": "🔥⚔️",
+    "stars": [
+      "Jupiter",
+      "Pluto"
+    ],
+    "code": "37421579"
+  },
+  {
+    "id": 134,
+    "name": "Mystical Capture Chain",
+    "type": "MONSTER",
+    "race": "Fairy",
+    "attr": "LIGHT",
+    "atk": 700,
+    "def": 700,
+    "icon": "🧚🪞",
+    "stars": [
+      "Moon",
+      "Mercury"
+    ],
+    "code": "63515678"
+  },
+  {
+    "id": 135,
+    "name": "Fiend's Hand",
+    "type": "MONSTER",
+    "race": "Zombie",
+    "attr": "DARK",
+    "atk": 600,
+    "def": 600,
+    "icon": "👹🔥",
+    "stars": [
+      "Venus",
+      "Neptune"
+    ],
+    "code": "52800428"
+  },
+  {
+    "id": 136,
+    "name": "Witty Phantom",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 1400,
+    "def": 1300,
+    "icon": "👻🌑",
+    "stars": [
+      "Sun",
+      "Jupiter"
+    ],
+    "code": "36304921"
+  },
+  {
+    "id": 137,
+    "name": "Mystery Hand",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 500,
+    "def": 500,
+    "icon": "👹💀",
+    "stars": [
+      "Venus",
+      "Pluto"
+    ],
+    "code": "62793020"
+  },
+  {
+    "id": 138,
+    "name": "Dragon Statue",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 1100,
+    "def": 900,
+    "icon": "🐉",
+    "stars": [
+      "Pluto",
+      "Jupiter"
+    ],
+    "code": "09197735"
+  },
+  {
+    "id": 139,
+    "name": "Blue-eyed Silver Zombie",
+    "type": "MONSTER",
+    "race": "Zombie",
+    "attr": "DARK",
+    "atk": 900,
+    "def": 700,
+    "icon": "🧟🥩",
+    "stars": [
+      "Moon",
+      "Neptune"
+    ],
+    "code": "35282433"
+  },
+  {
+    "id": 140,
+    "name": "Toad Master",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 1000,
+    "def": 1000,
+    "icon": "🌊🌧️",
+    "stars": [
+      "Mercury",
+      null
+    ],
+    "code": "62671448"
+  },
+  {
+    "id": 141,
+    "name": "Spiked Snail",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "DARK",
+    "atk": 700,
+    "def": 1300,
+    "icon": "🪲🏜️",
+    "stars": [
+      "Venus",
+      "Saturn"
+    ],
+    "code": "98075147"
+  },
+  {
+    "id": 142,
+    "name": "Flame Manipulator",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "FIRE",
+    "atk": 900,
+    "def": 1000,
+    "icon": "🔥💥",
+    "stars": [
+      "Jupiter",
+      "Neptune"
+    ],
+    "code": "34460851"
+  },
+  {
+    "id": 143,
+    "name": "Necrolancer the Timelord",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "DARK",
+    "atk": 800,
+    "def": 900,
+    "icon": "🧙📿",
+    "stars": [
+      null,
+      "Pluto"
+    ],
+    "code": "61454890"
+  },
+  {
+    "id": 144,
+    "name": "Djinn the Watcher of the Wind",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "WIND",
+    "atk": 700,
+    "def": 900,
+    "icon": "🧙🔮",
+    "stars": [
+      "Uranus",
+      "Sun"
+    ],
+    "code": "97843505"
+  },
+  {
+    "id": 145,
+    "name": "The Bewitching Phantom Thief",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "DARK",
+    "atk": 700,
+    "def": 700,
+    "icon": "🧙‍♀️✨",
+    "stars": [
+      null,
+      "Neptune"
+    ],
+    "code": "24348204"
+  },
+  {
+    "id": 146,
+    "name": "Temple of Skulls",
+    "type": "MONSTER",
+    "race": "Zombie",
+    "attr": "DARK",
+    "atk": 900,
+    "def": 1300,
+    "icon": "💀🦴",
+    "stars": [
+      "Sun",
+      "Neptune"
+    ],
+    "code": "00732302"
+  },
+  {
+    "id": 147,
+    "name": "Monster Egg",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 600,
+    "def": 900,
+    "icon": "⚔️🔱",
+    "stars": [
+      "Pluto",
+      "Saturn"
+    ],
+    "code": "36121917"
+  },
+  {
+    "id": 148,
+    "name": "The Shadow Who Controls the Dark",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 800,
+    "def": 700,
+    "icon": "👹🔥",
+    "stars": [
+      "Sun",
+      "Saturn"
+    ],
+    "code": "63125616"
+  },
+  {
+    "id": 149,
+    "name": "Lord of the Lamp",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 1400,
+    "def": 1200,
+    "icon": "👹🩸",
+    "stars": [
+      "Sun",
+      "Uranus"
+    ],
+    "code": "99510761"
+  },
+  {
+    "id": 150,
+    "name": "Akihiron",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 1700,
+    "def": 1400,
+    "icon": "🌊🪸",
+    "stars": [
+      "Mercury",
+      "Saturn"
+    ],
+    "code": "36904469"
+  },
+  {
+    "id": 151,
+    "name": "Rhaimundos of the Red Sword",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 1200,
+    "def": 1300,
+    "icon": "⚔️🛡️",
+    "stars": [
+      "Mercury",
+      "Jupiter"
+    ],
+    "code": "62403074"
+  },
+  {
+    "id": 152,
+    "name": "The Melting Red Shadow",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 500,
+    "def": 700,
+    "icon": "🌊💧",
+    "stars": [
+      "Venus",
+      "Mercury"
+    ],
+    "code": "98898173"
+  },
+  {
+    "id": 153,
+    "name": "Dokuroizo the Grim Reaper",
+    "type": "MONSTER",
+    "race": "Zombie",
+    "attr": "DARK",
+    "atk": 900,
+    "def": 1200,
+    "icon": "🧟🦴",
+    "stars": [
+      "Venus",
+      "Neptune"
+    ],
+    "code": "25882881"
+  },
+  {
+    "id": 154,
+    "name": "Fire Reaper",
+    "type": "MONSTER",
+    "race": "Zombie",
+    "attr": "DARK",
+    "atk": 700,
+    "def": 500,
+    "icon": "🔥💥",
+    "stars": [
+      "Jupiter",
+      "Moon"
+    ],
+    "code": "53581214"
+  },
+  {
+    "id": 155,
+    "name": "Larvas",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 800,
+    "def": 1000,
+    "icon": "🐅🌲",
+    "stars": [
+      "Saturn",
+      "Sun"
+    ],
+    "code": "94675535"
+  },
+  {
+    "id": 156,
+    "name": "Hard Armor",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 300,
+    "def": 1200,
+    "icon": "⚔️🪓",
+    "stars": [
+      "Pluto",
+      "Moon"
+    ],
+    "code": "20060230"
+  },
+  {
+    "id": 157,
+    "name": "Firegrass",
+    "type": "MONSTER",
+    "race": "Plant",
+    "attr": "EARTH",
+    "atk": 700,
+    "def": 600,
+    "icon": "🔥💥",
+    "stars": [
+      "Jupiter",
+      "Venus"
+    ],
+    "code": "53293545"
+  },
+  {
+    "id": 158,
+    "name": "Man Eater",
+    "type": "MONSTER",
+    "race": "Plant",
+    "attr": "EARTH",
+    "atk": 800,
+    "def": 600,
+    "icon": "🌱🌻",
+    "stars": [
+      "Saturn",
+      "Pluto"
+    ],
+    "code": "93553943"
+  },
+  {
+    "id": 159,
+    "name": "Dig Beak",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 500,
+    "def": 800,
+    "icon": "🐅⚡",
+    "stars": [
+      "Saturn",
+      "Neptune"
+    ],
+    "code": "29948642"
+  },
+  {
+    "id": 160,
+    "name": "M-warrior #1",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 1000,
+    "def": 500,
+    "icon": "⚔️🛡️",
+    "stars": [
+      "Pluto",
+      "Venus"
+    ],
+    "code": "56342351"
+  },
+  {
+    "id": 161,
+    "name": "M-warrior #2",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 500,
+    "def": 1000,
+    "icon": "⚔️🛡️",
+    "stars": [
+      "Pluto",
+      null
+    ],
+    "code": "92731455"
+  },
+  {
+    "id": 162,
+    "name": "Tainted Wisdom",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 1250,
+    "def": 800,
+    "icon": "👹⛓️",
+    "stars": [
+      "Venus",
+      "Sun"
+    ],
+    "code": "28725004"
+  },
+  {
+    "id": 163,
+    "name": "Lisark",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 1300,
+    "def": 1300,
+    "icon": "🐅🌲",
+    "stars": [
+      "Uranus",
+      "Neptune"
+    ],
+    "code": "55210709"
+  },
+  {
+    "id": 164,
+    "name": "Lord of Zemia",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 1300,
+    "def": 1000,
+    "icon": "👹🔥",
+    "stars": [
+      "Sun",
+      "Pluto"
+    ],
+    "code": "81618817"
+  },
+  {
+    "id": 165,
+    "name": "The Judgement Hand",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 1400,
+    "def": 700,
+    "icon": "⚔️🥊",
+    "stars": [
+      "Moon",
+      null
+    ],
+    "code": "28003512"
+  },
+  {
+    "id": 166,
+    "name": "Mysterious Puppeteer",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 1000,
+    "def": 1500,
+    "icon": "⚔️🏆",
+    "stars": [
+      "Pluto",
+      "Sun"
+    ],
+    "code": "54098121"
+  },
+  {
+    "id": 167,
+    "name": "Ancient Jar",
+    "type": "MONSTER",
+    "race": "Rock",
+    "attr": "EARTH",
+    "atk": 400,
+    "def": 200,
+    "icon": "🪨🏰",
+    "stars": [
+      "Pluto",
+      "Mercury"
+    ],
+    "code": "81492226"
+  },
+  {
+    "id": 168,
+    "name": "Darkfire Dragon",
+    "type": "MONSTER",
+    "race": "Dragon",
+    "attr": "DARK",
+    "atk": 1500,
+    "def": 1250,
+    "icon": "🔥🐉",
+    "stars": [
+      "Jupiter",
+      null
+    ],
+    "code": "17881964"
+  },
+  {
+    "id": 169,
+    "name": "Dark King of the Abyss",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 1200,
+    "def": 800,
+    "icon": "👹🔥",
+    "stars": [
+      "Sun",
+      "Neptune"
+    ],
+    "code": "53375573"
+  },
+  {
+    "id": 170,
+    "name": "Spirit of the Harp",
+    "type": "MONSTER",
+    "race": "Fairy",
+    "attr": "LIGHT",
+    "atk": 800,
+    "def": 2000,
+    "icon": "🧚🌸",
+    "stars": [
+      "Moon",
+      "Jupiter"
+    ],
+    "code": "80770678"
+  },
+  {
+    "id": 171,
+    "name": "Big Eye",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 1200,
+    "def": 1000,
+    "icon": "👹🌑",
+    "stars": [
+      null,
+      "Mercury"
+    ],
+    "code": "16768387"
+  },
+  {
+    "id": 172,
+    "name": "Armaill",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 700,
+    "def": 1300,
+    "icon": "⚔️🪓",
+    "stars": [
+      "Jupiter",
+      "Sun"
+    ],
+    "code": "53153481"
+  },
+  {
+    "id": 173,
+    "name": "Dark Prisoner",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 600,
+    "def": 1000,
+    "icon": "👹🩸",
+    "stars": [
+      "Sun",
+      "Mercury"
+    ],
+    "code": "89558090"
+  },
+  {
+    "id": 174,
+    "name": "Hurricail",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "WIND",
+    "atk": 900,
+    "def": 200,
+    "icon": "🧙🌟",
+    "stars": [
+      "Uranus",
+      "Mercury"
+    ],
+    "code": "15042735"
+  },
+  {
+    "id": 175,
+    "name": "Ancient Brain",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 1000,
+    "def": 700,
+    "icon": "👹🗡️",
+    "stars": [
+      "Sun",
+      "Venus"
+    ],
+    "code": "42431843"
+  },
+  {
+    "id": 176,
+    "name": "Fire Eye",
+    "type": "MONSTER",
+    "race": "Pyro",
+    "attr": "FIRE",
+    "atk": 800,
+    "def": 600,
+    "icon": "🔥💥",
+    "stars": [
+      "Jupiter",
+      "Uranus"
+    ],
+    "code": "88435542"
+  },
+  {
+    "id": 177,
+    "name": "Monsturtle",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 800,
+    "def": 1000,
+    "icon": "🐢🌊",
+    "stars": [
+      "Mercury",
+      "Sun"
+    ],
+    "code": "15820147"
+  },
+  {
+    "id": 178,
+    "name": "Claw Reacher",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 1000,
+    "def": 800,
+    "icon": "👹⛓️",
+    "stars": [
+      "Sun",
+      "Jupiter"
+    ],
+    "code": "41218256"
+  },
+  {
+    "id": 179,
+    "name": "Phantom Dewan",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "DARK",
+    "atk": 700,
+    "def": 600,
+    "icon": "👻🌑",
+    "stars": [
+      "Sun",
+      "Saturn"
+    ],
+    "code": "77603950"
+  },
+  {
+    "id": 180,
+    "name": "Arlownay",
+    "type": "MONSTER",
+    "race": "Plant",
+    "attr": "EARTH",
+    "atk": 800,
+    "def": 1000,
+    "icon": "🌱🍇",
+    "stars": [
+      "Saturn",
+      "Mercury"
+    ],
+    "code": "14708569"
+  },
+  {
+    "id": 181,
+    "name": "Dark Shade",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "WIND",
+    "atk": 1000,
+    "def": 1000,
+    "icon": "👹🩸",
+    "stars": [
+      "Uranus",
+      "Jupiter"
+    ],
+    "code": "40196604"
+  },
+  {
+    "id": 182,
+    "name": "Masked Clown",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "DARK",
+    "atk": 500,
+    "def": 700,
+    "icon": "⚔️🏆",
+    "stars": [
+      "Sun",
+      "Uranus"
+    ],
+    "code": "77581312"
+  },
+  {
+    "id": 183,
+    "name": "Lucky Trinket",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "LIGHT",
+    "atk": 600,
+    "def": 800,
+    "icon": "🧙📿",
+    "stars": [
+      "Moon",
+      "Saturn"
+    ],
+    "code": "03985011"
+  },
+  {
+    "id": 184,
+    "name": "Genin",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "LIGHT",
+    "atk": 600,
+    "def": 900,
+    "icon": "🧙🔮",
+    "stars": [
+      null,
+      "Moon"
+    ],
+    "code": "49370026"
+  },
+  {
+    "id": 185,
+    "name": "Eyearmor",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 600,
+    "def": 500,
+    "icon": "⚔️🗡️",
+    "stars": [
+      "Pluto",
+      "Jupiter"
+    ],
+    "code": "64511793"
+  },
+  {
+    "id": 186,
+    "name": "Fiend Refrection #2",
+    "type": "MONSTER",
+    "race": "Winged Beast",
+    "attr": "LIGHT",
+    "atk": 1100,
+    "def": 1400,
+    "icon": "👹🔥",
+    "stars": [
+      null,
+      "Jupiter"
+    ],
+    "code": "02863439"
+  },
+  {
+    "id": 187,
+    "name": "Gate Deeg",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "DARK",
+    "atk": 700,
+    "def": 800,
+    "icon": "🐅🌲",
+    "stars": [
+      "Venus",
+      "Jupiter"
+    ],
+    "code": "49258578"
+  },
+  {
+    "id": 188,
+    "name": "Synchar",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 800,
+    "def": 900,
+    "icon": "🐅🪵",
+    "stars": [
+      "Saturn",
+      "Moon"
+    ],
+    "code": "75646173"
+  },
+  {
+    "id": 189,
+    "name": "Fusionist",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 900,
+    "def": 700,
+    "icon": "🐅❄️",
+    "stars": [
+      "Saturn",
+      "Venus"
+    ],
+    "code": "01641882"
+  },
+  {
+    "id": 190,
+    "name": "Akakieisu",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "DARK",
+    "atk": 1000,
+    "def": 800,
+    "icon": "🧙🌟",
+    "stars": [
+      "Sun",
+      "Pluto"
+    ],
+    "code": "38035986"
+  },
+  {
+    "id": 191,
+    "name": "LaLa Li-oon",
+    "type": "MONSTER",
+    "race": "Thunder",
+    "attr": "WIND",
+    "atk": 600,
+    "def": 600,
+    "icon": "⚡🔮",
+    "stars": [
+      "Neptune",
+      "Venus"
+    ],
+    "code": "09430387"
+  },
+  {
+    "id": 192,
+    "name": "Key Mace",
+    "type": "MONSTER",
+    "race": "Fairy",
+    "attr": "LIGHT",
+    "atk": 400,
+    "def": 300,
+    "icon": "🧚✨",
+    "stars": [
+      "Moon",
+      "Uranus"
+    ],
+    "code": "01929294"
+  },
+  {
+    "id": 193,
+    "name": "Turtle Tiger",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 1000,
+    "def": 1500,
+    "icon": "🐢🌊",
+    "stars": [
+      "Mercury",
+      "Uranus"
+    ],
+    "code": "37313348"
+  },
+  {
+    "id": 194,
+    "name": "Terra the Terrible",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 1200,
+    "def": 1300,
+    "icon": "👹⛓️",
+    "stars": [
+      "Venus",
+      "Saturn"
+    ],
+    "code": "63308047"
+  },
+  {
+    "id": 195,
+    "name": "Doron",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 900,
+    "def": 500,
+    "icon": "⚔️🔱",
+    "stars": [
+      "Mercury",
+      "Venus"
+    ],
+    "code": "00756652"
+  },
+  {
+    "id": 196,
+    "name": "Arma Knight",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 1000,
+    "def": 1200,
+    "icon": "⚔️🛡️",
+    "stars": [
+      "Mercury",
+      null
+    ],
+    "code": "36151751"
+  },
+  {
+    "id": 197,
+    "name": "Mech Mole Zombie",
+    "type": "MONSTER",
+    "race": "Zombie",
+    "attr": "DARK",
+    "atk": 500,
+    "def": 400,
+    "icon": "🧟🥩",
+    "stars": [
+      "Venus",
+      "Uranus"
+    ],
+    "code": "63545455"
+  },
+  {
+    "id": 198,
+    "name": "Happy Lover",
+    "type": "MONSTER",
+    "race": "Fairy",
+    "attr": "LIGHT",
+    "atk": 800,
+    "def": 500,
+    "icon": "🧚🪞",
+    "stars": [
+      "Moon",
+      "Pluto"
+    ],
+    "code": "99030164"
+  },
+  {
+    "id": 199,
+    "name": "Penguin Knight",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 900,
+    "def": 800,
+    "icon": "⚔️🛡️",
+    "stars": [
+      "Pluto",
+      "Sun"
+    ],
+    "code": "36039163"
+  },
+  {
+    "id": 200,
+    "name": "Petit Dragon",
+    "type": "MONSTER",
+    "race": "Dragon",
+    "attr": "WIND",
+    "atk": 600,
+    "def": 700,
+    "icon": "🦅🐉",
+    "stars": [
+      "Uranus",
+      "Moon"
+    ],
+    "code": "75356564"
+  },
+  {
+    "id": 201,
+    "name": "Frenzied Panda",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 1200,
+    "def": 1000,
+    "icon": "🐅🌿",
+    "stars": [
+      "Saturn",
+      null
+    ],
+    "code": "98818516"
+  },
+  {
+    "id": 202,
+    "name": "Air Marmot of Nefariousness",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 400,
+    "def": 600,
+    "icon": "🐅🌙",
+    "stars": [
+      "Venus",
+      "Pluto"
+    ],
+    "code": "75889523"
+  },
+  {
+    "id": 203,
+    "name": "Phantom Ghost",
+    "type": "MONSTER",
+    "race": "Zombie",
+    "attr": "DARK",
+    "atk": 600,
+    "def": 800,
+    "icon": "👻🌑",
+    "stars": [
+      "Venus",
+      "Neptune"
+    ],
+    "code": "61201220"
+  },
+  {
+    "id": 204,
+    "name": "Mabarrel",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 1700,
+    "def": 1400,
+    "icon": "👹🔥",
+    "stars": [
+      "Venus",
+      "Mercury"
+    ],
+    "code": "98795934"
+  },
+  {
+    "id": 205,
+    "name": "Dorover",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 900,
+    "def": 800,
+    "icon": "🌊⚓",
+    "stars": [
+      "Mercury",
+      "Moon"
+    ],
+    "code": "24194033"
+  },
+  {
+    "id": 206,
+    "name": "Twin Long Rods #1",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 900,
+    "def": 700,
+    "icon": "🌊🪸",
+    "stars": [
+      "Venus",
+      "Sun"
+    ],
+    "code": "60589682"
+  },
+  {
+    "id": 207,
+    "name": "Droll Bird",
+    "type": "MONSTER",
+    "race": "Winged Beast",
+    "attr": "WIND",
+    "atk": 600,
+    "def": 500,
+    "icon": "🦅🪶",
+    "stars": [
+      "Uranus",
+      "Venus"
+    ],
+    "code": "97973387"
+  },
+  {
+    "id": 208,
+    "name": "Petit Angel",
+    "type": "MONSTER",
+    "race": "Fairy",
+    "attr": "LIGHT",
+    "atk": 600,
+    "def": 900,
+    "icon": "👼✨",
+    "stars": [
+      "Moon",
+      "Neptune"
+    ],
+    "code": "38142739"
+  },
+  {
+    "id": 209,
+    "name": "Winged Cleaver",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "EARTH",
+    "atk": 700,
+    "def": 700,
+    "icon": "🦅🪶",
+    "stars": [
+      "Saturn",
+      "Sun"
+    ],
+    "code": "39175982"
+  },
+  {
+    "id": 210,
+    "name": "Hinotama Soul",
+    "type": "MONSTER",
+    "race": "Pyro",
+    "attr": "FIRE",
+    "atk": 600,
+    "def": 500,
+    "icon": "🔥☄️",
+    "stars": [
+      "Jupiter",
+      "Pluto"
+    ],
+    "code": "96851799"
+  },
+  {
+    "id": 211,
+    "name": "Kaminarikozou",
+    "type": "MONSTER",
+    "race": "Thunder",
+    "attr": "WIND",
+    "atk": 700,
+    "def": 600,
+    "icon": "⚡☁️",
+    "stars": [
+      "Neptune",
+      null
+    ],
+    "code": "15510988"
+  },
+  {
+    "id": 212,
+    "name": "Meotoko",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 700,
+    "def": 600,
+    "icon": "🐅🪵",
+    "stars": [
+      "Venus",
+      "Jupiter"
+    ],
+    "code": "53832650"
+  },
+  {
+    "id": 213,
+    "name": "Aqua Madoor",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "WATER",
+    "atk": 1200,
+    "def": 2000,
+    "icon": "🐟🌊",
+    "stars": [
+      "Mercury",
+      "Sun"
+    ],
+    "code": "85639257"
+  },
+  {
+    "id": 214,
+    "name": "Kagemusha of the Blue Flame",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 800,
+    "def": 400,
+    "icon": "🔥💥",
+    "stars": [
+      "Jupiter",
+      "Moon"
+    ],
+    "code": "15401633"
+  },
+  {
+    "id": 215,
+    "name": "Flame Ghost",
+    "type": "MONSTER",
+    "race": "Zombie",
+    "attr": "DARK",
+    "atk": 1000,
+    "def": 800,
+    "icon": "👻🌑",
+    "stars": [
+      "Jupiter",
+      "Neptune"
+    ],
+    "code": "58528964"
+  },
+  {
+    "id": 216,
+    "name": "Dryad",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "EARTH",
+    "atk": 1200,
+    "def": 1400,
+    "icon": "🧙🔮",
+    "stars": [
+      "Saturn",
+      "Pluto"
+    ],
+    "code": "84916669"
+  },
+  {
+    "id": 217,
+    "name": "B. Skull Dragon",
+    "type": "MONSTER",
+    "race": "Dragon",
+    "attr": "DARK",
+    "atk": 3200,
+    "def": 2500,
+    "icon": "💀🐉",
+    "stars": [
+      "Venus",
+      "Saturn"
+    ],
+    "code": "11901678"
+  },
+  {
+    "id": 218,
+    "name": "Two-mouth Darkruler",
+    "type": "MONSTER",
+    "race": "Dinosaur",
+    "attr": "EARTH",
+    "atk": 900,
+    "def": 700,
+    "icon": "🦖🦴",
+    "stars": [
+      "Venus",
+      "Uranus"
+    ],
+    "code": "57305373"
+  },
+  {
+    "id": 219,
+    "name": "Solitude",
+    "type": "MONSTER",
+    "race": "Beast-Warrior",
+    "attr": "EARTH",
+    "atk": 1050,
+    "def": 1000,
+    "icon": "🐗🐺",
+    "stars": [
+      "Venus",
+      "Pluto"
+    ],
+    "code": "84794011"
+  },
+  {
+    "id": 220,
+    "name": "Masked Sorcerer",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "DARK",
+    "atk": 900,
+    "def": 1400,
+    "icon": "🧙‍♂️🌑",
+    "stars": [
+      "Sun",
+      "Mercury"
+    ],
+    "code": "10189126"
+  },
+  {
+    "id": 221,
+    "name": "Kumootoko",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "EARTH",
+    "atk": 700,
+    "def": 1400,
+    "icon": "🪲🏜️",
+    "stars": [
+      "Saturn",
+      "Neptune"
+    ],
+    "code": "56283725"
+  },
+  {
+    "id": 222,
+    "name": "Midnight Fiend",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 800,
+    "def": 600,
+    "icon": "👹🔥",
+    "stars": [
+      "Venus",
+      "Mercury"
+    ],
+    "code": "83678433"
+  },
+  {
+    "id": 223,
+    "name": "Roaring Ocean Snake",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 2100,
+    "def": 1800,
+    "icon": "🐟🌊",
+    "stars": [
+      "Mercury",
+      "Jupiter"
+    ],
+    "code": "19066538"
+  },
+  {
+    "id": 224,
+    "name": "Trap Master",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 500,
+    "def": 1100,
+    "icon": "⚔️🛡️",
+    "stars": [
+      "Sun",
+      "Venus"
+    ],
+    "code": "46461247"
+  },
+  {
+    "id": 225,
+    "name": "Fiend Sword",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "DARK",
+    "atk": 1400,
+    "def": 800,
+    "icon": "🗡️🌑",
+    "stars": [
+      "Venus",
+      "Sun"
+    ],
+    "code": "22855882"
+  },
+  {
+    "id": 226,
+    "name": "Skull Stalker",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "DARK",
+    "atk": 900,
+    "def": 800,
+    "icon": "💀🦴",
+    "stars": [
+      "Venus",
+      "Jupiter"
+    ],
+    "code": "54844990"
+  },
+  {
+    "id": 227,
+    "name": "Hitodenchak",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 600,
+    "def": 700,
+    "icon": "🌊❄️",
+    "stars": [
+      "Mercury",
+      "Jupiter"
+    ],
+    "code": "46718686"
+  },
+  {
+    "id": 228,
+    "name": "Wood Remains",
+    "type": "MONSTER",
+    "race": "Zombie",
+    "attr": "DARK",
+    "atk": 1000,
+    "def": 900,
+    "icon": "🧟🥩",
+    "stars": [
+      "Saturn",
+      "Mercury"
+    ],
+    "code": "17733394"
+  },
+  {
+    "id": 229,
+    "name": "Hourglass of Life",
+    "type": "MONSTER",
+    "race": "Fairy",
+    "attr": "LIGHT",
+    "atk": 700,
+    "def": 600,
+    "icon": "🧚🕊️",
+    "stars": [
+      "Moon",
+      "Mercury"
+    ],
+    "code": "08783685"
+  },
+  {
+    "id": 230,
+    "name": "Rare Fish",
+    "type": "MONSTER",
+    "race": "Fish",
+    "attr": "WATER",
+    "atk": 1500,
+    "def": 1200,
+    "icon": "🐟🌊",
+    "stars": [
+      "Mercury",
+      "Saturn"
+    ],
+    "code": "80516007"
+  },
+  {
+    "id": 231,
+    "name": "Wood Clown",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 800,
+    "def": 1200,
+    "icon": "⚔️🎖️",
+    "stars": [
+      "Sun",
+      "Jupiter"
+    ],
+    "code": "17511156"
+  },
+  {
+    "id": 232,
+    "name": "Madjinn Gunn",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 600,
+    "def": 800,
+    "icon": "👹😈",
+    "stars": [
+      "Venus",
+      "Saturn"
+    ],
+    "code": "43905751"
+  },
+  {
+    "id": 233,
+    "name": "Dark Titan of Terror",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 1300,
+    "def": 1100,
+    "icon": "👹💀",
+    "stars": [
+      "Sun",
+      "Saturn"
+    ],
+    "code": "89494469"
+  },
+  {
+    "id": 234,
+    "name": "Beautiful Headhuntress",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 1600,
+    "def": 800,
+    "icon": "⚔️🏹",
+    "stars": [
+      "Sun",
+      "Uranus"
+    ],
+    "code": "16899564"
+  },
+  {
+    "id": 235,
+    "name": "Wodan the Resident of the Forest",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 900,
+    "def": 1200,
+    "icon": "⚔️🔱",
+    "stars": [
+      "Saturn",
+      "Moon"
+    ],
+    "code": "42883273"
+  },
+  {
+    "id": 236,
+    "name": "Guardian of the Labyrinth",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 1000,
+    "def": 1200,
+    "icon": "⚔️🛡️",
+    "stars": [
+      "Neptune",
+      "Sun"
+    ],
+    "code": "89272878"
+  },
+  {
+    "id": 237,
+    "name": "Haniwa",
+    "type": "MONSTER",
+    "race": "Rock",
+    "attr": "EARTH",
+    "atk": 500,
+    "def": 500,
+    "icon": "🪨🌋",
+    "stars": [
+      "Pluto",
+      "Saturn"
+    ],
+    "code": "84285623"
+  },
+  {
+    "id": 238,
+    "name": "Yashinoki",
+    "type": "MONSTER",
+    "race": "Plant",
+    "attr": "EARTH",
+    "atk": 800,
+    "def": 600,
+    "icon": "🌱🌻",
+    "stars": [
+      "Saturn",
+      "Venus"
+    ],
+    "code": "41061625"
+  },
+  {
+    "id": 239,
+    "name": "Vishwar Randi",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "DARK",
+    "atk": 900,
+    "def": 700,
+    "icon": "⚔️🎖️",
+    "stars": [
+      "Sun",
+      "Pluto"
+    ],
+    "code": "78556320"
+  },
+  {
+    "id": 240,
+    "name": "The Drdek",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 700,
+    "def": 800,
+    "icon": "👹😈",
+    "stars": [
+      "Venus",
+      "Uranus"
+    ],
+    "code": "08944575"
+  },
+  {
+    "id": 241,
+    "name": "Dark Assailant",
+    "type": "MONSTER",
+    "race": "Zombie",
+    "attr": "DARK",
+    "atk": 1200,
+    "def": 1200,
+    "icon": "🐜🌱",
+    "stars": [
+      "Venus",
+      "Pluto"
+    ],
+    "code": "41949033"
+  },
+  {
+    "id": 242,
+    "name": "Candle of Fate",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 600,
+    "def": 600,
+    "icon": "👹⛓️",
+    "stars": [
+      "Jupiter",
+      "Venus"
+    ],
+    "code": "47695416"
+  },
+  {
+    "id": 243,
+    "name": "Water Element",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 900,
+    "def": 700,
+    "icon": "🌊❄️",
+    "stars": [
+      "Mercury",
+      "Uranus"
+    ],
+    "code": "03732747"
+  },
+  {
+    "id": 244,
+    "name": "Dissolverock",
+    "type": "MONSTER",
+    "race": "Rock",
+    "attr": "EARTH",
+    "atk": 900,
+    "def": 1000,
+    "icon": "🪨⛰️",
+    "stars": [
+      "Jupiter",
+      null
+    ],
+    "code": "40826495"
+  },
+  {
+    "id": 245,
+    "name": "Meda Bat",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 800,
+    "def": 400,
+    "icon": "👹🩸",
+    "stars": [
+      "Venus",
+      "Mercury"
+    ],
+    "code": "76211194"
+  },
+  {
+    "id": 246,
+    "name": "One Who Hunts Souls",
+    "type": "MONSTER",
+    "race": "Beast-Warrior",
+    "attr": "EARTH",
+    "atk": 1100,
+    "def": 1000,
+    "icon": "🐗🌲",
+    "stars": [
+      "Venus",
+      "Sun"
+    ],
+    "code": "03606209"
+  },
+  {
+    "id": 247,
+    "name": "Root Water",
+    "type": "MONSTER",
+    "race": "Fish",
+    "attr": "WATER",
+    "atk": 900,
+    "def": 800,
+    "icon": "🐟🎣",
+    "stars": [
+      "Mercury",
+      "Moon"
+    ],
+    "code": "39004808"
+  },
+  {
+    "id": 248,
+    "name": "Master & Expert",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 1200,
+    "def": 1000,
+    "icon": "🐅🐾",
+    "stars": [
+      "Saturn",
+      null
+    ],
+    "code": "75499502"
+  },
+  {
+    "id": 249,
+    "name": "Water Omotics",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 1400,
+    "def": 1200,
+    "icon": "🌊🫧",
+    "stars": [
+      "Mercury",
+      "Venus"
+    ],
+    "code": "02483611"
+  },
+  {
+    "id": 250,
+    "name": "Hyo",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "WATER",
+    "atk": 800,
+    "def": 1200,
+    "icon": "⚔️🏹",
+    "stars": [
+      "Mercury",
+      "Sun"
+    ],
+    "code": "38982356"
+  },
+  {
+    "id": 251,
+    "name": "Enchanting Mermaid",
+    "type": "MONSTER",
+    "race": "Fish",
+    "attr": "WATER",
+    "atk": 1200,
+    "def": 900,
+    "icon": "🐜🌱",
+    "stars": [
+      "Mercury",
+      null
+    ],
+    "code": "75376965"
+  },
+  {
+    "id": 252,
+    "name": "Nekogal #1",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 1100,
+    "def": 900,
+    "icon": "🐅🪵",
+    "stars": [
+      "Saturn",
+      "Sun"
+    ],
+    "code": "01761063"
+  },
+  {
+    "id": 253,
+    "name": "Angelwitch",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "DARK",
+    "atk": 800,
+    "def": 1000,
+    "icon": "🧙‍♀️✨",
+    "stars": [
+      "Sun",
+      "Mercury"
+    ],
+    "code": "37160778"
+  },
+  {
+    "id": 254,
+    "name": "Embryonic Beast",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 500,
+    "def": 750,
+    "icon": "🐾🌿",
+    "stars": [
+      "Venus",
+      "Jupiter"
+    ],
+    "code": "64154377"
+  },
+  {
+    "id": 255,
+    "name": "Prevent Rat",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 500,
+    "def": 2000,
+    "icon": "🐅⚡",
+    "stars": [
+      "Saturn",
+      "Pluto"
+    ],
+    "code": "00549481"
+  },
+  {
+    "id": 256,
+    "name": "Dimensional Warrior",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 1200,
+    "def": 1000,
+    "icon": "⚔️🛡️",
+    "stars": [
+      null,
+      "Jupiter"
+    ],
+    "code": "37043180"
+  },
+  {
+    "id": 257,
+    "name": "Stone Armadiller",
+    "type": "MONSTER",
+    "race": "Rock",
+    "attr": "EARTH",
+    "atk": 800,
+    "def": 1200,
+    "icon": "🪨⛰️",
+    "stars": [
+      "Pluto",
+      "Moon"
+    ],
+    "code": "63432835"
+  },
+  {
+    "id": 258,
+    "name": "Beastking of the Swamps",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 1000,
+    "def": 1100,
+    "icon": "🐾🌿",
+    "stars": [
+      "Pluto",
+      "Sun"
+    ],
+    "code": "99426834"
+  },
+  {
+    "id": 259,
+    "name": "Ancient Sorcerer",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "DARK",
+    "atk": 1000,
+    "def": 1300,
+    "icon": "🧙‍♂️🌑",
+    "stars": [
+      "Sun",
+      "Venus"
+    ],
+    "code": "36821538"
+  },
+  {
+    "id": 260,
+    "name": "Lunar Queen Elzaim",
+    "type": "MONSTER",
+    "race": "Fairy",
+    "attr": "LIGHT",
+    "atk": 750,
+    "def": 1100,
+    "icon": "🧚🌟",
+    "stars": [
+      "Venus",
+      null
+    ],
+    "code": "62210247"
+  },
+  {
+    "id": 261,
+    "name": "Wicked Mirror",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 700,
+    "def": 600,
+    "icon": "👹🩸",
+    "stars": [
+      null,
+      "Saturn"
+    ],
+    "code": "15150371"
+  },
+  {
+    "id": 262,
+    "name": "The Little Swordsman of Aile",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "WATER",
+    "atk": 800,
+    "def": 1300,
+    "icon": "⚔️🛡️",
+    "stars": [
+      "Mercury",
+      "Jupiter"
+    ],
+    "code": "25109950"
+  },
+  {
+    "id": 263,
+    "name": "Rock Ogre Grotto #2",
+    "type": "MONSTER",
+    "race": "Rock",
+    "attr": "EARTH",
+    "atk": 700,
+    "def": 1400,
+    "icon": "🪨⛰️",
+    "stars": [
+      "Pluto",
+      "Moon"
+    ],
+    "code": "62193699"
+  },
+  {
+    "id": 264,
+    "name": "Wing Egg Elf",
+    "type": "MONSTER",
+    "race": "Fairy",
+    "attr": "LIGHT",
+    "atk": 500,
+    "def": 1300,
+    "icon": "🧚‍♀️✨",
+    "stars": [
+      "Moon",
+      "Jupiter"
+    ],
+    "code": "98582704"
+  },
+  {
+    "id": 265,
+    "name": "The Furious Sea King",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 800,
+    "def": 700,
+    "icon": "🐟🌊",
+    "stars": [
+      "Mercury",
+      "Saturn"
+    ],
+    "code": "18710707"
+  },
+  {
+    "id": 266,
+    "name": "Princess of Tsurugi",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "WIND",
+    "atk": 900,
+    "def": 700,
+    "icon": "⚔️🏹",
+    "stars": [
+      "Uranus",
+      null
+    ],
+    "code": "51371017"
+  },
+  {
+    "id": 267,
+    "name": "Unknown Warrior of Fiend",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "DARK",
+    "atk": 1000,
+    "def": 500,
+    "icon": "🗡️🌑",
+    "stars": [
+      "Sun",
+      "Jupiter"
+    ],
+    "code": "97360116"
+  },
+  {
+    "id": 268,
+    "name": "Sectarian of Secrets",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "DARK",
+    "atk": 700,
+    "def": 500,
+    "icon": "🧙🕯️",
+    "stars": [
+      "Sun",
+      "Saturn"
+    ],
+    "code": "15507080"
+  },
+  {
+    "id": 269,
+    "name": "Versago the Destroyer",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 1100,
+    "def": 900,
+    "icon": "👹🩸",
+    "stars": [
+      "Sun",
+      "Uranus"
+    ],
+    "code": "50259460"
+  },
+  {
+    "id": 270,
+    "name": "Wetha",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 1000,
+    "def": 900,
+    "icon": "🌊🪸",
+    "stars": [
+      "Mercury",
+      "Uranus"
+    ],
+    "code": "96643568"
+  },
+  {
+    "id": 271,
+    "name": "Megirus Light",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 900,
+    "def": 600,
+    "icon": "👹🗡️",
+    "stars": [
+      "Sun",
+      "Pluto"
+    ],
+    "code": "23032273"
+  },
+  {
+    "id": 272,
+    "name": "Mavelus",
+    "type": "MONSTER",
+    "race": "Winged Beast",
+    "attr": "WIND",
+    "atk": 1300,
+    "def": 900,
+    "icon": "🦅🪶",
+    "stars": [
+      "Jupiter",
+      "Sun"
+    ],
+    "code": "59036972"
+  },
+  {
+    "id": 273,
+    "name": "Ancient Tree of Enlightenment",
+    "type": "MONSTER",
+    "race": "Plant",
+    "attr": "EARTH",
+    "atk": 600,
+    "def": 1500,
+    "icon": "🌲🪵",
+    "stars": [
+      "Saturn",
+      "Neptune"
+    ],
+    "code": "86421986"
+  },
+  {
+    "id": 274,
+    "name": "Green Phantom King",
+    "type": "MONSTER",
+    "race": "Plant",
+    "attr": "EARTH",
+    "atk": 500,
+    "def": 1600,
+    "icon": "👻🌑",
+    "stars": [
+      "Saturn",
+      "Mercury"
+    ],
+    "code": "22910685"
+  },
+  {
+    "id": 275,
+    "name": "Ground Attacker Bugroth",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "EARTH",
+    "atk": 1500,
+    "def": 1000,
+    "icon": "🤖🔋",
+    "stars": [
+      "Pluto",
+      "Venus"
+    ],
+    "code": "58314394"
+  },
+  {
+    "id": 276,
+    "name": "Ray & Temperature",
+    "type": "MONSTER",
+    "race": "Fairy",
+    "attr": "LIGHT",
+    "atk": 1000,
+    "def": 1000,
+    "icon": "🧚🌟",
+    "stars": [
+      "Moon",
+      "Uranus"
+    ],
+    "code": "85309439"
+  },
+  {
+    "id": 277,
+    "name": "Gorgon Egg",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 300,
+    "def": 1300,
+    "icon": "👹🩸",
+    "stars": [
+      "Venus",
+      "Saturn"
+    ],
+    "code": "11793047"
+  },
+  {
+    "id": 278,
+    "name": "Petit Moth",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "EARTH",
+    "atk": 300,
+    "def": 200,
+    "icon": "🐜🌱",
+    "stars": [
+      "Saturn",
+      "Moon"
+    ],
+    "code": "58192742"
+  },
+  {
+    "id": 279,
+    "name": "King Fog",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 1000,
+    "def": 900,
+    "icon": "👹🗡️",
+    "stars": [
+      "Sun",
+      "Mercury"
+    ],
+    "code": "84686841"
+  },
+  {
+    "id": 280,
+    "name": "Protector of the Throne",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 800,
+    "def": 1500,
+    "icon": "⚔️🛡️",
+    "stars": [
+      "Pluto",
+      null
+    ],
+    "code": "10071456"
+  },
+  {
+    "id": 281,
+    "name": "Mystic Clown",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 1500,
+    "def": 1000,
+    "icon": "👹💀",
+    "stars": [
+      "Sun",
+      "Venus"
+    ],
+    "code": "47060154"
+  },
+  {
+    "id": 282,
+    "name": "Mystical Sheep #2",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 800,
+    "def": 1000,
+    "icon": "🐅🌙",
+    "stars": [
+      null,
+      "Uranus"
+    ],
+    "code": "83464209"
+  },
+  {
+    "id": 283,
+    "name": "Holograh",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "EARTH",
+    "atk": 1100,
+    "def": 700,
+    "icon": "🤖🔋",
+    "stars": [
+      "Moon",
+      "Saturn"
+    ],
+    "code": "10859908"
+  },
+  {
+    "id": 284,
+    "name": "Tao the Chanter",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "EARTH",
+    "atk": 1200,
+    "def": 900,
+    "icon": "🐜🌱",
+    "stars": [
+      null,
+      "Pluto"
+    ],
+    "code": "46247516"
+  },
+  {
+    "id": 285,
+    "name": "Serpent Marauder",
+    "type": "MONSTER",
+    "race": "Reptile",
+    "attr": "EARTH",
+    "atk": 700,
+    "def": 600,
+    "icon": "🦎🌿",
+    "stars": [
+      "Mercury",
+      "Moon"
+    ],
+    "code": "82742611"
+  },
+  {
+    "id": 286,
+    "name": "Gatekeeper",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "DARK",
+    "atk": 1500,
+    "def": 1800,
+    "icon": "🤖💡",
+    "stars": [
+      "Sun",
+      "Jupiter"
+    ],
+    "code": "19737320"
+  },
+  {
+    "id": 287,
+    "name": "Ogre of the Black Shadow",
+    "type": "MONSTER",
+    "race": "Beast-Warrior",
+    "attr": "EARTH",
+    "atk": 1200,
+    "def": 1400,
+    "icon": "🐗⚡",
+    "stars": [
+      "Venus",
+      "Uranus"
+    ],
+    "code": "45121025"
+  },
+  {
+    "id": 288,
+    "name": "Dark Artist",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 600,
+    "def": 1400,
+    "icon": "👹😈",
+    "stars": [
+      "Sun",
+      "Saturn"
+    ],
+    "code": "72520073"
+  },
+  {
+    "id": 289,
+    "name": "Change Slime",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 400,
+    "def": 300,
+    "icon": "🌊🫧",
+    "stars": [
+      "Mercury",
+      "Venus"
+    ],
+    "code": "18914778"
+  },
+  {
+    "id": 290,
+    "name": "Moon Envoy",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "LIGHT",
+    "atk": 1100,
+    "def": 1000,
+    "icon": "⚔️🏹",
+    "stars": [
+      "Venus",
+      "Uranus"
+    ],
+    "code": "45909477"
+  },
+  {
+    "id": 291,
+    "name": "Fireyarou",
+    "type": "MONSTER",
+    "race": "Pyro",
+    "attr": "FIRE",
+    "atk": 1300,
+    "def": 1000,
+    "icon": "🔥💥",
+    "stars": [
+      "Jupiter",
+      "Uranus"
+    ],
+    "code": "71407486"
+  },
+  {
+    "id": 292,
+    "name": "Psychic Kappa",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 400,
+    "def": 1000,
+    "icon": "🌊🌧️",
+    "stars": [
+      "Mercury",
+      null
+    ],
+    "code": "07892180"
+  },
+  {
+    "id": 293,
+    "name": "Masaki the Legendary Swordsman",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 1100,
+    "def": 1100,
+    "icon": "⚔️🛡️",
+    "stars": [
+      "Moon",
+      "Pluto"
+    ],
+    "code": "44287299"
+  },
+  {
+    "id": 294,
+    "name": "Dragoness the Wicked Knight",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "WIND",
+    "atk": 1200,
+    "def": 900,
+    "icon": "🦅🐉",
+    "stars": [
+      "Uranus",
+      "Sun"
+    ],
+    "code": "70681994"
+  },
+  {
+    "id": 295,
+    "name": "Bio Plant",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 600,
+    "def": 1300,
+    "icon": "🐜🌱",
+    "stars": [
+      "Saturn",
+      "Venus"
+    ],
+    "code": "07670542"
+  },
+  {
+    "id": 296,
+    "name": "One-eyed Shield Dragon",
+    "type": "MONSTER",
+    "race": "Dragon",
+    "attr": "WIND",
+    "atk": 700,
+    "def": 1300,
+    "icon": "🦅🐉",
+    "stars": [
+      "Uranus",
+      "Neptune"
+    ],
+    "code": "33064647"
+  },
+  {
+    "id": 297,
+    "name": "Cyber Soldier of Darkworld",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "DARK",
+    "atk": 1400,
+    "def": 1200,
+    "icon": "🤖🦾",
+    "stars": [
+      "Venus",
+      "Pluto"
+    ],
+    "code": "75559356"
+  },
+  {
+    "id": 298,
+    "name": "Wicked Dragon with the Ersatz Head",
+    "type": "MONSTER",
+    "race": "Dragon",
+    "attr": "WIND",
+    "atk": 900,
+    "def": 900,
+    "icon": "🦅🐉",
+    "stars": [
+      "Venus",
+      "Mercury"
+    ],
+    "code": "02957055"
+  },
+  {
+    "id": 299,
+    "name": "Sonic Maid",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 1200,
+    "def": 900,
+    "icon": "⚔️🔱",
+    "stars": [
+      "Moon",
+      "Neptune"
+    ],
+    "code": "38942059"
+  },
+  {
+    "id": 300,
+    "name": "Kurama",
+    "type": "MONSTER",
+    "race": "Winged Beast",
+    "attr": "WIND",
+    "atk": 800,
+    "def": 800,
+    "icon": "🦅🌲",
+    "stars": [
+      "Uranus",
+      "Mercury"
+    ],
+    "code": "85705804"
+  },
+  {
+    "id": 301,
+    "name": "Legendary Sword",
+    "type": "MAGIC",
+    "kind": "equip",
+    "desc": "Trang bị (+300 ATK): Fish, Thunder.",
+    "icon": "🗡️✨",
+    "code": "61854111"
+  },
+  {
+    "id": 302,
+    "name": "Sword of Dark Destruction",
+    "type": "MAGIC",
+    "kind": "equip",
+    "desc": "Trang bị (+400 ATK): Fish, Machine.",
+    "icon": "🗡️✨",
+    "code": "37120512"
+  },
+  {
+    "id": 303,
+    "name": "Dark Energy",
+    "type": "MAGIC",
+    "kind": "equip",
+    "desc": "Trang bị (+500 ATK): Warrior, Beast, Winged Beast, Insect, Dinosaur, Fish, Aqua, Pyro, Rock, Plant.",
+    "icon": "🔮🌑",
+    "code": "04614116"
+  },
+  {
+    "id": 304,
+    "name": "Axe of Despair",
+    "type": "MAGIC",
+    "kind": "equip",
+    "desc": "Trang bị (+700 ATK): Warrior, Beast, Winged Beast, Fish, Machine.",
+    "icon": "⚒️✨",
+    "code": "40619825"
+  },
+  {
+    "id": 305,
+    "name": "Laser Cannon Armor",
+    "type": "MAGIC",
+    "kind": "equip",
+    "desc": "Trang bị (+500 ATK): Warrior, Beast-Warrior, Beast, Winged Beast, Fish, Sea Serpent.",
+    "icon": "🛡️✨",
+    "code": "77007920"
+  },
+  {
+    "id": 306,
+    "name": "Insect Armor with Laser Cannon",
+    "type": "MAGIC",
+    "kind": "equip",
+    "desc": "Trang bị (+500 ATK): .",
+    "icon": "🛡️✨",
+    "code": "03492538"
+  },
+  {
+    "id": 307,
+    "name": "Elf's Light",
+    "type": "MAGIC",
+    "kind": "equip",
+    "desc": "Trang bị (+300 ATK): Zombie.",
+    "icon": "⚒️✨",
+    "code": "39897277"
+  },
+  {
+    "id": 308,
+    "name": "Beast Fangs",
+    "type": "MAGIC",
+    "kind": "equip",
+    "desc": "Trang bị (+400 ATK): Warrior, Beast-Warrior, Beast, Winged Beast, Fiend, Insect, Dinosaur, Reptile, Machine.",
+    "icon": "🦷🐺",
+    "code": "46009906"
+  },
+  {
+    "id": 309,
+    "name": "Steel Shell",
+    "type": "MAGIC",
+    "kind": "equip",
+    "desc": "Trang bị (+500 ATK): .",
+    "icon": "⚒️✨",
+    "code": "02370081"
+  },
+  {
+    "id": 310,
+    "name": "Vile Germs",
+    "type": "MAGIC",
+    "kind": "equip",
+    "desc": "Trang bị (+300 ATK): Fairy.",
+    "icon": "⚒️✨",
+    "code": "39774685"
+  },
+  {
+    "id": 311,
+    "name": "Black Pendant",
+    "type": "MAGIC",
+    "kind": "equip",
+    "desc": "Trang bị (+500 ATK): Fish, Aqua, Pyro, Rock, Plant.",
+    "icon": "⚒️✨",
+    "code": "65169794"
+  },
+  {
+    "id": 312,
+    "name": "Silver Bow and Arrow",
+    "type": "MAGIC",
+    "kind": "equip",
+    "desc": "Trang bị (+300 ATK): Zombie.",
+    "icon": "🏹✨",
+    "code": "01557499"
+  },
+  {
+    "id": 313,
+    "name": "Horn of Light",
+    "type": "MAGIC",
+    "kind": "equip",
+    "desc": "Trang bị (+300 ATK): Beast-Warrior, Fiend.",
+    "icon": "📯✨",
+    "code": "38552107"
+  },
+  {
+    "id": 314,
+    "name": "Horn of the Unicorn",
+    "type": "MAGIC",
+    "kind": "equip",
+    "desc": "Trang bị (+400 ATK): Beast, Winged Beast, Dinosaur, Fish, Machine.",
+    "icon": "📯✨",
+    "code": "64047146"
+  },
+  {
+    "id": 315,
+    "name": "Dragon Treasure",
+    "type": "MAGIC",
+    "kind": "equip",
+    "desc": "Trang bị (+500 ATK): Spellcaster, Beast-Warrior, Fiend, Dinosaur, Reptile.",
+    "icon": "🐉💎",
+    "code": "01435851"
+  },
+  {
+    "id": 316,
+    "name": "Electro-whip",
+    "type": "MAGIC",
+    "kind": "equip",
+    "desc": "Trang bị (+300 ATK): Zombie, Warrior, Winged Beast, Fish.",
+    "icon": "⚒️✨",
+    "code": "37820550"
+  },
+  {
+    "id": 317,
+    "name": "Cyber Shield",
+    "type": "MAGIC",
+    "kind": "equip",
+    "desc": "Trang bị (+300 ATK): Zombie.",
+    "icon": "🛡️✨",
+    "code": "63224564"
+  },
+  {
+    "id": 318,
+    "name": "Elegant Egotist",
+    "type": "MAGIC",
+    "kind": "equip",
+    "desc": "Trang bị (+300 ATK): .",
+    "icon": "⚒️✨",
+    "code": "90219263"
+  },
+  {
+    "id": 319,
+    "name": "Mystical Moon",
+    "type": "MAGIC",
+    "kind": "equip",
+    "desc": "Trang bị (+500 ATK): Winged Beast, Insect, Machine.",
+    "icon": "⚒️✨",
+    "code": "36607978"
+  },
+  {
+    "id": 320,
+    "name": "Stop Defense",
+    "type": "MAGIC",
+    "kind": "flipAllEnemyAtk",
+    "desc": "Lật toàn bộ quái úp của đối thủ ra mặt và ép sang tấn công.",
+    "icon": "🪄✨",
+    "code": "63102017"
+  },
+  {
+    "id": 321,
+    "name": "Malevolent Nuzzler",
+    "type": "MAGIC",
+    "kind": "equip",
+    "desc": "Trang bị (+500 ATK): Zombie, Warrior, Beast, Insect.",
+    "icon": "⚒️✨",
+    "code": "99597615"
+  },
+  {
+    "id": 322,
+    "name": "Violet Crystal",
+    "type": "MAGIC",
+    "kind": "equip",
+    "desc": "Trang bị (+400 ATK): Beast, Insect.",
+    "icon": "⚒️✨",
+    "code": "15052462"
+  },
+  {
+    "id": 323,
+    "name": "Book of Secret Arts",
+    "type": "MAGIC",
+    "kind": "equip",
+    "desc": "Trang bị (+200 ATK): Zombie, Aqua.",
+    "icon": "📖✨",
+    "code": "91595718"
+  },
+  {
+    "id": 324,
+    "name": "Invigoration",
+    "type": "MAGIC",
+    "kind": "equip",
+    "desc": "Trang bị (+400 ATK): Fairy, Insect, Thunder.",
+    "icon": "⚒️✨",
+    "code": "98374133"
+  },
+  {
+    "id": 325,
+    "name": "Machine Conversion Factory",
+    "type": "MAGIC",
+    "kind": "equip",
+    "desc": "Trang bị (+300 ATK): Fish, Sea Serpent.",
+    "icon": "⚒️✨",
+    "code": "25769732"
+  },
+  {
+    "id": 326,
+    "name": "Raise Body Heat",
+    "type": "MAGIC",
+    "kind": "equip",
+    "desc": "Trang bị (+400 ATK): Fairy, Reptile, Sea Serpent, Thunder.",
+    "icon": "⚒️✨",
+    "code": "51267887"
+  },
+  {
+    "id": 327,
+    "name": "Follow Wind",
+    "type": "MAGIC",
+    "kind": "equip",
+    "desc": "Trang bị (+200 ATK): Beast-Warrior, Beast, Winged Beast, Fiend, Dinosaur, Sea Serpent.",
+    "icon": "⚒️✨",
+    "code": "98252586"
+  },
+  {
+    "id": 328,
+    "name": "Power of Kaishin",
+    "type": "MAGIC",
+    "kind": "equip",
+    "desc": "Trang bị (+300 ATK): .",
+    "icon": "🔮✨",
+    "code": "77027445"
+  },
+  {
+    "id": 329,
+    "name": "Dragon Capture Jar",
+    "type": "MAGIC",
+    "kind": "dragonsToDef",
+    "desc": "Toàn bộ Dragon của đối thủ bị ép về phòng thủ.",
+    "icon": "🪄✨",
+    "code": "50045299"
+  },
+  {
+    "id": 330,
+    "name": "Forest",
+    "type": "MAGIC",
+    "desc": "Địa hình: Beast/Insect/Plant/Beast-Warrior +500 ATK & DEF (cả 2 bên).",
+    "icon": "🌲🦌",
+    "code": "87430998"
+  },
+  {
+    "id": 331,
+    "name": "Wasteland",
+    "type": "MAGIC",
+    "desc": "Địa hình: Dinosaur/Zombie/Rock +500 ATK & DEF (cả 2 bên).",
+    "icon": "🏜️🦖",
+    "code": "23424603"
+  },
+  {
+    "id": 332,
+    "name": "Mountain",
+    "type": "MAGIC",
+    "desc": "Địa hình: Dragon/Thunder/Winged Beast +500 ATK & DEF (cả 2 bên).",
+    "icon": "⛰️🦅",
+    "code": "50913601"
+  },
+  {
+    "id": 333,
+    "name": "Sogen",
+    "type": "MAGIC",
+    "desc": "Địa hình: Warrior/Beast-Warrior +500 ATK & DEF (cả 2 bên).",
+    "icon": "🌾⚔️",
+    "code": "86318356"
+  },
+  {
+    "id": 334,
+    "name": "Umi",
+    "type": "MAGIC",
+    "desc": "Địa hình: Aqua/Fish/Sea Serpent +500 ATK & DEF (cả 2 bên).",
+    "icon": "🌊⚓",
+    "code": "22702055"
+  },
+  {
+    "id": 335,
+    "name": "Yami",
+    "type": "MAGIC",
+    "desc": "Địa hình: Fiend/Zombie +500 ATK & DEF (cả 2 bên).",
+    "icon": "🌌🌑",
+    "code": "59197169"
+  },
+  {
+    "id": 336,
+    "name": "Dark Hole",
+    "type": "MAGIC",
+    "kind": "destroyAll",
+    "desc": "Phá hủy TẤT CẢ quái vật trên sân (cả 2 bên).",
+    "icon": "🕳️🌀",
+    "code": "53129443"
+  },
+  {
+    "id": 337,
+    "name": "Raigeki",
+    "type": "MAGIC",
+    "kind": "destroyEnemyAll",
+    "desc": "Phá hủy toàn bộ quái vật của đối thủ.",
+    "icon": "⚡🌩️",
+    "code": "12580477"
+  },
+  {
+    "id": 338,
+    "name": "Mooyan Curry",
+    "type": "MAGIC",
+    "kind": "heal",
+    "desc": "Hồi 200 LP.",
+    "icon": "🍛✨",
+    "code": "58074572"
+  },
+  {
+    "id": 339,
+    "name": "Red Medicine",
+    "type": "MAGIC",
+    "kind": "heal",
+    "desc": "Hồi 300 LP.",
+    "icon": "🧪❤️",
+    "code": "38199696"
+  },
+  {
+    "id": 340,
+    "name": "Goblin's Secret Remedy",
+    "type": "MAGIC",
+    "kind": "heal",
+    "desc": "Hồi 600 LP.",
+    "icon": "🏺💚",
+    "code": "11868825"
+  },
+  {
+    "id": 341,
+    "name": "Soul of the Pure",
+    "type": "MAGIC",
+    "kind": "heal",
+    "desc": "Hồi 800 LP.",
+    "icon": "🕊️💖",
+    "code": "47852924"
+  },
+  {
+    "id": 342,
+    "name": "Dian Keto the Cure Master",
+    "type": "MAGIC",
+    "kind": "heal",
+    "desc": "Hồi 1000 LP.",
+    "icon": "💚✨",
+    "code": "84257639"
+  },
+  {
+    "id": 343,
+    "name": "Sparks",
+    "type": "MAGIC",
+    "kind": "damage",
+    "desc": "Gây 200 sát thương LP đối thủ.",
+    "icon": "✨⚡",
+    "code": "76103675"
+  },
+  {
+    "id": 344,
+    "name": "Hinotama",
+    "type": "MAGIC",
+    "kind": "damage",
+    "desc": "Gây 600 sát thương.",
+    "icon": "🔥☄️",
+    "code": "46130346"
+  },
+  {
+    "id": 345,
+    "name": "Final Flame",
+    "type": "MAGIC",
+    "kind": "damage",
+    "desc": "Gây 1200 sát thương.",
+    "icon": "🌋🔥",
+    "code": "73134081"
+  },
+  {
+    "id": 346,
+    "name": "Ookazi",
+    "type": "MAGIC",
+    "kind": "damage",
+    "desc": "Gây 800 sát thương.",
+    "icon": "💥🔥",
+    "code": "19523799"
+  },
+  {
+    "id": 347,
+    "name": "Tremendous Fire",
+    "type": "MAGIC",
+    "kind": "damage",
+    "desc": "Gây 1000 sát thương.",
+    "icon": "🔥🌋",
+    "code": "46918794"
+  },
+  {
+    "id": 348,
+    "name": "Swords of Revealing Light",
+    "type": "MAGIC",
+    "kind": "flipAllEnemyDef",
+    "desc": "Lật toàn bộ quái úp của đối thủ ra mặt (giữ phòng thủ).",
+    "icon": "🗡️✨",
+    "code": "72302403"
+  },
+  {
+    "id": 349,
+    "name": "Spellbinding Circle",
+    "type": "MAGIC",
+    "kind": "forceDef",
+    "desc": "Ép 1 quái của đối thủ về phòng thủ — không thể tấn công.",
+    "icon": "✡️🔒",
+    "code": "18807108"
+  },
+  {
+    "id": 350,
+    "name": "Dark-piercing Light",
+    "type": "MAGIC",
+    "kind": "flipAllEnemyDef",
+    "desc": "Lật toàn bộ quái úp của đối thủ ra mặt.",
+    "icon": "☀️✨",
+    "code": "45895206"
+  },
+  {
+    "id": 351,
+    "name": "Yaranzo",
+    "type": "MONSTER",
+    "race": "Zombie",
+    "attr": "DARK",
+    "atk": 1300,
+    "def": 1500,
+    "icon": "🧟🕸️",
+    "stars": [
+      "Venus",
+      "Sun"
+    ],
+    "code": "71280811"
+  },
+  {
+    "id": 352,
+    "name": "Kanan the Swordmistress",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 1400,
+    "def": 1400,
+    "icon": "⚔️🛡️",
+    "stars": [
+      "Pluto",
+      "Mercury"
+    ],
+    "code": "12829151"
+  },
+  {
+    "id": 353,
+    "name": "Takriminos",
+    "type": "MONSTER",
+    "race": "Sea Serpent",
+    "attr": "WATER",
+    "atk": 1500,
+    "def": 1200,
+    "icon": "🐍⚡",
+    "stars": [
+      "Mercury",
+      "Sun"
+    ],
+    "code": "44073668"
+  },
+  {
+    "id": 354,
+    "name": "Stuffed Animal",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 1200,
+    "def": 900,
+    "icon": "⚔️🏹",
+    "stars": [
+      "Venus",
+      "Jupiter"
+    ],
+    "code": "71068263"
+  },
+  {
+    "id": 355,
+    "name": "Megasonic Eye",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "DARK",
+    "atk": 1500,
+    "def": 1800,
+    "icon": "🤖🔋",
+    "stars": [
+      "Venus",
+      "Saturn"
+    ],
+    "code": "07562372"
+  },
+  {
+    "id": 356,
+    "name": "Super War-lion",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 2300,
+    "def": 2100,
+    "icon": "🦁👑",
+    "stars": [
+      "Saturn",
+      null
+    ],
+    "code": "00000000"
+  },
+  {
+    "id": 357,
+    "name": "Yamadron",
+    "type": "MONSTER",
+    "race": "Dragon",
+    "attr": "FIRE",
+    "atk": 1600,
+    "def": 1800,
+    "icon": "🐉🌑",
+    "stars": [
+      "Jupiter",
+      "Pluto"
+    ],
+    "code": "70345785"
+  },
+  {
+    "id": 358,
+    "name": "Seiyaryu",
+    "type": "MONSTER",
+    "race": "Dragon",
+    "attr": "LIGHT",
+    "atk": 2500,
+    "def": 2300,
+    "icon": "🐉💎",
+    "stars": [
+      "Moon",
+      "Mercury"
+    ],
+    "code": "06740720"
+  },
+  {
+    "id": 359,
+    "name": "Three-legged Zombies",
+    "type": "MONSTER",
+    "race": "Zombie",
+    "attr": "DARK",
+    "atk": 1100,
+    "def": 800,
+    "icon": "🧟🥩",
+    "stars": [
+      "Venus",
+      "Neptune"
+    ],
+    "code": "33734439"
+  },
+  {
+    "id": 360,
+    "name": "Zera The Mant",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 2800,
+    "def": 2300,
+    "icon": "🐜🌱",
+    "stars": [
+      "Venus",
+      "Uranus"
+    ],
+    "code": "00000000"
+  },
+  {
+    "id": 361,
+    "name": "Flying Penguin",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 1200,
+    "def": 1000,
+    "icon": "🌊🫧",
+    "stars": [
+      "Mercury",
+      "Saturn"
+    ],
+    "code": "05628232"
+  },
+  {
+    "id": 362,
+    "name": "Millennium Shield",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 0,
+    "def": 3000,
+    "icon": "⚔️🏹",
+    "stars": [
+      "Pluto",
+      "Jupiter"
+    ],
+    "code": "32012841"
+  },
+  {
+    "id": 363,
+    "name": "Fairy's Gift",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "LIGHT",
+    "atk": 1400,
+    "def": 1000,
+    "icon": "🧚‍♀️✨",
+    "stars": [
+      "Saturn",
+      "Sun"
+    ],
+    "code": "68401546"
+  },
+  {
+    "id": 364,
+    "name": "Black Luster Soldier",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "DARK",
+    "atk": 3000,
+    "def": 2500,
+    "icon": "🛡️⚔️",
+    "stars": [
+      "Venus",
+      "Pluto"
+    ],
+    "code": "00000000"
+  },
+  {
+    "id": 365,
+    "name": "Fiend's Mirror",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 2100,
+    "def": 1800,
+    "icon": "👹🔥",
+    "stars": [
+      null,
+      "Neptune"
+    ],
+    "code": "00000000"
+  },
+  {
+    "id": 366,
+    "name": "Labyrinth Wall",
+    "type": "MONSTER",
+    "race": "Rock",
+    "attr": "EARTH",
+    "atk": 0,
+    "def": 3000,
+    "icon": "🪨🧱",
+    "stars": [
+      "Pluto",
+      "Saturn"
+    ],
+    "code": "67284908"
+  },
+  {
+    "id": 367,
+    "name": "Jirai Gumo",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "EARTH",
+    "atk": 2200,
+    "def": 100,
+    "icon": "🪲🌾",
+    "stars": [
+      "Saturn",
+      "Pluto"
+    ],
+    "code": "94773007"
+  },
+  {
+    "id": 368,
+    "name": "Shadow Ghoul",
+    "type": "MONSTER",
+    "race": "Zombie",
+    "attr": "DARK",
+    "atk": 1600,
+    "def": 1300,
+    "icon": "🧟🥩",
+    "stars": [
+      "Venus",
+      "Neptune"
+    ],
+    "code": "30778711"
+  },
+  {
+    "id": 369,
+    "name": "Wall Shadow",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "DARK",
+    "atk": 1600,
+    "def": 3000,
+    "icon": "⚔️🗡️",
+    "stars": [
+      "Venus",
+      "Mercury"
+    ],
+    "code": "63162310"
+  },
+  {
+    "id": 370,
+    "name": "Labyrinth Tank",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "DARK",
+    "atk": 2400,
+    "def": 2400,
+    "icon": "🚀🤖",
+    "stars": [
+      "Venus",
+      "Sun"
+    ],
+    "code": "99551425"
+  },
+  {
+    "id": 371,
+    "name": "Sanga of the Thunder",
+    "type": "MONSTER",
+    "race": "Thunder",
+    "attr": "LIGHT",
+    "atk": 2600,
+    "def": 2200,
+    "icon": "⚡🗿",
+    "stars": [
+      "Neptune",
+      "Jupiter"
+    ],
+    "code": "25955164"
+  },
+  {
+    "id": 372,
+    "name": "Kazejin",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "WIND",
+    "atk": 2400,
+    "def": 2200,
+    "icon": "🌪️🗿",
+    "stars": [
+      "Uranus",
+      "Jupiter"
+    ],
+    "code": "62340868"
+  },
+  {
+    "id": 373,
+    "name": "Suijin",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 2500,
+    "def": 2400,
+    "icon": "🌊🗿",
+    "stars": [
+      "Mercury",
+      "Uranus"
+    ],
+    "code": "98434877"
+  },
+  {
+    "id": 374,
+    "name": "Gate Guardian",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "DARK",
+    "atk": 3750,
+    "def": 3400,
+    "icon": "⛩️💥",
+    "stars": [
+      "Venus",
+      "Jupiter"
+    ],
+    "code": "00000000"
+  },
+  {
+    "id": 375,
+    "name": "Dungeon Worm",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "EARTH",
+    "atk": 1800,
+    "def": 1500,
+    "icon": "🐜🌱",
+    "stars": [
+      "Pluto",
+      "Venus"
+    ],
+    "code": "51228280"
+  },
+  {
+    "id": 376,
+    "name": "Monster Tamer",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 1800,
+    "def": 1600,
+    "icon": "⚔️🛡️",
+    "stars": [
+      "Saturn",
+      "Neptune"
+    ],
+    "code": "97612389"
+  },
+  {
+    "id": 377,
+    "name": "Ryu-kishin Powered",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 1600,
+    "def": 1200,
+    "icon": "👿⚡",
+    "stars": [
+      "Venus",
+      "Saturn"
+    ],
+    "code": "24611934"
+  },
+  {
+    "id": 378,
+    "name": "Swordstalker",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "DARK",
+    "atk": 2000,
+    "def": 1600,
+    "icon": "🗡️🌑",
+    "stars": [
+      "Venus",
+      "Uranus"
+    ],
+    "code": "50005633"
+  },
+  {
+    "id": 379,
+    "name": "La Jinn the Mystical Genie",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 1800,
+    "def": 1000,
+    "icon": "👹🌑",
+    "stars": [
+      "Sun",
+      "Uranus"
+    ],
+    "code": "97590747"
+  },
+  {
+    "id": 380,
+    "name": "Blue-eyes Ultimate Dragon",
+    "type": "MONSTER",
+    "race": "Dragon",
+    "attr": "LIGHT",
+    "atk": 4500,
+    "def": 3800,
+    "icon": "🐲👑",
+    "stars": [
+      "Moon",
+      null
+    ],
+    "code": "00000000"
+  },
+  {
+    "id": 381,
+    "name": "Toon Alligator",
+    "type": "MONSTER",
+    "race": "Reptile",
+    "attr": "WATER",
+    "atk": 800,
+    "def": 1600,
+    "icon": "🦎🪵",
+    "stars": [
+      "Mercury",
+      "Jupiter"
+    ],
+    "code": "59383041"
+  },
+  {
+    "id": 382,
+    "name": "Rude Kaiser",
+    "type": "MONSTER",
+    "race": "Beast-Warrior",
+    "attr": "EARTH",
+    "atk": 1800,
+    "def": 1600,
+    "icon": "🐗🌲",
+    "stars": [
+      "Pluto",
+      "Moon"
+    ],
+    "code": "26378150"
+  },
+  {
+    "id": 383,
+    "name": "Parrot Dragon",
+    "type": "MONSTER",
+    "race": "Dragon",
+    "attr": "WIND",
+    "atk": 2000,
+    "def": 1300,
+    "icon": "🦅🐉",
+    "stars": [
+      "Uranus",
+      "Moon"
+    ],
+    "code": "62762898"
+  },
+  {
+    "id": 384,
+    "name": "Dark Rabbit",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "DARK",
+    "atk": 1100,
+    "def": 1500,
+    "icon": "🐅🐾",
+    "stars": [
+      "Venus",
+      "Pluto"
+    ],
+    "code": "99261403"
+  },
+  {
+    "id": 385,
+    "name": "Bickuribox",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 2300,
+    "def": 2000,
+    "icon": "🐂⚡",
+    "stars": [
+      "Venus",
+      "Mercury"
+    ],
+    "code": "25655502"
+  },
+  {
+    "id": 386,
+    "name": "Harpie's Pet Dragon",
+    "type": "MONSTER",
+    "race": "Dragon",
+    "attr": "WIND",
+    "atk": 2000,
+    "def": 2500,
+    "icon": "🦅🐉",
+    "stars": [
+      "Uranus",
+      "Venus"
+    ],
+    "code": "52040216"
+  },
+  {
+    "id": 387,
+    "name": "Mystic Lamp",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "DARK",
+    "atk": 400,
+    "def": 300,
+    "icon": "🧙🌑",
+    "stars": [
+      "Sun",
+      "Pluto"
+    ],
+    "code": "98049915"
+  },
+  {
+    "id": 388,
+    "name": "Pendulum Machine",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "DARK",
+    "atk": 1750,
+    "def": 2000,
+    "icon": "🤖🦾",
+    "stars": [
+      "Sun",
+      "Mercury"
+    ],
+    "code": "24433920"
+  },
+  {
+    "id": 389,
+    "name": "Giltia the D. Knight",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "LIGHT",
+    "atk": 1850,
+    "def": 1500,
+    "icon": "🤺⚔️",
+    "stars": [
+      "Moon",
+      "Jupiter"
+    ],
+    "code": "51828629"
+  },
+  {
+    "id": 390,
+    "name": "Launcher Spider",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "FIRE",
+    "atk": 2200,
+    "def": 2500,
+    "icon": "🕷️🕸️",
+    "stars": [
+      "Jupiter",
+      "Neptune"
+    ],
+    "code": "87322377"
+  },
+  {
+    "id": 391,
+    "name": "Zoa",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 2600,
+    "def": 1900,
+    "icon": "👹💥",
+    "stars": [
+      "Venus",
+      "Sun"
+    ],
+    "code": "24311372"
+  },
+  {
+    "id": 392,
+    "name": "Metalzoa",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "DARK",
+    "atk": 3000,
+    "def": 2300,
+    "icon": "🤖👹",
+    "stars": [
+      "Venus",
+      "Jupiter"
+    ],
+    "code": "50705071"
+  },
+  {
+    "id": 393,
+    "name": "Zone Eater",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 250,
+    "def": 200,
+    "icon": "🌊🫧",
+    "stars": [
+      "Mercury",
+      "Moon"
+    ],
+    "code": "86100785"
+  },
+  {
+    "id": 394,
+    "name": "Steel Scorpion",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "EARTH",
+    "atk": 250,
+    "def": 300,
+    "icon": "🤖🛞",
+    "stars": [
+      "Saturn",
+      "Mercury"
+    ],
+    "code": "13599884"
+  },
+  {
+    "id": 395,
+    "name": "Dancing Elf",
+    "type": "MONSTER",
+    "race": "Fairy",
+    "attr": "WIND",
+    "atk": 300,
+    "def": 200,
+    "icon": "🧚‍♀️✨",
+    "stars": [
+      "Saturn",
+      "Moon"
+    ],
+    "code": "59983499"
+  },
+  {
+    "id": 396,
+    "name": "Ocubeam",
+    "type": "MONSTER",
+    "race": "Fairy",
+    "attr": "LIGHT",
+    "atk": 1550,
+    "def": 1650,
+    "icon": "🧚🌟",
+    "stars": [
+      "Uranus",
+      null
+    ],
+    "code": "86088138"
+  },
+  {
+    "id": 397,
+    "name": "Leghul",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "EARTH",
+    "atk": 300,
+    "def": 350,
+    "icon": "🪲🏜️",
+    "stars": [
+      "Saturn",
+      "Venus"
+    ],
+    "code": "12472242"
+  },
+  {
+    "id": 398,
+    "name": "Ooguchi",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 300,
+    "def": 250,
+    "icon": "🌊🪸",
+    "stars": [
+      "Mercury",
+      "Venus"
+    ],
+    "code": "58861941"
+  },
+  {
+    "id": 399,
+    "name": "Swordsman from a Foreign Land",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 250,
+    "def": 250,
+    "icon": "⚔️🛡️",
+    "stars": [
+      "Pluto",
+      null
+    ],
+    "code": "85255550"
+  },
+  {
+    "id": 400,
+    "name": "Emperor of the Land and Sea",
+    "type": "MONSTER",
+    "race": "Reptile",
+    "attr": "WATER",
+    "atk": 1800,
+    "def": 1500,
+    "icon": "🐟🌊",
+    "stars": [
+      "Mercury",
+      null
+    ],
+    "code": "11250655"
+  },
+  {
+    "id": 401,
+    "name": "Ushi Oni",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 2150,
+    "def": 1950,
+    "icon": "👹💀",
+    "stars": [
+      "Saturn",
+      null
+    ],
+    "code": "48649353"
+  },
+  {
+    "id": 402,
+    "name": "Monster Eye",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 250,
+    "def": 350,
+    "icon": "👹⛓️",
+    "stars": [
+      "Venus",
+      "Saturn"
+    ],
+    "code": "84133008"
+  },
+  {
+    "id": 403,
+    "name": "Leogun",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 1750,
+    "def": 1550,
+    "icon": "🐅🌲",
+    "stars": [
+      "Pluto",
+      "Sun"
+    ],
+    "code": "10538007"
+  },
+  {
+    "id": 404,
+    "name": "Tatsunootoshigo",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 1350,
+    "def": 1600,
+    "icon": "🐅🪵",
+    "stars": [
+      "Mercury",
+      "Sun"
+    ],
+    "code": "47922711"
+  },
+  {
+    "id": 405,
+    "name": "Saber Slasher",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "DARK",
+    "atk": 1450,
+    "def": 1500,
+    "icon": "🤖🔧",
+    "stars": [
+      "Venus",
+      "Uranus"
+    ],
+    "code": "73911410"
+  },
+  {
+    "id": 406,
+    "name": "Yaiba Robo",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "DARK",
+    "atk": 1000,
+    "def": 1300,
+    "icon": "🤖💡",
+    "stars": [
+      "Venus",
+      "Pluto"
+    ],
+    "code": "10315429"
+  },
+  {
+    "id": 407,
+    "name": "Machine King",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "EARTH",
+    "atk": 2200,
+    "def": 2000,
+    "icon": "👑🤖",
+    "stars": [
+      "Jupiter",
+      "Moon"
+    ],
+    "code": "46700124"
+  },
+  {
+    "id": 408,
+    "name": "Giant Mech-soldier",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "EARTH",
+    "atk": 1750,
+    "def": 1900,
+    "icon": "🤖🦾",
+    "stars": [
+      "Venus",
+      "Mercury"
+    ],
+    "code": "72299832"
+  },
+  {
+    "id": 409,
+    "name": "Metal Dragon",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "WIND",
+    "atk": 1850,
+    "def": 1700,
+    "icon": "🦅🐉",
+    "stars": [
+      "Jupiter",
+      "Venus"
+    ],
+    "code": "09293977"
+  },
+  {
+    "id": 410,
+    "name": "Mechanical Spider",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "EARTH",
+    "atk": 400,
+    "def": 500,
+    "icon": "🤖🦾",
+    "stars": [
+      "Saturn",
+      "Sun"
+    ],
+    "code": "45688586"
+  },
+  {
+    "id": 411,
+    "name": "Bat",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "WIND",
+    "atk": 300,
+    "def": 350,
+    "icon": "🤖🔋",
+    "stars": [
+      "Venus",
+      "Sun"
+    ],
+    "code": "72076281"
+  },
+  {
+    "id": 412,
+    "name": "Giga-tech Wolf",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "EARTH",
+    "atk": 1200,
+    "def": 1400,
+    "icon": "🐺🌙",
+    "stars": [
+      "Saturn",
+      "Pluto"
+    ],
+    "code": "08471389"
+  },
+  {
+    "id": 413,
+    "name": "Cyber Soldier",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "DARK",
+    "atk": 1500,
+    "def": 1700,
+    "icon": "🤖🦾",
+    "stars": [
+      "Venus",
+      "Jupiter"
+    ],
+    "code": "44865098"
+  },
+  {
+    "id": 414,
+    "name": "Shovel Crusher",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "EARTH",
+    "atk": 900,
+    "def": 1200,
+    "icon": "🤖💡",
+    "stars": [
+      "Pluto",
+      "Mercury"
+    ],
+    "code": "71950093"
+  },
+  {
+    "id": 415,
+    "name": "Mechanicalchacer",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "DARK",
+    "atk": 1850,
+    "def": 800,
+    "icon": "🤖🦾",
+    "stars": [
+      "Venus",
+      "Saturn"
+    ],
+    "code": "07359741"
+  },
+  {
+    "id": 416,
+    "name": "Blocker",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "DARK",
+    "atk": 850,
+    "def": 1800,
+    "icon": "🤖⚙️",
+    "stars": [
+      "Venus",
+      "Uranus"
+    ],
+    "code": "34743446"
+  },
+  {
+    "id": 417,
+    "name": "Blast Juggler",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "FIRE",
+    "atk": 800,
+    "def": 900,
+    "icon": "🤖🚀",
+    "stars": [
+      "Jupiter",
+      null
+    ],
+    "code": "70138455"
+  },
+  {
+    "id": 418,
+    "name": "Golgoil",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "EARTH",
+    "atk": 900,
+    "def": 1600,
+    "icon": "🤖🛞",
+    "stars": [
+      null,
+      "Mercury"
+    ],
+    "code": "07526150"
+  },
+  {
+    "id": 419,
+    "name": "Giganto",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "DARK",
+    "atk": 1700,
+    "def": 1800,
+    "icon": "🐜🌱",
+    "stars": [
+      "Venus",
+      "Pluto"
+    ],
+    "code": "33621868"
+  },
+  {
+    "id": 420,
+    "name": "Cyber-Stein",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "DARK",
+    "atk": 700,
+    "def": 500,
+    "icon": "🤖🦾",
+    "stars": [
+      "Venus",
+      "Mercury"
+    ],
+    "code": "69015963"
+  },
+  {
+    "id": 421,
+    "name": "Cyber Commander",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "DARK",
+    "atk": 750,
+    "def": 700,
+    "icon": "🤖🦾",
+    "stars": [
+      "Venus",
+      "Sun"
+    ],
+    "code": "06400512"
+  },
+  {
+    "id": 422,
+    "name": "Jinzo #7",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "DARK",
+    "atk": 500,
+    "def": 400,
+    "icon": "🤖💡",
+    "stars": [
+      "Venus",
+      "Jupiter"
+    ],
+    "code": "32809211"
+  },
+  {
+    "id": 423,
+    "name": "Dice Armadillo",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "EARTH",
+    "atk": 1650,
+    "def": 1800,
+    "icon": "🤖🏭",
+    "stars": [
+      "Saturn",
+      "Neptune"
+    ],
+    "code": "69893315"
+  },
+  {
+    "id": 424,
+    "name": "Sky Dragon",
+    "type": "MONSTER",
+    "race": "Dragon",
+    "attr": "WIND",
+    "atk": 1900,
+    "def": 1800,
+    "icon": "🦅🐉",
+    "stars": [
+      "Uranus",
+      "Pluto"
+    ],
+    "code": "95288024"
+  },
+  {
+    "id": 425,
+    "name": "Thunder Dragon",
+    "type": "MONSTER",
+    "race": "Thunder",
+    "attr": "LIGHT",
+    "atk": 1600,
+    "def": 1500,
+    "icon": "⚡🐉",
+    "stars": [
+      "Neptune",
+      "Saturn"
+    ],
+    "code": "31786629"
+  },
+  {
+    "id": 426,
+    "name": "Stone D.",
+    "type": "MONSTER",
+    "race": "Rock",
+    "attr": "EARTH",
+    "atk": 2000,
+    "def": 2300,
+    "icon": "🪨⛰️",
+    "stars": [
+      "Pluto",
+      "Jupiter"
+    ],
+    "code": "68171737"
+  },
+  {
+    "id": 427,
+    "name": "Kaiser Dragon",
+    "type": "MONSTER",
+    "race": "Dragon",
+    "attr": "LIGHT",
+    "atk": 2300,
+    "def": 2000,
+    "icon": "✨🐉",
+    "stars": [
+      "Moon",
+      "Saturn"
+    ],
+    "code": "94566432"
+  },
+  {
+    "id": 428,
+    "name": "Magician of Faith",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "LIGHT",
+    "atk": 300,
+    "def": 400,
+    "icon": "🧙‍♂️🔮",
+    "stars": [
+      "Moon",
+      "Uranus"
+    ],
+    "code": "31560081"
+  },
+  {
+    "id": 429,
+    "name": "Goddess of Whim",
+    "type": "MONSTER",
+    "race": "Fairy",
+    "attr": "LIGHT",
+    "atk": 950,
+    "def": 700,
+    "icon": "👸✨",
+    "stars": [
+      "Moon",
+      "Pluto"
+    ],
+    "code": "67959180"
+  },
+  {
+    "id": 430,
+    "name": "Water Magician",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 1400,
+    "def": 1000,
+    "icon": "🧙‍♂️🔮",
+    "stars": [
+      "Mercury",
+      "Sun"
+    ],
+    "code": "93343894"
+  },
+  {
+    "id": 431,
+    "name": "Ice Water",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 1150,
+    "def": 900,
+    "icon": "🌊🐚",
+    "stars": [
+      "Mercury",
+      "Venus"
+    ],
+    "code": "20848593"
+  },
+  {
+    "id": 432,
+    "name": "Waterdragon Fairy",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 1100,
+    "def": 700,
+    "icon": "🌊🐉",
+    "stars": [
+      "Mercury",
+      null
+    ],
+    "code": "66836598"
+  },
+  {
+    "id": 433,
+    "name": "Ancient Elf",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "LIGHT",
+    "atk": 1450,
+    "def": 1200,
+    "icon": "🧚‍♀️✨",
+    "stars": [
+      "Moon",
+      "Neptune"
+    ],
+    "code": "93221206"
+  },
+  {
+    "id": 434,
+    "name": "Beautiful Beast Trainer",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 1750,
+    "def": 1500,
+    "icon": "🐾🌿",
+    "stars": [
+      "Saturn",
+      "Mercury"
+    ],
+    "code": "29616941"
+  },
+  {
+    "id": 435,
+    "name": "Water Girl",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 1250,
+    "def": 1000,
+    "icon": "🌊❄️",
+    "stars": [
+      "Mercury",
+      null
+    ],
+    "code": "55014050"
+  },
+  {
+    "id": 436,
+    "name": "White Dolphin",
+    "type": "MONSTER",
+    "race": "Fish",
+    "attr": "WATER",
+    "atk": 500,
+    "def": 400,
+    "icon": "🐟💧",
+    "stars": [
+      "Mercury",
+      "Saturn"
+    ],
+    "code": "92409659"
+  },
+  {
+    "id": 437,
+    "name": "Deepsea Shark",
+    "type": "MONSTER",
+    "race": "Fish",
+    "attr": "WATER",
+    "atk": 1900,
+    "def": 1600,
+    "icon": "🦈🌊",
+    "stars": [
+      "Mercury",
+      "Jupiter"
+    ],
+    "code": "28593363"
+  },
+  {
+    "id": 438,
+    "name": "Metal Fish",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "WATER",
+    "atk": 1600,
+    "def": 1900,
+    "icon": "🐟🌊",
+    "stars": [
+      "Mercury",
+      "Uranus"
+    ],
+    "code": "55998462"
+  },
+  {
+    "id": 439,
+    "name": "Bottom Dweller",
+    "type": "MONSTER",
+    "race": "Fish",
+    "attr": "WATER",
+    "atk": 1650,
+    "def": 1700,
+    "icon": "🐟🎣",
+    "stars": [
+      "Mercury",
+      "Moon"
+    ],
+    "code": "81386177"
+  },
+  {
+    "id": 440,
+    "name": "7 Colored Fish",
+    "type": "MONSTER",
+    "race": "Fish",
+    "attr": "WATER",
+    "atk": 1800,
+    "def": 800,
+    "icon": "🐟🌊",
+    "stars": [
+      "Mercury",
+      "Moon"
+    ],
+    "code": "23771716"
+  },
+  {
+    "id": 441,
+    "name": "Mech Bass",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "WATER",
+    "atk": 1800,
+    "def": 1500,
+    "icon": "🤖🦾",
+    "stars": [
+      "Mercury",
+      null
+    ],
+    "code": "50176820"
+  },
+  {
+    "id": 442,
+    "name": "Aqua Dragon",
+    "type": "MONSTER",
+    "race": "Sea Serpent",
+    "attr": "WATER",
+    "atk": 2250,
+    "def": 1900,
+    "icon": "🌊🐉",
+    "stars": [
+      "Mercury",
+      "Venus"
+    ],
+    "code": "86164529"
+  },
+  {
+    "id": 443,
+    "name": "Sea King Dragon",
+    "type": "MONSTER",
+    "race": "Sea Serpent",
+    "attr": "WATER",
+    "atk": 2000,
+    "def": 1700,
+    "icon": "🌊🐉",
+    "stars": [
+      "Mercury",
+      "Sun"
+    ],
+    "code": "23659124"
+  },
+  {
+    "id": 444,
+    "name": "Turu-Purun",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 450,
+    "def": 500,
+    "icon": "🌊🌧️",
+    "stars": [
+      "Mercury",
+      "Saturn"
+    ],
+    "code": "59053232"
+  },
+  {
+    "id": 445,
+    "name": "Guardian of the Sea",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 1300,
+    "def": 1000,
+    "icon": "⚔️🛡️",
+    "stars": [
+      "Mercury",
+      "Jupiter"
+    ],
+    "code": "85448931"
+  },
+  {
+    "id": 446,
+    "name": "Aqua Snake",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 1050,
+    "def": 900,
+    "icon": "🐟🌊",
+    "stars": [
+      "Mercury",
+      "Uranus"
+    ],
+    "code": "12436646"
+  },
+  {
+    "id": 447,
+    "name": "Giant Red Seasnake",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 1800,
+    "def": 800,
+    "icon": "🐜🌱",
+    "stars": [
+      "Mercury",
+      "Moon"
+    ],
+    "code": "58831685"
+  },
+  {
+    "id": 448,
+    "name": "Spike Seadra",
+    "type": "MONSTER",
+    "race": "Sea Serpent",
+    "attr": "WATER",
+    "atk": 1600,
+    "def": 1300,
+    "icon": "🐟🌊",
+    "stars": [
+      "Neptune",
+      "Sun"
+    ],
+    "code": "85326399"
+  },
+  {
+    "id": 449,
+    "name": "30,000-Year White Turtle",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 1250,
+    "def": 2100,
+    "icon": "🐢🌊",
+    "stars": [
+      "Mercury",
+      "Venus"
+    ],
+    "code": "11714098"
+  },
+  {
+    "id": 450,
+    "name": "Kappa Avenger",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 1200,
+    "def": 900,
+    "icon": "🌊🧊",
+    "stars": [
+      "Mercury",
+      null
+    ],
+    "code": "48109103"
+  },
+  {
+    "id": 451,
+    "name": "Kanikabuto",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 650,
+    "def": 900,
+    "icon": "🌊❄️",
+    "stars": [
+      "Mercury",
+      "Uranus"
+    ],
+    "code": "84103702"
+  },
+  {
+    "id": 452,
+    "name": "Zarigun",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 600,
+    "def": 700,
+    "icon": "🌊🌧️",
+    "stars": [
+      "Mercury",
+      "Sun"
+    ],
+    "code": "10598400"
+  },
+  {
+    "id": 453,
+    "name": "Millennium Golem",
+    "type": "MONSTER",
+    "race": "Rock",
+    "attr": "EARTH",
+    "atk": 2000,
+    "def": 2200,
+    "icon": "🗿🪨",
+    "stars": [
+      "Pluto",
+      "Saturn"
+    ],
+    "code": "47986555"
+  },
+  {
+    "id": 454,
+    "name": "Destroyer Golem",
+    "type": "MONSTER",
+    "race": "Rock",
+    "attr": "EARTH",
+    "atk": 1500,
+    "def": 1000,
+    "icon": "🗿🪨",
+    "stars": [
+      "Pluto",
+      "Moon"
+    ],
+    "code": "73481154"
+  },
+  {
+    "id": 455,
+    "name": "Barrel Rock",
+    "type": "MONSTER",
+    "race": "Rock",
+    "attr": "EARTH",
+    "atk": 1000,
+    "def": 1300,
+    "icon": "🪨⛰️",
+    "stars": [
+      "Pluto",
+      "Venus"
+    ],
+    "code": "10476868"
+  },
+  {
+    "id": 456,
+    "name": "Minomushi Warrior",
+    "type": "MONSTER",
+    "race": "Rock",
+    "attr": "EARTH",
+    "atk": 1300,
+    "def": 1200,
+    "icon": "⚔️🛡️",
+    "stars": [
+      "Pluto",
+      null
+    ],
+    "code": "46864967"
+  },
+  {
+    "id": 457,
+    "name": "Stone Ghost",
+    "type": "MONSTER",
+    "race": "Rock",
+    "attr": "EARTH",
+    "atk": 1200,
+    "def": 1000,
+    "icon": "👻🌑",
+    "stars": [
+      "Pluto",
+      "Sun"
+    ],
+    "code": "72269672"
+  },
+  {
+    "id": 458,
+    "name": "Kaminari Attack",
+    "type": "MONSTER",
+    "race": "Thunder",
+    "attr": "WIND",
+    "atk": 1900,
+    "def": 1400,
+    "icon": "⚡🦅",
+    "stars": [
+      "Neptune",
+      null
+    ],
+    "code": "09653271"
+  },
+  {
+    "id": 459,
+    "name": "Tripwire Beast",
+    "type": "MONSTER",
+    "race": "Thunder",
+    "attr": "EARTH",
+    "atk": 1200,
+    "def": 1300,
+    "icon": "🐾🌿",
+    "stars": [
+      "Neptune",
+      "Uranus"
+    ],
+    "code": "45042329"
+  },
+  {
+    "id": 460,
+    "name": "Bolt Escargot",
+    "type": "MONSTER",
+    "race": "Thunder",
+    "attr": "WATER",
+    "atk": 1400,
+    "def": 1500,
+    "icon": "⚡☄️",
+    "stars": [
+      "Neptune",
+      "Saturn"
+    ],
+    "code": "12146024"
+  },
+  {
+    "id": 461,
+    "name": "Bolt Penguin",
+    "type": "MONSTER",
+    "race": "Thunder",
+    "attr": "WATER",
+    "atk": 1100,
+    "def": 800,
+    "icon": "⚡🔋",
+    "stars": [
+      "Neptune",
+      "Venus"
+    ],
+    "code": "48531733"
+  },
+  {
+    "id": 462,
+    "name": "The Immortal of Thunder",
+    "type": "MONSTER",
+    "race": "Thunder",
+    "attr": "LIGHT",
+    "atk": 1500,
+    "def": 1300,
+    "icon": "⚡🌩️",
+    "stars": [
+      "Neptune",
+      "Moon"
+    ],
+    "code": "84926738"
+  },
+  {
+    "id": 463,
+    "name": "Electric Snake",
+    "type": "MONSTER",
+    "race": "Thunder",
+    "attr": "LIGHT",
+    "atk": 800,
+    "def": 900,
+    "icon": "🐍🩸",
+    "stars": [
+      "Neptune",
+      "Jupiter"
+    ],
+    "code": "11324436"
+  },
+  {
+    "id": 464,
+    "name": "Wing Eagle",
+    "type": "MONSTER",
+    "race": "Winged Beast",
+    "attr": "WIND",
+    "atk": 1800,
+    "def": 1500,
+    "icon": "🦅🪶",
+    "stars": [
+      "Uranus",
+      "Sun"
+    ],
+    "code": "47319141"
+  },
+  {
+    "id": 465,
+    "name": "Punished Eagle",
+    "type": "MONSTER",
+    "race": "Winged Beast",
+    "attr": "WIND",
+    "atk": 2100,
+    "def": 1800,
+    "icon": "🦅🪶",
+    "stars": [
+      "Uranus",
+      "Neptune"
+    ],
+    "code": "74703140"
+  },
+  {
+    "id": 466,
+    "name": "Skull Red Bird",
+    "type": "MONSTER",
+    "race": "Winged Beast",
+    "attr": "WIND",
+    "atk": 1550,
+    "def": 1200,
+    "icon": "💀🦴",
+    "stars": [
+      "Uranus",
+      "Moon"
+    ],
+    "code": "10202894"
+  },
+  {
+    "id": 467,
+    "name": "Crimson Sunbird",
+    "type": "MONSTER",
+    "race": "Winged Beast",
+    "attr": "FIRE",
+    "atk": 2300,
+    "def": 1800,
+    "icon": "🦅🪶",
+    "stars": [
+      "Jupiter",
+      "Sun"
+    ],
+    "code": "46696593"
+  },
+  {
+    "id": 468,
+    "name": "Queen Bird",
+    "type": "MONSTER",
+    "race": "Winged Beast",
+    "attr": "WIND",
+    "atk": 1200,
+    "def": 2000,
+    "icon": "🦅🪶",
+    "stars": [
+      "Uranus",
+      "Venus"
+    ],
+    "code": "73081602"
+  },
+  {
+    "id": 469,
+    "name": "Armed Ninja",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 300,
+    "def": 300,
+    "icon": "🥷⚔️",
+    "stars": [
+      "Mercury",
+      "Jupiter"
+    ],
+    "code": "09076207"
+  },
+  {
+    "id": 470,
+    "name": "Magical Ghost",
+    "type": "MONSTER",
+    "race": "Zombie",
+    "attr": "DARK",
+    "atk": 1300,
+    "def": 1400,
+    "icon": "👻🌑",
+    "stars": [
+      "Venus",
+      "Neptune"
+    ],
+    "code": "46474915"
+  },
+  {
+    "id": 471,
+    "name": "Soul Hunter",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 2200,
+    "def": 1800,
+    "icon": "👹🗡️",
+    "stars": [
+      "Venus",
+      "Saturn"
+    ],
+    "code": "72869010"
+  },
+  {
+    "id": 472,
+    "name": "Air Eater",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "WIND",
+    "atk": 2100,
+    "def": 1600,
+    "icon": "👹😈",
+    "stars": [
+      "Venus",
+      "Uranus"
+    ],
+    "code": "08353769"
+  },
+  {
+    "id": 473,
+    "name": "Vermillion Sparrow",
+    "type": "MONSTER",
+    "race": "Pyro",
+    "attr": "FIRE",
+    "atk": 1900,
+    "def": 1500,
+    "icon": "🦁👑",
+    "stars": [
+      "Jupiter",
+      null
+    ],
+    "code": "35752363"
+  },
+  {
+    "id": 474,
+    "name": "Sea Kamen",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 1100,
+    "def": 1300,
+    "icon": "🐟🌊",
+    "stars": [
+      "Mercury",
+      "Moon"
+    ],
+    "code": "71746462"
+  },
+  {
+    "id": 475,
+    "name": "Sinister Serpent",
+    "type": "MONSTER",
+    "race": "Reptile",
+    "attr": "WATER",
+    "atk": 300,
+    "def": 250,
+    "icon": "🦎🌿",
+    "stars": [
+      "Mercury",
+      "Saturn"
+    ],
+    "code": "08131171"
+  },
+  {
+    "id": 476,
+    "name": "Ganigumo",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "EARTH",
+    "atk": 600,
+    "def": 800,
+    "icon": "🪲🍃",
+    "stars": [
+      "Saturn",
+      "Moon"
+    ],
+    "code": "34536276"
+  },
+  {
+    "id": 477,
+    "name": "Alinsection",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "EARTH",
+    "atk": 950,
+    "def": 700,
+    "icon": "🐜🌱",
+    "stars": [
+      "Saturn",
+      "Venus"
+    ],
+    "code": "70924884"
+  },
+  {
+    "id": 478,
+    "name": "Insect Soldiers of the Sky",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "WIND",
+    "atk": 1000,
+    "def": 800,
+    "icon": "🐜🌱",
+    "stars": [
+      "Uranus",
+      "Mercury"
+    ],
+    "code": "07019529"
+  },
+  {
+    "id": 479,
+    "name": "Cockroach Knight",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "EARTH",
+    "atk": 800,
+    "def": 900,
+    "icon": "⚔️🛡️",
+    "stars": [
+      "Saturn",
+      null
+    ],
+    "code": "33413638"
+  },
+  {
+    "id": 480,
+    "name": "Kuwagata a",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "EARTH",
+    "atk": 1250,
+    "def": 1000,
+    "icon": "🪲🌱",
+    "stars": [
+      "Saturn",
+      "Sun"
+    ],
+    "code": "60802233"
+  },
+  {
+    "id": 481,
+    "name": "Burglar",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 850,
+    "def": 800,
+    "icon": "🐅🌿",
+    "stars": [
+      "Saturn",
+      "Pluto"
+    ],
+    "code": "06297941"
+  },
+  {
+    "id": 482,
+    "name": "Pragtical",
+    "type": "MONSTER",
+    "race": "Dinosaur",
+    "attr": "EARTH",
+    "atk": 1900,
+    "def": 1500,
+    "icon": "🦖🦴",
+    "stars": [
+      "Pluto",
+      "Mercury"
+    ],
+    "code": "33691040"
+  },
+  {
+    "id": 483,
+    "name": "Garvas",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 2000,
+    "def": 1700,
+    "icon": "🐅🌲",
+    "stars": [
+      "Saturn",
+      "Neptune"
+    ],
+    "code": "69780745"
+  },
+  {
+    "id": 484,
+    "name": "Ameba",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 300,
+    "def": 350,
+    "icon": "🌊🌧️",
+    "stars": [
+      "Mercury",
+      "Venus"
+    ],
+    "code": "95174353"
+  },
+  {
+    "id": 485,
+    "name": "Korogashi",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "EARTH",
+    "atk": 550,
+    "def": 400,
+    "icon": "🪲🏜️",
+    "stars": [
+      "Saturn",
+      "Mercury"
+    ],
+    "code": "32569498"
+  },
+  {
+    "id": 486,
+    "name": "Boo Koo",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "DARK",
+    "atk": 650,
+    "def": 500,
+    "icon": "🧙🌟",
+    "stars": [
+      "Moon",
+      "Saturn"
+    ],
+    "code": "68963107"
+  },
+  {
+    "id": 487,
+    "name": "Flower Wolf",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 1800,
+    "def": 1400,
+    "icon": "🌹✨",
+    "stars": [
+      "Saturn",
+      "Moon"
+    ],
+    "code": "95952802"
+  },
+  {
+    "id": 488,
+    "name": "Rainbow Flower",
+    "type": "MONSTER",
+    "race": "Plant",
+    "attr": "EARTH",
+    "atk": 400,
+    "def": 500,
+    "icon": "🌹✨",
+    "stars": [
+      "Saturn",
+      "Venus"
+    ],
+    "code": "21347810"
+  },
+  {
+    "id": 489,
+    "name": "Barrel Lily",
+    "type": "MONSTER",
+    "race": "Plant",
+    "attr": "EARTH",
+    "atk": 1100,
+    "def": 600,
+    "icon": "🌱🍄",
+    "stars": [
+      "Saturn",
+      null
+    ],
+    "code": "67841515"
+  },
+  {
+    "id": 490,
+    "name": "Needle Ball",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 750,
+    "def": 700,
+    "icon": "👹⛓️",
+    "stars": [
+      "Venus",
+      "Pluto"
+    ],
+    "code": "94230224"
+  },
+  {
+    "id": 491,
+    "name": "Peacock",
+    "type": "MONSTER",
+    "race": "Winged Beast",
+    "attr": "WIND",
+    "atk": 1700,
+    "def": 1500,
+    "icon": "🦅⚡",
+    "stars": [
+      "Saturn",
+      "Sun"
+    ],
+    "code": "20624263"
+  },
+  {
+    "id": 492,
+    "name": "Hoshiningen",
+    "type": "MONSTER",
+    "race": "Fairy",
+    "attr": "LIGHT",
+    "atk": 500,
+    "def": 700,
+    "icon": "🧚🌟",
+    "stars": [
+      "Moon",
+      "Mercury"
+    ],
+    "code": "67629977"
+  },
+  {
+    "id": 493,
+    "name": "Maha Vailo",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "LIGHT",
+    "atk": 1550,
+    "def": 1400,
+    "icon": "🧙🪄",
+    "stars": [
+      "Moon",
+      null
+    ],
+    "code": "93013676"
+  },
+  {
+    "id": 494,
+    "name": "Rainbow Marine Mermaid",
+    "type": "MONSTER",
+    "race": "Fish",
+    "attr": "WATER",
+    "atk": 1550,
+    "def": 1700,
+    "icon": "🐟🐬",
+    "stars": [
+      "Mercury",
+      null
+    ],
+    "code": "29402771"
+  },
+  {
+    "id": 495,
+    "name": "Musician King",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "LIGHT",
+    "atk": 1750,
+    "def": 1500,
+    "icon": "🧙📿",
+    "stars": [
+      "Moon",
+      "Jupiter"
+    ],
+    "code": "56907389"
+  },
+  {
+    "id": 496,
+    "name": "Wilmee",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 1000,
+    "def": 1200,
+    "icon": "🐅🐾",
+    "stars": [
+      "Saturn",
+      "Pluto"
+    ],
+    "code": "92391084"
+  },
+  {
+    "id": 497,
+    "name": "Yado Karu",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 900,
+    "def": 1700,
+    "icon": "🌊🫧",
+    "stars": [
+      "Mercury",
+      "Sun"
+    ],
+    "code": "29380133"
+  },
+  {
+    "id": 498,
+    "name": "Morinphen",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 1550,
+    "def": 1300,
+    "icon": "👹⛓️",
+    "stars": [
+      "Venus",
+      "Mercury"
+    ],
+    "code": "55784832"
+  },
+  {
+    "id": 499,
+    "name": "Kattapillar",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "EARTH",
+    "atk": 250,
+    "def": 300,
+    "icon": "🪲🕸️",
+    "stars": [
+      "Saturn",
+      "Mercury"
+    ],
+    "code": "81179446"
+  },
+  {
+    "id": 500,
+    "name": "Dragon Seeker",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 2000,
+    "def": 2100,
+    "icon": "🌑🐉",
+    "stars": [
+      "Venus",
+      "Sun"
+    ],
+    "code": "28563545"
+  },
+  {
+    "id": 501,
+    "name": "Man-eater Bug",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "EARTH",
+    "atk": 450,
+    "def": 600,
+    "icon": "🪲🏜️",
+    "stars": [
+      "Saturn",
+      "Neptune"
+    ],
+    "code": "54652250"
+  },
+  {
+    "id": 502,
+    "name": "D. Human",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 1300,
+    "def": 1100,
+    "icon": "⚔️🏆",
+    "stars": [
+      "Pluto",
+      "Jupiter"
+    ],
+    "code": "81057959"
+  },
+  {
+    "id": 503,
+    "name": "Turtle Raccoon",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 700,
+    "def": 900,
+    "icon": "🐢🌊",
+    "stars": [
+      "Saturn",
+      "Moon"
+    ],
+    "code": "17441953"
+  },
+  {
+    "id": 504,
+    "name": "Fungi of the Musk",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 400,
+    "def": 300,
+    "icon": "👹😈",
+    "stars": [
+      "Saturn",
+      "Venus"
+    ],
+    "code": "53830602"
+  },
+  {
+    "id": 505,
+    "name": "Prisman",
+    "type": "MONSTER",
+    "race": "Rock",
+    "attr": "LIGHT",
+    "atk": 800,
+    "def": 1000,
+    "icon": "🪨🗿",
+    "stars": [
+      "Pluto",
+      "Saturn"
+    ],
+    "code": "80234301"
+  },
+  {
+    "id": 506,
+    "name": "Gale Dogra",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "EARTH",
+    "atk": 650,
+    "def": 600,
+    "icon": "🐾🌿",
+    "stars": [
+      "Saturn",
+      null
+    ],
+    "code": "16229315"
+  },
+  {
+    "id": 507,
+    "name": "Crazy Fish",
+    "type": "MONSTER",
+    "race": "Fish",
+    "attr": "WATER",
+    "atk": 1600,
+    "def": 1200,
+    "icon": "🐟🌊",
+    "stars": [
+      "Mercury",
+      "Saturn"
+    ],
+    "code": "53713014"
+  },
+  {
+    "id": 508,
+    "name": "Cyber Saurus",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "EARTH",
+    "atk": 1800,
+    "def": 1400,
+    "icon": "🤖🦾",
+    "stars": [
+      "Pluto",
+      "Moon"
+    ],
+    "code": "89112729"
+  },
+  {
+    "id": 509,
+    "name": "Bracchio-raidus",
+    "type": "MONSTER",
+    "race": "Dinosaur",
+    "attr": "WATER",
+    "atk": 2200,
+    "def": 2000,
+    "icon": "🦖⚡",
+    "stars": [
+      "Pluto",
+      "Venus"
+    ],
+    "code": "16507828"
+  },
+  {
+    "id": 510,
+    "name": "Laughing Flower",
+    "type": "MONSTER",
+    "race": "Plant",
+    "attr": "EARTH",
+    "atk": 900,
+    "def": 500,
+    "icon": "🌹✨",
+    "stars": [
+      "Saturn",
+      "Sun"
+    ],
+    "code": "42591472"
+  },
+  {
+    "id": 511,
+    "name": "Bean Soldier",
+    "type": "MONSTER",
+    "race": "Plant",
+    "attr": "EARTH",
+    "atk": 1400,
+    "def": 1300,
+    "icon": "🌱🌿",
+    "stars": [
+      "Saturn",
+      "Pluto"
+    ],
+    "code": "84990171"
+  },
+  {
+    "id": 512,
+    "name": "Cannon Soldier",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "DARK",
+    "atk": 1400,
+    "def": 1300,
+    "icon": "🚀🤖",
+    "stars": [
+      "Venus",
+      "Jupiter"
+    ],
+    "code": "11384280"
+  },
+  {
+    "id": 513,
+    "name": "Guardian of the Throne Room",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "LIGHT",
+    "atk": 1650,
+    "def": 1600,
+    "icon": "🛡️✨",
+    "stars": [
+      "Moon",
+      "Uranus"
+    ],
+    "code": "47879985"
+  },
+  {
+    "id": 514,
+    "name": "Brave Scizzar",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "DARK",
+    "atk": 1300,
+    "def": 1000,
+    "icon": "🤖🛞",
+    "stars": [
+      "Venus",
+      "Saturn"
+    ],
+    "code": "74277583"
+  },
+  {
+    "id": 515,
+    "name": "The Statue of Easter Island",
+    "type": "MONSTER",
+    "race": "Rock",
+    "attr": "EARTH",
+    "atk": 1100,
+    "def": 1400,
+    "icon": "🗿🪨",
+    "stars": [
+      "Pluto",
+      null
+    ],
+    "code": "10262698"
+  },
+  {
+    "id": 516,
+    "name": "Muka Muka",
+    "type": "MONSTER",
+    "race": "Rock",
+    "attr": "EARTH",
+    "atk": 600,
+    "def": 300,
+    "icon": "🪨⛏️",
+    "stars": [
+      "Pluto",
+      "Sun"
+    ],
+    "code": "46657337"
+  },
+  {
+    "id": 517,
+    "name": "Sand Stone",
+    "type": "MONSTER",
+    "race": "Rock",
+    "attr": "EARTH",
+    "atk": 1300,
+    "def": 1600,
+    "icon": "🪨⛰️",
+    "stars": [
+      "Pluto",
+      "Jupiter"
+    ],
+    "code": "73051941"
+  },
+  {
+    "id": 518,
+    "name": "Boulder Tortoise",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "EARTH",
+    "atk": 1450,
+    "def": 2200,
+    "icon": "🪨⛰️",
+    "stars": [
+      "Pluto",
+      "Mercury"
+    ],
+    "code": "09540040"
+  },
+  {
+    "id": 519,
+    "name": "Fire Kraken",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "FIRE",
+    "atk": 1600,
+    "def": 1500,
+    "icon": "🐟🌊",
+    "stars": [
+      "Jupiter",
+      "Uranus"
+    ],
+    "code": "46534755"
+  },
+  {
+    "id": 520,
+    "name": "Turtle Bird",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 1900,
+    "def": 1700,
+    "icon": "🦅🪶",
+    "stars": [
+      "Uranus",
+      "Jupiter"
+    ],
+    "code": "72929454"
+  },
+  {
+    "id": 521,
+    "name": "Skullbird",
+    "type": "MONSTER",
+    "race": "Winged Beast",
+    "attr": "WIND",
+    "atk": 1900,
+    "def": 1700,
+    "icon": "💀🦴",
+    "stars": [
+      "Uranus",
+      null
+    ],
+    "code": "08327462"
+  },
+  {
+    "id": 522,
+    "name": "Monstrous Bird",
+    "type": "MONSTER",
+    "race": "Winged Beast",
+    "attr": "WIND",
+    "atk": 2000,
+    "def": 1900,
+    "icon": "🦅🪶",
+    "stars": [
+      "Uranus",
+      "Sun"
+    ],
+    "code": "35712107"
+  },
+  {
+    "id": 523,
+    "name": "The Bistro Butcher",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 1800,
+    "def": 1000,
+    "icon": "👹🌑",
+    "stars": [
+      "Venus",
+      "Uranus"
+    ],
+    "code": "71107816"
+  },
+  {
+    "id": 524,
+    "name": "Star Boy",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 550,
+    "def": 500,
+    "icon": "🌊🌧️",
+    "stars": [
+      "Mercury",
+      "Jupiter"
+    ],
+    "code": "08201910"
+  },
+  {
+    "id": 525,
+    "name": "Spirit of the Mountain",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "EARTH",
+    "atk": 1300,
+    "def": 1800,
+    "icon": "🧙🪄",
+    "stars": [
+      "Pluto",
+      "Saturn"
+    ],
+    "code": "34690519"
+  },
+  {
+    "id": 526,
+    "name": "Neck Hunter",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 1750,
+    "def": 1900,
+    "icon": "👹👁️",
+    "stars": [
+      "Venus",
+      "Pluto"
+    ],
+    "code": "70084224"
+  },
+  {
+    "id": 527,
+    "name": "Milus Radiant",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 300,
+    "def": 250,
+    "icon": "🐜🌱",
+    "stars": [
+      "Saturn",
+      "Mercury"
+    ],
+    "code": "07489323"
+  },
+  {
+    "id": 528,
+    "name": "Togex",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 1600,
+    "def": 1800,
+    "icon": "🐅🐾",
+    "stars": [
+      "Pluto",
+      "Moon"
+    ],
+    "code": "33878931"
+  },
+  {
+    "id": 529,
+    "name": "Flame Cerebrus",
+    "type": "MONSTER",
+    "race": "Pyro",
+    "attr": "FIRE",
+    "atk": 2100,
+    "def": 1800,
+    "icon": "🔥💥",
+    "stars": [
+      "Jupiter",
+      "Neptune"
+    ],
+    "code": "60862676"
+  },
+  {
+    "id": 530,
+    "name": "Eldeen",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "LIGHT",
+    "atk": 950,
+    "def": 1000,
+    "icon": "🧙✨",
+    "stars": [
+      "Sun",
+      "Venus"
+    ],
+    "code": "06367785"
+  },
+  {
+    "id": 531,
+    "name": "Mystical Sand",
+    "type": "MONSTER",
+    "race": "Rock",
+    "attr": "EARTH",
+    "atk": 2100,
+    "def": 1700,
+    "icon": "🪨💎",
+    "stars": [
+      "Sun",
+      "Uranus"
+    ],
+    "code": "32751480"
+  },
+  {
+    "id": 532,
+    "name": "Gemini Elf",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "EARTH",
+    "atk": 1900,
+    "def": 900,
+    "icon": "🧚‍♀️✨",
+    "stars": [
+      "Moon",
+      "Pluto"
+    ],
+    "code": "69140098"
+  },
+  {
+    "id": 533,
+    "name": "Kwagar Hercules",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "EARTH",
+    "atk": 1900,
+    "def": 1700,
+    "icon": "🪲🏜️",
+    "stars": [
+      "Saturn",
+      "Moon"
+    ],
+    "code": "95144193"
+  },
+  {
+    "id": 534,
+    "name": "Minar",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "EARTH",
+    "atk": 850,
+    "def": 750,
+    "icon": "🪲🌿",
+    "stars": [
+      "Venus",
+      "Mercury"
+    ],
+    "code": "32539892"
+  },
+  {
+    "id": 535,
+    "name": "Kamakiriman",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "EARTH",
+    "atk": 1150,
+    "def": 1400,
+    "icon": "🪲🌾",
+    "stars": [
+      "Saturn",
+      "Venus"
+    ],
+    "code": "68928540"
+  },
+  {
+    "id": 536,
+    "name": "Mechaleon",
+    "type": "MONSTER",
+    "race": "Reptile",
+    "attr": "WATER",
+    "atk": 800,
+    "def": 600,
+    "icon": "🤖🦾",
+    "stars": [
+      "Mercury",
+      "Uranus"
+    ],
+    "code": "94412545"
+  },
+  {
+    "id": 537,
+    "name": "Mega Thunderball",
+    "type": "MONSTER",
+    "race": "Thunder",
+    "attr": "WIND",
+    "atk": 750,
+    "def": 600,
+    "icon": "⚡🌩️",
+    "stars": [
+      "Neptune",
+      "Sun"
+    ],
+    "code": "21817254"
+  },
+  {
+    "id": 538,
+    "name": "Niwatori",
+    "type": "MONSTER",
+    "race": "Winged Beast",
+    "attr": "EARTH",
+    "atk": 900,
+    "def": 800,
+    "icon": "🦅🎯",
+    "stars": [
+      "Saturn",
+      null
+    ],
+    "code": "07805359"
+  },
+  {
+    "id": 539,
+    "name": "Corroding Shark",
+    "type": "MONSTER",
+    "race": "Zombie",
+    "attr": "DARK",
+    "atk": 1100,
+    "def": 700,
+    "icon": "🦈🌊",
+    "stars": [
+      "Venus",
+      "Neptune"
+    ],
+    "code": "34290067"
+  },
+  {
+    "id": 540,
+    "name": "Skelengel",
+    "type": "MONSTER",
+    "race": "Fairy",
+    "attr": "LIGHT",
+    "atk": 900,
+    "def": 400,
+    "icon": "🧚🌟",
+    "stars": [
+      "Moon",
+      "Neptune"
+    ],
+    "code": "60694662"
+  },
+  {
+    "id": 541,
+    "name": "Hane-Hane",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 450,
+    "def": 500,
+    "icon": "🐅❄️",
+    "stars": [
+      "Uranus",
+      "Neptune"
+    ],
+    "code": "07089711"
+  },
+  {
+    "id": 542,
+    "name": "Misairuzame",
+    "type": "MONSTER",
+    "race": "Fish",
+    "attr": "WATER",
+    "atk": 1400,
+    "def": 1600,
+    "icon": "🐟🐬",
+    "stars": [
+      "Mercury",
+      "Moon"
+    ],
+    "code": "33178416"
+  },
+  {
+    "id": 543,
+    "name": "Tongyo",
+    "type": "MONSTER",
+    "race": "Fish",
+    "attr": "WATER",
+    "atk": 1350,
+    "def": 800,
+    "icon": "🐟🎣",
+    "stars": [
+      "Mercury",
+      "Venus"
+    ],
+    "code": "69572024"
+  },
+  {
+    "id": 544,
+    "name": "Dharma Cannon",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "DARK",
+    "atk": 900,
+    "def": 500,
+    "icon": "🚀🤖",
+    "stars": [
+      "Venus",
+      "Sun"
+    ],
+    "code": "96967123"
+  },
+  {
+    "id": 545,
+    "name": "Skelgon",
+    "type": "MONSTER",
+    "race": "Zombie",
+    "attr": "DARK",
+    "atk": 1700,
+    "def": 1900,
+    "icon": "🧟🦴",
+    "stars": [
+      "Venus",
+      "Neptune"
+    ],
+    "code": "32355828"
+  },
+  {
+    "id": 546,
+    "name": "Wow Warrior",
+    "type": "MONSTER",
+    "race": "Fish",
+    "attr": "WATER",
+    "atk": 1250,
+    "def": 900,
+    "icon": "⚔️🛡️",
+    "stars": [
+      "Mercury",
+      "Jupiter"
+    ],
+    "code": "69750536"
+  },
+  {
+    "id": 547,
+    "name": "Griggle",
+    "type": "MONSTER",
+    "race": "Plant",
+    "attr": "EARTH",
+    "atk": 350,
+    "def": 300,
+    "icon": "🌱🌲",
+    "stars": [
+      "Saturn",
+      "Sun"
+    ],
+    "code": "95744531"
+  },
+  {
+    "id": 548,
+    "name": "Bone Mouse",
+    "type": "MONSTER",
+    "race": "Zombie",
+    "attr": "DARK",
+    "atk": 400,
+    "def": 300,
+    "icon": "💀🦴",
+    "stars": [
+      "Venus",
+      "Neptune"
+    ],
+    "code": "21239280"
+  },
+  {
+    "id": 549,
+    "name": "Frog The Jam",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 700,
+    "def": 500,
+    "icon": "🌊⚓",
+    "stars": [
+      "Mercury",
+      "Saturn"
+    ],
+    "code": "68638985"
+  },
+  {
+    "id": 550,
+    "name": "Behegon",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 1350,
+    "def": 1000,
+    "icon": "🌊🪸",
+    "stars": [
+      "Mercury",
+      "Uranus"
+    ],
+    "code": "94022093"
+  },
+  {
+    "id": 551,
+    "name": "Dark Elf",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "DARK",
+    "atk": 2000,
+    "def": 800,
+    "icon": "🧚‍♀️✨",
+    "stars": [
+      "Sun",
+      "Saturn"
+    ],
+    "code": "21417692"
+  },
+  {
+    "id": 552,
+    "name": "Winged Dragon #2",
+    "type": "MONSTER",
+    "race": "Winged Beast",
+    "attr": "WIND",
+    "atk": 1200,
+    "def": 1000,
+    "icon": "🦅🐉",
+    "stars": [
+      "Uranus",
+      "Mercury"
+    ],
+    "code": "57405307"
+  },
+  {
+    "id": 553,
+    "name": "Mushroom Man #2",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 1250,
+    "def": 800,
+    "icon": "🍄🌱",
+    "stars": [
+      "Saturn",
+      "Pluto"
+    ],
+    "code": "93900406"
+  },
+  {
+    "id": 554,
+    "name": "Lava Battleguard",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 1550,
+    "def": 1800,
+    "icon": "⚔️🛡️",
+    "stars": [
+      "Sun",
+      "Jupiter"
+    ],
+    "code": "20394040"
+  },
+  {
+    "id": 555,
+    "name": "Tyhone #2",
+    "type": "MONSTER",
+    "race": "Dragon",
+    "attr": "FIRE",
+    "atk": 1700,
+    "def": 1900,
+    "icon": "🐉🌪️",
+    "stars": [
+      "Jupiter",
+      "Pluto"
+    ],
+    "code": "56789759"
+  },
+  {
+    "id": 556,
+    "name": "The Wandering Doomed",
+    "type": "MONSTER",
+    "race": "Zombie",
+    "attr": "DARK",
+    "atk": 800,
+    "def": 600,
+    "icon": "🧟🥩",
+    "stars": [
+      "Venus",
+      "Neptune"
+    ],
+    "code": "93788854"
+  },
+  {
+    "id": 557,
+    "name": "Steel Ogre Grotto #1",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "EARTH",
+    "atk": 1400,
+    "def": 1800,
+    "icon": "🤖🔧",
+    "stars": [
+      "Venus",
+      "Jupiter"
+    ],
+    "code": "29172562"
+  },
+  {
+    "id": 558,
+    "name": "Pot the Trick",
+    "type": "MONSTER",
+    "race": "Rock",
+    "attr": "EARTH",
+    "atk": 400,
+    "def": 400,
+    "icon": "🪨🧱",
+    "stars": [
+      "Venus",
+      "Saturn"
+    ],
+    "code": "55567161"
+  },
+  {
+    "id": 559,
+    "name": "Oscillo Hero",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 1250,
+    "def": 700,
+    "icon": "⚔️🎖️",
+    "stars": [
+      null,
+      "Moon"
+    ],
+    "code": "82065276"
+  },
+  {
+    "id": 560,
+    "name": "Invader from Another Dimension",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 950,
+    "def": 1400,
+    "icon": "👹😈",
+    "stars": [
+      null,
+      "Jupiter"
+    ],
+    "code": "28450915"
+  },
+  {
+    "id": 561,
+    "name": "Lesser Dragon",
+    "type": "MONSTER",
+    "race": "Dragon",
+    "attr": "WIND",
+    "atk": 1200,
+    "def": 1000,
+    "icon": "🦅🐉",
+    "stars": [
+      "Venus",
+      "Uranus"
+    ],
+    "code": "55444629"
+  },
+  {
+    "id": 562,
+    "name": "Needle Worm",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "EARTH",
+    "atk": 750,
+    "def": 600,
+    "icon": "🐜🌱",
+    "stars": [
+      "Saturn",
+      "Neptune"
+    ],
+    "code": "81843628"
+  },
+  {
+    "id": 563,
+    "name": "Wretched Ghost of the Attic",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 550,
+    "def": 400,
+    "icon": "👻🌑",
+    "stars": [
+      "Sun",
+      "Pluto"
+    ],
+    "code": "17238333"
+  },
+  {
+    "id": 564,
+    "name": "Great Mammoth of Goldfine",
+    "type": "MONSTER",
+    "race": "Zombie",
+    "attr": "DARK",
+    "atk": 2200,
+    "def": 1800,
+    "icon": "🦣☠️",
+    "stars": [
+      "Venus",
+      "Neptune"
+    ],
+    "code": "54622031"
+  },
+  {
+    "id": 565,
+    "name": "Man-eating Black Shark",
+    "type": "MONSTER",
+    "race": "Fish",
+    "attr": "WATER",
+    "atk": 2100,
+    "def": 1300,
+    "icon": "🦈🌊",
+    "stars": [
+      "Mercury",
+      "Moon"
+    ],
+    "code": "80727036"
+  },
+  {
+    "id": 566,
+    "name": "Yormungarde",
+    "type": "MONSTER",
+    "race": "Reptile",
+    "attr": "EARTH",
+    "atk": 1200,
+    "def": 900,
+    "icon": "🦎🐾",
+    "stars": [
+      "Mercury",
+      "Venus"
+    ],
+    "code": "17115745"
+  },
+  {
+    "id": 567,
+    "name": "Darkworld Thorns",
+    "type": "MONSTER",
+    "race": "Plant",
+    "attr": "EARTH",
+    "atk": 1200,
+    "def": 900,
+    "icon": "🌱🌿",
+    "stars": [
+      "Venus",
+      "Saturn"
+    ],
+    "code": "43500484"
+  },
+  {
+    "id": 568,
+    "name": "Anthrosaurus",
+    "type": "MONSTER",
+    "race": "Dinosaur",
+    "attr": "EARTH",
+    "atk": 1000,
+    "def": 850,
+    "icon": "🐜🌱",
+    "stars": [
+      "Pluto",
+      "Venus"
+    ],
+    "code": "89904598"
+  },
+  {
+    "id": 569,
+    "name": "Drooling Lizard",
+    "type": "MONSTER",
+    "race": "Reptile",
+    "attr": "EARTH",
+    "atk": 900,
+    "def": 800,
+    "icon": "🦎🌿",
+    "stars": [
+      "Mercury",
+      null
+    ],
+    "code": "16353197"
+  },
+  {
+    "id": 570,
+    "name": "Trakadon",
+    "type": "MONSTER",
+    "race": "Dinosaur",
+    "attr": "EARTH",
+    "atk": 1300,
+    "def": 800,
+    "icon": "🦖🦴",
+    "stars": [
+      "Pluto",
+      null
+    ],
+    "code": "42348802"
+  },
+  {
+    "id": 571,
+    "name": "B. Dragon Jungle King",
+    "type": "MONSTER",
+    "race": "Dragon",
+    "attr": "EARTH",
+    "atk": 2100,
+    "def": 1800,
+    "icon": "🐉",
+    "stars": [
+      "Saturn",
+      "Mercury"
+    ],
+    "code": "89832901"
+  },
+  {
+    "id": 572,
+    "name": "Empress Judge",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 2100,
+    "def": 1700,
+    "icon": "⚔️🪓",
+    "stars": [
+      "Pluto",
+      null
+    ],
+    "code": "15237615"
+  },
+  {
+    "id": 573,
+    "name": "Little D",
+    "type": "MONSTER",
+    "race": "Dinosaur",
+    "attr": "EARTH",
+    "atk": 1100,
+    "def": 700,
+    "icon": "🦖⚡",
+    "stars": [
+      "Pluto",
+      "Sun"
+    ],
+    "code": "42625254"
+  },
+  {
+    "id": 574,
+    "name": "Witch of the Black Forest",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "DARK",
+    "atk": 1100,
+    "def": 1200,
+    "icon": "🧙‍♀️✨",
+    "stars": [
+      "Sun",
+      "Neptune"
+    ],
+    "code": "78010363"
+  },
+  {
+    "id": 575,
+    "name": "Ancient One of the Deep Forest",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 1800,
+    "def": 1900,
+    "icon": "🐅⚡",
+    "stars": [
+      "Saturn",
+      "Moon"
+    ],
+    "code": "14015067"
+  },
+  {
+    "id": 576,
+    "name": "Giant Scorpion of the Tundra",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "EARTH",
+    "atk": 1100,
+    "def": 1000,
+    "icon": "🐜🌱",
+    "stars": [
+      "Saturn",
+      "Venus"
+    ],
+    "code": "41403766"
+  },
+  {
+    "id": 577,
+    "name": "Crow Goblin",
+    "type": "MONSTER",
+    "race": "Winged Beast",
+    "attr": "WIND",
+    "atk": 1850,
+    "def": 1600,
+    "icon": "🐦‍⬛🌑",
+    "stars": [
+      "Uranus",
+      "Jupiter"
+    ],
+    "code": "77998771"
+  },
+  {
+    "id": 578,
+    "name": "Leo Wizard",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "EARTH",
+    "atk": 1350,
+    "def": 1200,
+    "icon": "🧙‍♂️🔮",
+    "stars": [
+      "Sun",
+      "Mercury"
+    ],
+    "code": "04392470"
+  },
+  {
+    "id": 579,
+    "name": "Abyss Flower",
+    "type": "MONSTER",
+    "race": "Plant",
+    "attr": "EARTH",
+    "atk": 750,
+    "def": 400,
+    "icon": "👹🔥",
+    "stars": [
+      "Saturn",
+      null
+    ],
+    "code": "40387124"
+  },
+  {
+    "id": 580,
+    "name": "Patrol Robo",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "EARTH",
+    "atk": 1100,
+    "def": 900,
+    "icon": "🤖📡",
+    "stars": [
+      "Venus",
+      "Pluto"
+    ],
+    "code": "76775123"
+  },
+  {
+    "id": 581,
+    "name": "Takuhee",
+    "type": "MONSTER",
+    "race": "Winged Beast",
+    "attr": "WIND",
+    "atk": 1450,
+    "def": 1000,
+    "icon": "🦅🌤️",
+    "stars": [
+      "Uranus",
+      "Moon"
+    ],
+    "code": "03170832"
+  },
+  {
+    "id": 582,
+    "name": "Dark Witch",
+    "type": "MONSTER",
+    "race": "Fairy",
+    "attr": "LIGHT",
+    "atk": 1800,
+    "def": 1700,
+    "icon": "🧙‍♀️✨",
+    "stars": [
+      "Moon",
+      "Mercury"
+    ],
+    "code": "35565537"
+  },
+  {
+    "id": 583,
+    "name": "Weather Report",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 950,
+    "def": 1500,
+    "icon": "🌊🐚",
+    "stars": [
+      "Mercury",
+      "Sun"
+    ],
+    "code": "72053645"
+  },
+  {
+    "id": 584,
+    "name": "Binding Chain",
+    "type": "MONSTER",
+    "race": "Fairy",
+    "attr": "LIGHT",
+    "atk": 1000,
+    "def": 1100,
+    "icon": "🧚✨",
+    "stars": [
+      "Moon",
+      null
+    ],
+    "code": "08058240"
+  },
+  {
+    "id": 585,
+    "name": "Mechanical Snail",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "DARK",
+    "atk": 800,
+    "def": 1000,
+    "icon": "🤖🦾",
+    "stars": [
+      "Venus",
+      "Mercury"
+    ],
+    "code": "34442949"
+  },
+  {
+    "id": 586,
+    "name": "Greenkappa",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "DARK",
+    "atk": 650,
+    "def": 900,
+    "icon": "⚔️🏹",
+    "stars": [
+      "Venus",
+      "Sun"
+    ],
+    "code": "61831093"
+  },
+  {
+    "id": 587,
+    "name": "Mon Larvas",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 1300,
+    "def": 1400,
+    "icon": "🐅🌲",
+    "stars": [
+      "Saturn",
+      "Sun"
+    ],
+    "code": "07225792"
+  },
+  {
+    "id": 588,
+    "name": "Living Vase",
+    "type": "MONSTER",
+    "race": "Plant",
+    "attr": "EARTH",
+    "atk": 900,
+    "def": 1100,
+    "icon": "🌱🍇",
+    "stars": [
+      "Saturn",
+      "Pluto"
+    ],
+    "code": "34320307"
+  },
+  {
+    "id": 589,
+    "name": "Tentacle Plant",
+    "type": "MONSTER",
+    "race": "Plant",
+    "attr": "WATER",
+    "atk": 500,
+    "def": 600,
+    "icon": "🐜🌱",
+    "stars": [
+      "Saturn",
+      "Neptune"
+    ],
+    "code": "60715406"
+  },
+  {
+    "id": 590,
+    "name": "Beaked Snake",
+    "type": "MONSTER",
+    "race": "Reptile",
+    "attr": "EARTH",
+    "atk": 800,
+    "def": 900,
+    "icon": "🐍🩸",
+    "stars": [
+      "Mercury",
+      "Saturn"
+    ],
+    "code": "06103114"
+  },
+  {
+    "id": 591,
+    "name": "Morphing Jar",
+    "type": "MONSTER",
+    "race": "Rock",
+    "attr": "EARTH",
+    "atk": 700,
+    "def": 600,
+    "icon": "🪨🏰",
+    "stars": [
+      "Pluto",
+      "Mercury"
+    ],
+    "code": "33508719"
+  },
+  {
+    "id": 592,
+    "name": "Muse-A",
+    "type": "MONSTER",
+    "race": "Fairy",
+    "attr": "LIGHT",
+    "atk": 850,
+    "def": 900,
+    "icon": "🧚✨",
+    "stars": [
+      "Moon",
+      "Jupiter"
+    ],
+    "code": "69992868"
+  },
+  {
+    "id": 593,
+    "name": "Giant Turtle Who Feeds on Flames",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 1400,
+    "def": 1800,
+    "icon": "🐜🌱",
+    "stars": [
+      "Mercury",
+      "Jupiter"
+    ],
+    "code": "96981563"
+  },
+  {
+    "id": 594,
+    "name": "Rose Spectre of Dunn",
+    "type": "MONSTER",
+    "race": "Plant",
+    "attr": "DARK",
+    "atk": 2000,
+    "def": 1800,
+    "icon": "🌹✨",
+    "stars": [
+      "Venus",
+      "Saturn"
+    ],
+    "code": "32485271"
+  },
+  {
+    "id": 595,
+    "name": "Fiend Refrection #1",
+    "type": "MONSTER",
+    "race": "Winged Beast",
+    "attr": "WIND",
+    "atk": 1300,
+    "def": 1400,
+    "icon": "👹🔥",
+    "stars": [
+      null,
+      "Saturn"
+    ],
+    "code": "68870276"
+  },
+  {
+    "id": 596,
+    "name": "Ghoul with an Appetite",
+    "type": "MONSTER",
+    "race": "Zombie",
+    "attr": "DARK",
+    "atk": 1600,
+    "def": 1200,
+    "icon": "🧟🥩",
+    "stars": [
+      "Venus",
+      "Neptune"
+    ],
+    "code": "95265975"
+  },
+  {
+    "id": 597,
+    "name": "Pale Beast",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 1500,
+    "def": 1200,
+    "icon": "🐾🌿",
+    "stars": [
+      "Saturn",
+      "Mercury"
+    ],
+    "code": "21263083"
+  },
+  {
+    "id": 598,
+    "name": "Little Chimera",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "FIRE",
+    "atk": 600,
+    "def": 550,
+    "icon": "🐅🐾",
+    "stars": [
+      "Uranus",
+      "Venus"
+    ],
+    "code": "68658728"
+  },
+  {
+    "id": 599,
+    "name": "Violent Rain",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 1550,
+    "def": 800,
+    "icon": "🌊🐚",
+    "stars": [
+      "Mercury",
+      "Sun"
+    ],
+    "code": "94042337"
+  },
+  {
+    "id": 600,
+    "name": "Key Mace #2",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 1050,
+    "def": 1200,
+    "icon": "👹😈",
+    "stars": [
+      "Sun",
+      "Venus"
+    ],
+    "code": "20541432"
+  },
+  {
+    "id": 601,
+    "name": "Tenderness",
+    "type": "MONSTER",
+    "race": "Fairy",
+    "attr": "LIGHT",
+    "atk": 700,
+    "def": 1400,
+    "icon": "🧚💖",
+    "stars": [
+      "Moon",
+      "Saturn"
+    ],
+    "code": "57935140"
+  },
+  {
+    "id": 602,
+    "name": "Penguin Soldier",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 750,
+    "def": 500,
+    "icon": "🌊🧊",
+    "stars": [
+      "Mercury",
+      "Jupiter"
+    ],
+    "code": "93920745"
+  },
+  {
+    "id": 603,
+    "name": "Fairy Dragon",
+    "type": "MONSTER",
+    "race": "Dragon",
+    "attr": "WIND",
+    "atk": 1100,
+    "def": 1200,
+    "icon": "🦅🐉",
+    "stars": [
+      "Moon",
+      "Uranus"
+    ],
+    "code": "20315854"
+  },
+  {
+    "id": 604,
+    "name": "Obese Marmot of Nefariousness",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 750,
+    "def": 800,
+    "icon": "🐅🪵",
+    "stars": [
+      "Venus",
+      "Jupiter"
+    ],
+    "code": "56713552"
+  },
+  {
+    "id": 605,
+    "name": "Liquid Beast",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 950,
+    "def": 800,
+    "icon": "🐾🌿",
+    "stars": [
+      "Mercury",
+      "Uranus"
+    ],
+    "code": "93108297"
+  },
+  {
+    "id": 606,
+    "name": "Twin Long Rods #2",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 850,
+    "def": 700,
+    "icon": "🌊🪸",
+    "stars": [
+      "Mercury",
+      "Moon"
+    ],
+    "code": "29692206"
+  },
+  {
+    "id": 607,
+    "name": "Great Bill",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 1250,
+    "def": 1300,
+    "icon": "🐅⚡",
+    "stars": [
+      "Saturn",
+      "Moon"
+    ],
+    "code": "55691901"
+  },
+  {
+    "id": 608,
+    "name": "Shining Friendship",
+    "type": "MONSTER",
+    "race": "Fairy",
+    "attr": "LIGHT",
+    "atk": 1300,
+    "def": 1100,
+    "icon": "🧚✨",
+    "stars": [
+      "Moon",
+      "Pluto"
+    ],
+    "code": "82085619"
+  },
+  {
+    "id": 609,
+    "name": "Bladefly",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "WIND",
+    "atk": 600,
+    "def": 700,
+    "icon": "⚔️🛡️",
+    "stars": [
+      "Saturn",
+      "Venus"
+    ],
+    "code": "28470714"
+  },
+  {
+    "id": 610,
+    "name": "Electric Lizard",
+    "type": "MONSTER",
+    "race": "Thunder",
+    "attr": "EARTH",
+    "atk": 850,
+    "def": 800,
+    "icon": "🦎🌿",
+    "stars": [
+      "Neptune",
+      "Moon"
+    ],
+    "code": "55875323"
+  },
+  {
+    "id": 611,
+    "name": "Hiro's Shadow Scout",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 650,
+    "def": 500,
+    "icon": "👹🌑",
+    "stars": [
+      "Venus",
+      "Uranus"
+    ],
+    "code": "81863068"
+  },
+  {
+    "id": 612,
+    "name": "Lady of Faith",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "LIGHT",
+    "atk": 1100,
+    "def": 800,
+    "icon": "🧙🕯️",
+    "stars": [
+      "Moon",
+      "Neptune"
+    ],
+    "code": "17358176"
+  },
+  {
+    "id": 613,
+    "name": "Twin-headed Thunder Dragon",
+    "type": "MONSTER",
+    "race": "Thunder",
+    "attr": "LIGHT",
+    "atk": 2800,
+    "def": 2100,
+    "icon": "⚡🐲",
+    "stars": [
+      "Neptune",
+      "Venus"
+    ],
+    "code": "54752875"
+  },
+  {
+    "id": 614,
+    "name": "Hunter Spider",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "EARTH",
+    "atk": 1600,
+    "def": 1400,
+    "icon": "🕷️🕸️",
+    "stars": [
+      "Saturn",
+      null
+    ],
+    "code": "80141480"
+  },
+  {
+    "id": 615,
+    "name": "Armored Starfish",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 850,
+    "def": 1400,
+    "icon": "🐟🌊",
+    "stars": [
+      "Mercury",
+      "Venus"
+    ],
+    "code": "17535588"
+  },
+  {
+    "id": 616,
+    "name": "Hourglass of Courage",
+    "type": "MONSTER",
+    "race": "Fairy",
+    "attr": "LIGHT",
+    "atk": 1100,
+    "def": 1200,
+    "icon": "🧚✨",
+    "stars": [
+      "Moon",
+      "Mercury"
+    ],
+    "code": "43530283"
+  },
+  {
+    "id": 617,
+    "name": "Marine Beast",
+    "type": "MONSTER",
+    "race": "Fish",
+    "attr": "WATER",
+    "atk": 1700,
+    "def": 1600,
+    "icon": "🐾🌿",
+    "stars": [
+      "Mercury",
+      "Sun"
+    ],
+    "code": "29929832"
+  },
+  {
+    "id": 618,
+    "name": "Warrior of Tradition",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 1900,
+    "def": 1700,
+    "icon": "⚔️🛡️",
+    "stars": [
+      "Sun",
+      "Jupiter"
+    ],
+    "code": "56413937"
+  },
+  {
+    "id": 619,
+    "name": "Rock Spirit",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "EARTH",
+    "atk": 1650,
+    "def": 1900,
+    "icon": "🪨⛰️",
+    "stars": [
+      "Pluto",
+      "Jupiter"
+    ],
+    "code": "82818645"
+  },
+  {
+    "id": 620,
+    "name": "Snakeyashi",
+    "type": "MONSTER",
+    "race": "Plant",
+    "attr": "EARTH",
+    "atk": 1000,
+    "def": 1200,
+    "icon": "🐍🩸",
+    "stars": [
+      "Saturn",
+      "Sun"
+    ],
+    "code": "29802344"
+  },
+  {
+    "id": 621,
+    "name": "Succubus Knight",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "DARK",
+    "atk": 1650,
+    "def": 1300,
+    "icon": "🗡️🌑",
+    "stars": [
+      "Sun",
+      "Saturn"
+    ],
+    "code": "55291359"
+  },
+  {
+    "id": 622,
+    "name": "Ill Witch",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "LIGHT",
+    "atk": 1600,
+    "def": 1500,
+    "icon": "🧙‍♀️✨",
+    "stars": [
+      "Moon",
+      null
+    ],
+    "code": "81686058"
+  },
+  {
+    "id": 623,
+    "name": "The Thing That Hides in the Mud",
+    "type": "MONSTER",
+    "race": "Rock",
+    "attr": "EARTH",
+    "atk": 1200,
+    "def": 1300,
+    "icon": "🪨🏰",
+    "stars": [
+      "Pluto",
+      "Saturn"
+    ],
+    "code": "18180762"
+  },
+  {
+    "id": 624,
+    "name": "High Tide Gyojin",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 1650,
+    "def": 1300,
+    "icon": "🌊💧",
+    "stars": [
+      "Mercury",
+      "Sun"
+    ],
+    "code": "54579801"
+  },
+  {
+    "id": 625,
+    "name": "Fairy of the Fountain",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 1600,
+    "def": 1100,
+    "icon": "🧚‍♀️✨",
+    "stars": [
+      "Mercury",
+      null
+    ],
+    "code": "81563416"
+  },
+  {
+    "id": 626,
+    "name": "Amazon of the Seas",
+    "type": "MONSTER",
+    "race": "Fish",
+    "attr": "WATER",
+    "atk": 1300,
+    "def": 1400,
+    "icon": "🐟🌊",
+    "stars": [
+      "Mercury",
+      "Jupiter"
+    ],
+    "code": "17968114"
+  },
+  {
+    "id": 627,
+    "name": "Nekogal #2",
+    "type": "MONSTER",
+    "race": "Beast-Warrior",
+    "attr": "EARTH",
+    "atk": 1900,
+    "def": 2000,
+    "icon": "🐗🐺",
+    "stars": [
+      "Saturn",
+      "Pluto"
+    ],
+    "code": "43352213"
+  },
+  {
+    "id": 628,
+    "name": "Witch's Apprentice",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "DARK",
+    "atk": 550,
+    "def": 500,
+    "icon": "🧙‍♀️✨",
+    "stars": [
+      "Sun",
+      "Uranus"
+    ],
+    "code": "80741828"
+  },
+  {
+    "id": 629,
+    "name": "Armored Rat",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 950,
+    "def": 1100,
+    "icon": "🐅❄️",
+    "stars": [
+      "Saturn",
+      "Neptune"
+    ],
+    "code": "16246527"
+  },
+  {
+    "id": 630,
+    "name": "Ancient Lizard Warrior",
+    "type": "MONSTER",
+    "race": "Reptile",
+    "attr": "EARTH",
+    "atk": 1400,
+    "def": 1100,
+    "icon": "⚔️🛡️",
+    "stars": [
+      "Mercury",
+      "Uranus"
+    ],
+    "code": "43230671"
+  },
+  {
+    "id": 631,
+    "name": "Maiden of the Moonlight",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "LIGHT",
+    "atk": 1500,
+    "def": 1300,
+    "icon": "👸✨",
+    "stars": [
+      "Venus",
+      null
+    ],
+    "code": "79629370"
+  },
+  {
+    "id": 632,
+    "name": "Stone Ogre Grotto",
+    "type": "MONSTER",
+    "race": "Rock",
+    "attr": "EARTH",
+    "atk": 1600,
+    "def": 1500,
+    "icon": "🪨⛰️",
+    "stars": [
+      "Pluto",
+      "Moon"
+    ],
+    "code": "15023985"
+  },
+  {
+    "id": 633,
+    "name": "Winged Egg of New Life",
+    "type": "MONSTER",
+    "race": "Fairy",
+    "attr": "LIGHT",
+    "atk": 1400,
+    "def": 1700,
+    "icon": "🦅🪶",
+    "stars": [
+      "Moon",
+      "Jupiter"
+    ],
+    "code": "42418084"
+  },
+  {
+    "id": 634,
+    "name": "Night Lizard",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 1150,
+    "def": 1300,
+    "icon": "🦎🌿",
+    "stars": [
+      "Mercury",
+      "Saturn"
+    ],
+    "code": "78402798"
+  },
+  {
+    "id": 635,
+    "name": "Queen's Double",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 350,
+    "def": 300,
+    "icon": "⚔️🔱",
+    "stars": [
+      "Pluto",
+      "Venus"
+    ],
+    "code": "05901497"
+  },
+  {
+    "id": 636,
+    "name": "Blue-winged Crown",
+    "type": "MONSTER",
+    "race": "Winged Beast",
+    "attr": "WIND",
+    "atk": 1600,
+    "def": 1200,
+    "icon": "🐦‍⬛🌑",
+    "stars": [
+      "Uranus",
+      null
+    ],
+    "code": "41396436"
+  },
+  {
+    "id": 637,
+    "name": "Trent",
+    "type": "MONSTER",
+    "race": "Plant",
+    "attr": "EARTH",
+    "atk": 1500,
+    "def": 1800,
+    "icon": "🌱🍂",
+    "stars": [
+      "Saturn",
+      "Moon"
+    ],
+    "code": "78780140"
+  },
+  {
+    "id": 638,
+    "name": "Queen of Autumn Leaves",
+    "type": "MONSTER",
+    "race": "Plant",
+    "attr": "EARTH",
+    "atk": 1800,
+    "def": 1500,
+    "icon": "🌱🌻",
+    "stars": [
+      "Saturn",
+      "Venus"
+    ],
+    "code": "04179849"
+  },
+  {
+    "id": 639,
+    "name": "Amphibious Bugroth",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 1850,
+    "def": 1300,
+    "icon": "🌊🐚",
+    "stars": [
+      "Mercury",
+      "Moon"
+    ],
+    "code": "40173854"
+  },
+  {
+    "id": 640,
+    "name": "Acid Crawler",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "EARTH",
+    "atk": 900,
+    "def": 700,
+    "icon": "🪲🌱",
+    "stars": [
+      "Saturn",
+      null
+    ],
+    "code": "77568553"
+  },
+  {
+    "id": 641,
+    "name": "Invader of the Throne",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 1350,
+    "def": 1700,
+    "icon": "⚔️🗡️",
+    "stars": [
+      "Pluto",
+      null
+    ],
+    "code": "03056267"
+  },
+  {
+    "id": 642,
+    "name": "Mystical Sheep #1",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "EARTH",
+    "atk": 1150,
+    "def": 900,
+    "icon": "🐅🌙",
+    "stars": [
+      null,
+      "Uranus"
+    ],
+    "code": "30451366"
+  },
+  {
+    "id": 643,
+    "name": "Disk Magician",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "DARK",
+    "atk": 1350,
+    "def": 1000,
+    "icon": "🧙‍♂️🌑",
+    "stars": [
+      "Venus",
+      "Pluto"
+    ],
+    "code": "76446915"
+  },
+  {
+    "id": 644,
+    "name": "Flame Viper",
+    "type": "MONSTER",
+    "race": "Pyro",
+    "attr": "EARTH",
+    "atk": 400,
+    "def": 450,
+    "icon": "🐍🩸",
+    "stars": [
+      "Jupiter",
+      "Neptune"
+    ],
+    "code": "02830619"
+  },
+  {
+    "id": 645,
+    "name": "Royal Guard",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "EARTH",
+    "atk": 1900,
+    "def": 2200,
+    "icon": "⚔️🛡️",
+    "stars": [
+      "Pluto",
+      "Sun"
+    ],
+    "code": "39239728"
+  },
+  {
+    "id": 646,
+    "name": "Gruesome Goo",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 1300,
+    "def": 700,
+    "icon": "🌊🪸",
+    "stars": [
+      "Mercury",
+      "Venus"
+    ],
+    "code": "65623423"
+  },
+  {
+    "id": 647,
+    "name": "Hyosube",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 1500,
+    "def": 900,
+    "icon": "🌊🐚",
+    "stars": [
+      "Mercury",
+      null
+    ],
+    "code": "02118022"
+  },
+  {
+    "id": 648,
+    "name": "Machine Attacker",
+    "type": "MONSTER",
+    "race": "Machine",
+    "attr": "EARTH",
+    "atk": 1600,
+    "def": 1300,
+    "icon": "🤖🦾",
+    "stars": [
+      "Venus",
+      "Mercury"
+    ],
+    "code": "38116136"
+  },
+  {
+    "id": 649,
+    "name": "Hibikime",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 1450,
+    "def": 1000,
+    "icon": "⚔️🗡️",
+    "stars": [
+      "Sun",
+      "Pluto"
+    ],
+    "code": "64501875"
+  },
+  {
+    "id": 650,
+    "name": "Whiptail Crow",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 1650,
+    "def": 1600,
+    "icon": "🐦‍⬛🌑",
+    "stars": [
+      "Venus",
+      "Sun"
+    ],
+    "code": "91996584"
+  },
+  {
+    "id": 651,
+    "name": "Kunai with Chain",
+    "type": "MAGIC",
+    "kind": "equip",
+    "desc": "Trang bị (+500 ATK): Fish, Machine, Thunder.",
+    "icon": "⚒️✨",
+    "code": "37390589"
+  },
+  {
+    "id": 652,
+    "name": "Magical Labyrinth",
+    "type": "MAGIC",
+    "kind": "equip",
+    "desc": "Trang bị (+300 ATK): .",
+    "icon": "⚒️✨",
+    "code": "64389297"
+  },
+  {
+    "id": 653,
+    "name": "Warrior Elimination",
+    "type": "MAGIC",
+    "kind": "destroyRace",
+    "desc": "Phá hủy toàn bộ quái Warrior của đối thủ.",
+    "icon": "🪄✨",
+    "code": "90873992"
+  },
+  {
+    "id": 654,
+    "name": "Salamandra",
+    "type": "MAGIC",
+    "kind": "equip",
+    "desc": "Trang bị (+500 ATK): Thunder.",
+    "icon": "🦎🔥",
+    "code": "32268901"
+  },
+  {
+    "id": 655,
+    "name": "Cursebreaker",
+    "type": "MAGIC",
+    "kind": "clearTraps",
+    "desc": "Phá hủy toàn bộ bẫy đã SET của đối thủ.",
+    "icon": "🪄✨",
+    "code": "69666645"
+  },
+  {
+    "id": 656,
+    "name": "Eternal Rest",
+    "type": "MAGIC",
+    "kind": "destroyRace",
+    "desc": "Phá hủy toàn bộ quái Zombie của đối thủ.",
+    "icon": "🪄✨",
+    "code": "95051344"
+  },
+  {
+    "id": 657,
+    "name": "Megamorph",
+    "type": "MAGIC",
+    "kind": "equip",
+    "desc": "Trang bị (+500 ATK): Spellcaster, Zombie, Warrior, Beast-Warrior, Beast, Winged Beast, Fiend, Fairy, Insect, Dinosaur, Reptile, Fish, Sea Serpent, Machine, Thunder, Aqua, Pyro, Rock, Plant.",
+    "icon": "💪✨",
+    "code": "22046459"
+  },
+  {
+    "id": 658,
+    "name": "Metalmorph",
+    "type": "MAGIC",
+    "kind": "equip",
+    "desc": "Trang bị (+400 ATK): .",
+    "icon": "⚒️✨",
+    "code": "68540058"
+  },
+  {
+    "id": 659,
+    "name": "Winged Trumpeter",
+    "type": "MAGIC",
+    "kind": "equip",
+    "desc": "Trang bị (+300 ATK): .",
+    "icon": "⚒️✨",
+    "code": "94939166"
+  },
+  {
+    "id": 660,
+    "name": "Stain Storm",
+    "type": "MAGIC",
+    "kind": "destroyRace",
+    "desc": "Phá hủy toàn bộ quái Winged Beast của đối thủ.",
+    "icon": "🪄✨",
+    "code": "21323861"
+  },
+  {
+    "id": 661,
+    "name": "Crush Card",
+    "type": "MAGIC",
+    "kind": "destroyRace",
+    "desc": "Phá hủy toàn bộ quái Fiend của đối thủ.",
+    "icon": "🧪🦠",
+    "code": "57728570"
+  },
+  {
+    "id": 662,
+    "name": "Eradicating Aerosol",
+    "type": "MAGIC",
+    "kind": "destroyRace",
+    "desc": "Phá hủy toàn bộ quái Insect của đối thủ.",
+    "icon": "🪄✨",
+    "code": "94716515"
+  },
+  {
+    "id": 663,
+    "name": "Breath of Light",
+    "type": "MAGIC",
+    "kind": "destroyRace",
+    "desc": "Phá hủy toàn bộ quái Rock của đối thủ.",
+    "icon": "🪄✨",
+    "code": "20101223"
+  },
+  {
+    "id": 664,
+    "name": "Eternal Draught",
+    "type": "MAGIC",
+    "kind": "destroyRace",
+    "desc": "Phá hủy toàn bộ quái Reptile/Sea Serpent của đối thủ.",
+    "icon": "🪄✨",
+    "code": "56606928"
+  },
+  {
+    "id": 665,
+    "name": "Curse of Millennium Shield",
+    "type": "RITUAL",
+    "kind": "ritual",
+    "desc": "Ritual: hi sinh 3 nguyên liệu đúng quy định để triệu hồi Millennium Shield.",
+    "icon": "👁️✨",
+    "code": "83094937"
+  },
+  {
+    "id": 666,
+    "name": "Yamadron Ritual",
+    "type": "RITUAL",
+    "kind": "ritual",
+    "desc": "Ritual: hi sinh 3 nguyên liệu đúng quy định để triệu hồi Yamadron.",
+    "icon": "👁️✨",
+    "code": "29089635"
+  },
+  {
+    "id": 667,
+    "name": "Gate Guardian Ritual",
+    "type": "RITUAL",
+    "kind": "ritual",
+    "desc": "Ritual: hi sinh 3 nguyên liệu đúng quy định để triệu hồi Gate Guardian.",
+    "icon": "⛩️⚡",
+    "code": "56483330"
+  },
+  {
+    "id": 668,
+    "name": "Bright Castle",
+    "type": "MAGIC",
+    "kind": "equip",
+    "desc": "Trang bị (+300 ATK): Spellcaster, Zombie, Warrior, Beast-Warrior, Beast, Winged Beast, Fiend, Fairy, Insect, Dinosaur, Reptile, Fish, Sea Serpent, Machine, Thunder, Aqua, Pyro, Rock, Plant.",
+    "icon": "⚒️✨",
+    "code": "82878489"
+  },
+  {
+    "id": 669,
+    "name": "Shadow Spell",
+    "type": "MAGIC",
+    "kind": "forceDef",
+    "desc": "Ép 1 quái của đối thủ về phòng thủ — không thể tấn công.",
+    "icon": "🪄✨",
+    "code": "29267084"
+  },
+  {
+    "id": 670,
+    "name": "Black Luster Ritual",
+    "type": "RITUAL",
+    "kind": "ritual",
+    "desc": "Ritual: hi sinh 3 nguyên liệu đúng quy định để triệu hồi Black Luster Soldier.",
+    "icon": "🛡️🗡️",
+    "code": "55761792"
+  },
+  {
+    "id": 671,
+    "name": "Zera Ritual",
+    "type": "RITUAL",
+    "kind": "ritual",
+    "desc": "Ritual: hi sinh 3 nguyên liệu đúng quy định để triệu hồi Zera The Mant.",
+    "icon": "👁️✨",
+    "code": "81756897"
+  },
+  {
+    "id": 672,
+    "name": "Harpie's Feather Duster",
+    "type": "MAGIC",
+    "kind": "clearTraps",
+    "desc": "Phá hủy toàn bộ bẫy đã SET của đối thủ.",
+    "icon": "🪶🧹",
+    "code": "18144506"
+  },
+  {
+    "id": 673,
+    "name": "War-lion Ritual",
+    "type": "RITUAL",
+    "kind": "ritual",
+    "desc": "Ritual: hi sinh 3 nguyên liệu đúng quy định để triệu hồi Super War-lion.",
+    "icon": "👁️✨",
+    "code": "54539105"
+  },
+  {
+    "id": 674,
+    "name": "Beastry Mirror Ritual",
+    "type": "RITUAL",
+    "kind": "ritual",
+    "desc": "Ritual: hi sinh 3 nguyên liệu đúng quy định để triệu hồi Fiend's Mirror.",
+    "icon": "👁️✨",
+    "code": "81933259"
+  },
+  {
+    "id": 675,
+    "name": "Ultimate Dragon",
+    "type": "RITUAL",
+    "kind": "ritual",
+    "desc": "Ritual: hi sinh 3 nguyên liệu đúng quy định để triệu hồi Blue-eyes Ultimate Dragon.",
+    "icon": "🐲👑",
+    "code": "17928958"
+  },
+  {
+    "id": 676,
+    "name": "Commencement Dance",
+    "type": "RITUAL",
+    "kind": "ritual",
+    "desc": "Ritual: hi sinh 3 nguyên liệu đúng quy định để triệu hồi Performance of Sword.",
+    "icon": "👁️✨",
+    "code": "43417563"
+  },
+  {
+    "id": 677,
+    "name": "Hamburger Recipe",
+    "type": "RITUAL",
+    "kind": "ritual",
+    "desc": "Ritual: hi sinh 3 nguyên liệu đúng quy định để triệu hồi Hungry Burger.",
+    "icon": "👁️✨",
+    "code": "80811661"
+  },
+  {
+    "id": 678,
+    "name": "Revival of Sennen Genjin",
+    "type": "RITUAL",
+    "kind": "ritual",
+    "desc": "Ritual: hi sinh 3 nguyên liệu đúng quy định để triệu hồi Sengenjin.",
+    "icon": "👁️✨",
+    "code": "16206366"
+  },
+  {
+    "id": 679,
+    "name": "Novox's Prayer",
+    "type": "RITUAL",
+    "kind": "ritual",
+    "desc": "Ritual: hi sinh 3 nguyên liệu đúng quy định để triệu hồi Skull Guardian.",
+    "icon": "👁️✨",
+    "code": "43694075"
+  },
+  {
+    "id": 680,
+    "name": "Curse of Tri-Horned Dragon",
+    "type": "RITUAL",
+    "kind": "ritual",
+    "desc": "Ritual: hi sinh 3 nguyên liệu đúng quy định để triệu hồi Tri-horned Dragon.",
+    "icon": "🐲👑",
+    "code": "79699070"
+  },
+  {
+    "id": 681,
+    "name": "House of Adhesive Tape",
+    "type": "TRAP",
+    "kind": "destroyBelow",
+    "desc": "Attacker ATK < 500 bị phá hủy khi tấn công.",
+    "icon": "🩹🪤",
+    "code": "15083728"
+  },
+  {
+    "id": 682,
+    "name": "Eatgaboon",
+    "type": "TRAP",
+    "kind": "destroyBelow",
+    "desc": "Attacker ATK < 500 bị phá hủy khi tấn công.",
+    "icon": "🦷🪤",
+    "code": "42578427"
+  },
+  {
+    "id": 683,
+    "name": "Bear Trap",
+    "type": "TRAP",
+    "kind": "destroyBelow",
+    "desc": "Attacker ATK < 1000 bị phá hủy khi tấn công.",
+    "icon": "🪤🐻",
+    "code": "78977532"
+  },
+  {
+    "id": 684,
+    "name": "Invisible Wire",
+    "type": "TRAP",
+    "kind": "destroyBelow",
+    "desc": "Attacker ATK < 1500 bị phá hủy khi tấn công.",
+    "icon": "🪤⚡",
+    "code": "15361130"
+  },
+  {
+    "id": 685,
+    "name": "Acid Trap Hole",
+    "type": "TRAP",
+    "kind": "destroyBelow",
+    "desc": "Attacker ATK < 2000 bị phá hủy khi tấn công.",
+    "icon": "🧪🕳️",
+    "code": "41356845"
+  },
+  {
+    "id": 686,
+    "name": "Widespread Ruin",
+    "type": "TRAP",
+    "kind": "destroyAttacker",
+    "desc": "Phá hủy quái tấn công của đối thủ.",
+    "icon": "💥🚀",
+    "code": "77754944"
+  },
+  {
+    "id": 687,
+    "name": "Goblin Fan",
+    "type": "TRAP",
+    "kind": "negateDirect",
+    "desc": "Hủy đòn đánh trực tiếp + đối thủ mất 500 LP.",
+    "icon": "🪭💨",
+    "code": "04149689"
+  },
+  {
+    "id": 688,
+    "name": "Bad Reaction to Simochi",
+    "type": "TRAP",
+    "kind": "simochi",
+    "desc": "LP đối thủ hồi bao nhiêu mất bấy nhiêu (khi bẫy còn set).",
+    "icon": "🍭☠️",
+    "code": "40633297"
+  },
+  {
+    "id": 689,
+    "name": "Reverse Trap",
+    "type": "TRAP",
+    "kind": "stripEquips",
+    "desc": "Xóa toàn bộ trang bị trên quái của đối thủ.",
+    "icon": "🔄🪤",
+    "code": "77622396"
+  },
+  {
+    "id": 690,
+    "name": "Fake Trap",
+    "type": "TRAP",
+    "kind": "fake",
+    "desc": "Không làm gì cả — nó là bẫy giả mà!",
+    "icon": "🎭🪤",
+    "code": "03027001"
+  },
+  {
+    "id": 691,
+    "name": "Revived of Serpent Night Dragon",
+    "type": "RITUAL",
+    "kind": "ritual",
+    "desc": "Ritual: hi sinh 3 nguyên liệu đúng quy định để triệu hồi Serpent Night Dragon.",
+    "icon": "🐲👑",
+    "code": "39411600"
+  },
+  {
+    "id": 692,
+    "name": "Turtle Oath",
+    "type": "RITUAL",
+    "kind": "ritual",
+    "desc": "Ritual: hi sinh 3 nguyên liệu đúng quy định để triệu hồi Crab Turtle.",
+    "icon": "👁️✨",
+    "code": "76806714"
+  },
+  {
+    "id": 693,
+    "name": "Contruct of Mask",
+    "type": "RITUAL",
+    "kind": "ritual",
+    "desc": "Ritual: hi sinh 3 nguyên liệu đúng quy định để triệu hồi Mask of Shine & Dark.",
+    "icon": "👁️✨",
+    "code": "02304453"
+  },
+  {
+    "id": 694,
+    "name": "Resurrection of Chakra",
+    "type": "RITUAL",
+    "kind": "ritual",
+    "desc": "Ritual: hi sinh 3 nguyên liệu đúng quy định để triệu hồi Chakra.",
+    "icon": "👁️✨",
+    "code": "39399168"
+  },
+  {
+    "id": 695,
+    "name": "Puppet Ritual",
+    "type": "RITUAL",
+    "kind": "ritual",
+    "desc": "Ritual: hi sinh 3 nguyên liệu đúng quy định để triệu hồi Psycho-Puppet.",
+    "icon": "👁️✨",
+    "code": "05783166"
+  },
+  {
+    "id": 696,
+    "name": "Javelin Beetle Pact",
+    "type": "RITUAL",
+    "kind": "ritual",
+    "desc": "Ritual: hi sinh 3 nguyên liệu đúng quy định để triệu hồi Javelin Beetle.",
+    "icon": "👁️✨",
+    "code": "41182875"
+  },
+  {
+    "id": 697,
+    "name": "Garma Sword Oath",
+    "type": "RITUAL",
+    "kind": "ritual",
+    "desc": "Ritual: hi sinh 3 nguyên liệu đúng quy định để triệu hồi Garma Sword.",
+    "icon": "👁️✨",
+    "code": "78577570"
+  },
+  {
+    "id": 698,
+    "name": "Cosmo Queen's Prayer",
+    "type": "RITUAL",
+    "kind": "ritual",
+    "desc": "Ritual: hi sinh 3 nguyên liệu đúng quy định để triệu hồi Cosmo Queen.",
+    "icon": "👁️✨",
+    "code": "04561679"
+  },
+  {
+    "id": 699,
+    "name": "Revival of Skeleton Rider",
+    "type": "RITUAL",
+    "kind": "ritual",
+    "desc": "Ritual: hi sinh 3 nguyên liệu đúng quy định để triệu hồi Dokurorider.",
+    "icon": "👁️✨",
+    "code": "31066283"
+  },
+  {
+    "id": 700,
+    "name": "Fortress Whale's Oath",
+    "type": "RITUAL",
+    "kind": "ritual",
+    "desc": "Ritual: hi sinh 3 nguyên liệu đúng quy định để triệu hồi Fortress Whale.",
+    "icon": "👁️✨",
+    "code": "77454922"
+  },
+  {
+    "id": 701,
+    "name": "Performance of Sword",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "EARTH",
+    "atk": 1950,
+    "def": 1850,
+    "icon": "⚔️🛡️",
+    "stars": [
+      "Moon",
+      "Uranus"
+    ],
+    "code": "00000000"
+  },
+  {
+    "id": 702,
+    "name": "Hungry Burger",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "DARK",
+    "atk": 2000,
+    "def": 1850,
+    "icon": "⚔️🏆",
+    "stars": [
+      "Venus",
+      "Jupiter"
+    ],
+    "code": "00000000"
+  },
+  {
+    "id": 703,
+    "name": "Sengenjin",
+    "type": "MONSTER",
+    "race": "Beast-Warrior",
+    "attr": "EARTH",
+    "atk": 2750,
+    "def": 2500,
+    "icon": "🐗⚡",
+    "stars": [
+      "Saturn",
+      "Sun"
+    ],
+    "code": "00000000"
+  },
+  {
+    "id": 704,
+    "name": "Skull Guardian",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "LIGHT",
+    "atk": 2050,
+    "def": 2500,
+    "icon": "🛡️✨",
+    "stars": [
+      "Moon",
+      "Saturn"
+    ],
+    "code": "00000000"
+  },
+  {
+    "id": 705,
+    "name": "Tri-horned Dragon",
+    "type": "MONSTER",
+    "race": "Dragon",
+    "attr": "DARK",
+    "atk": 2850,
+    "def": 2350,
+    "icon": "🌑🐉",
+    "stars": [
+      "Venus",
+      "Saturn"
+    ],
+    "code": "00000000"
+  },
+  {
+    "id": 706,
+    "name": "Serpent Night Dragon",
+    "type": "MONSTER",
+    "race": "Dragon",
+    "attr": "DARK",
+    "atk": 2350,
+    "def": 2400,
+    "icon": "🌑🐉",
+    "stars": [
+      "Sun",
+      "Neptune"
+    ],
+    "code": "00000000"
+  },
+  {
+    "id": 707,
+    "name": "Skull Knight",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "DARK",
+    "atk": 2650,
+    "def": 2250,
+    "icon": "🗡️🌑",
+    "stars": [
+      "Sun",
+      "Mercury"
+    ],
+    "code": "02504891"
+  },
+  {
+    "id": 708,
+    "name": "Cosmo Queen",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "DARK",
+    "atk": 2900,
+    "def": 2450,
+    "icon": "🧙🕯️",
+    "stars": [
+      null,
+      "Pluto"
+    ],
+    "code": "00000000"
+  },
+  {
+    "id": 709,
+    "name": "Chakra",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 2450,
+    "def": 2000,
+    "icon": "👹🩸",
+    "stars": [
+      "Sun",
+      "Venus"
+    ],
+    "code": "00000000"
+  },
+  {
+    "id": 710,
+    "name": "Crab Turtle",
+    "type": "MONSTER",
+    "race": "Aqua",
+    "attr": "WATER",
+    "atk": 2550,
+    "def": 2500,
+    "icon": "🦀🌊",
+    "stars": [
+      "Mercury",
+      "Saturn"
+    ],
+    "code": "00000000"
+  },
+  {
+    "id": 711,
+    "name": "Mikazukinoyaiba",
+    "type": "MONSTER",
+    "race": "Dragon",
+    "attr": "DARK",
+    "atk": 2200,
+    "def": 2350,
+    "icon": "🐉🌋",
+    "stars": [
+      "Moon",
+      "Pluto"
+    ],
+    "code": "38277918"
+  },
+  {
+    "id": 712,
+    "name": "Meteor Dragon",
+    "type": "MONSTER",
+    "race": "Dragon",
+    "attr": "EARTH",
+    "atk": 1800,
+    "def": 2000,
+    "icon": "☄️🐉",
+    "stars": [
+      "Pluto",
+      "Mercury"
+    ],
+    "code": "64271667"
+  },
+  {
+    "id": 713,
+    "name": "Meteor B. Dragon",
+    "type": "MONSTER",
+    "race": "Dragon",
+    "attr": "FIRE",
+    "atk": 3500,
+    "def": 2000,
+    "icon": "☄️🐲",
+    "stars": [
+      "Jupiter",
+      "Moon"
+    ],
+    "code": "00000000"
+  },
+  {
+    "id": 714,
+    "name": "Firewing Pegasus",
+    "type": "MONSTER",
+    "race": "Beast",
+    "attr": "FIRE",
+    "atk": 2250,
+    "def": 1800,
+    "icon": "🦅🪶",
+    "stars": [
+      "Jupiter",
+      "Venus"
+    ],
+    "code": "27054370"
+  },
+  {
+    "id": 715,
+    "name": "Psycho-Puppet",
+    "type": "MONSTER",
+    "race": "Fiend",
+    "attr": "DARK",
+    "atk": 2000,
+    "def": 2350,
+    "icon": "👹🌑",
+    "stars": [
+      "Venus",
+      "Uranus"
+    ],
+    "code": "00000000"
+  },
+  {
+    "id": 716,
+    "name": "Garma Sword",
+    "type": "MONSTER",
+    "race": "Warrior",
+    "attr": "DARK",
+    "atk": 2550,
+    "def": 2150,
+    "icon": "🗡️🌑",
+    "stars": [
+      "Venus",
+      "Pluto"
+    ],
+    "code": "00000000"
+  },
+  {
+    "id": 717,
+    "name": "Javelin Beetle",
+    "type": "MONSTER",
+    "race": "Insect",
+    "attr": "EARTH",
+    "atk": 2450,
+    "def": 2550,
+    "icon": "🐝🍯",
+    "stars": [
+      "Saturn",
+      "Pluto"
+    ],
+    "code": "00000000"
+  },
+  {
+    "id": 718,
+    "name": "Fortress Whale",
+    "type": "MONSTER",
+    "race": "Fish",
+    "attr": "WATER",
+    "atk": 2350,
+    "def": 2150,
+    "icon": "🐋🌊",
+    "stars": [
+      "Mercury",
+      "Uranus"
+    ],
+    "code": "00000000"
+  },
+  {
+    "id": 719,
+    "name": "Dokurorider",
+    "type": "MONSTER",
+    "race": "Zombie",
+    "attr": "DARK",
+    "atk": 1900,
+    "def": 1850,
+    "icon": "🧟🕸️",
+    "stars": [
+      "Pluto",
+      "Jupiter"
+    ],
+    "code": "00000000"
+  },
+  {
+    "id": 720,
+    "name": "Mask of Shine & Dark",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "DARK",
+    "atk": 2000,
+    "def": 1800,
+    "icon": "🧙🔮",
+    "stars": [
+      null,
+      "Neptune"
+    ],
+    "code": "00000000"
+  },
+  {
+    "id": 721,
+    "name": "Dark Magic Ritual",
+    "type": "RITUAL",
+    "kind": "ritual",
+    "desc": "Ritual: hi sinh 3 nguyên liệu đúng quy định để triệu hồi Magician of Black Chaos.",
+    "icon": "👁️✨",
+    "code": "00000000"
+  },
+  {
+    "id": 722,
+    "name": "Magician of Black Chaos",
+    "type": "MONSTER",
+    "race": "Spellcaster",
+    "attr": "DARK",
+    "atk": 2800,
+    "def": 2600,
+    "icon": "🧙‍♂️🌑",
+    "stars": [
+      "Sun",
+      "Jupiter"
+    ],
+    "code": "00000000"
+  }
+]
