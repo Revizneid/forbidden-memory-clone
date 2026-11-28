@@ -1,21 +1,8 @@
 #!/usr/bin/env python3
 """
-Forbidden Memories Web Clone — Cyberpunk 3.0 "HUD Card" Art Generator
-
-Layout theo ảnh mẫu (HUD card):
-  [ Header: ID | PASS-progress bar | ATTR ]
-  [ Tab CHARACTER/ITEM CARD | LV. n | ★ sparkles ]
-  [ Viewport: lens xanh + lưới + vòng HUD tím + crosshair + sprite pixel-art ]
-  [ Footer: TÊN [RACE] | ATK | DEF | dot-matrix ]
-
-Dữ liệu: fmdata/cards_v.json (722 lá) + js/cards_full.js (icon) -> cards_db_cyberpunk.json
-
-Chạy:
-    python generate_cyberpunk_cards.py                  # toàn bộ 722 lá, 480x480
-    python generate_cyberpunk_cards.py --only 1,2,3     # thử vài lá
-    python generate_cyberpunk_cards.py --size 240       # kích thước cũ
-    python generate_cyberpunk_cards.py --workers 4      # chạy đa tiến trình
-Font đẹp hơn (tuỳ chọn, không cần admin): bỏ Orbitron-Bold.ttf vào thư mục scripts/fonts/
+Forbidden Memories Web Clone — Cyberpunk Holographic Legendary Card Generator
+Combines the Cyberpunk Holographic Legendary Card architecture (portrait 5:7)
+with full canonical PS1 dataset and CLI options.
 """
 
 import os
@@ -29,18 +16,19 @@ from contextlib import contextmanager
 from pathlib import Path
 from concurrent.futures import ProcessPoolExecutor
 
-from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageChops
+from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageChops, ImageEnhance
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_DIR = SCRIPT_DIR.parent
 ROOT_DIR = PROJECT_DIR.parent
 ASSETS_DIR = PROJECT_DIR / "assets" / "cards"
+ART_DIR = ASSETS_DIR / "art"
 FMDATA_CARDS = ROOT_DIR / "fmdata" / "cards_v.json"
 CARDS_FULL_JS = PROJECT_DIR / "js" / "cards_full.js"
 DB_CACHE = SCRIPT_DIR / "cards_db_cyberpunk.json"
 FONT_DIR = SCRIPT_DIR / "fonts"
 
-D = 1000.0  # không gian thiết kế 1000x1000, mọi toạ độ bên dưới dùng đơn vị này
+D = 1000.0
 
 STAR_NAMES = ['Mars', 'Jupiter', 'Saturn', 'Uranus', 'Pluto', 'Neptune', 'Mercury', 'Sun', 'Moon', 'Venus']
 CARD_TYPES = [
@@ -52,48 +40,6 @@ CARD_TYPES = [
 ]
 ATTR_NAMES = ['LIGHT', 'DARK', 'EARTH', 'WATER', 'FIRE', 'WIND', 'ILLUSION', 'DIVINE']
 
-PALETTES = {
-    'LIGHT':    {'neon': (0, 245, 255),   'sub': (255, 230, 110), 'bg': (7, 12, 24)},
-    'DARK':     {'neon': (255, 30, 200),  'sub': (160, 60, 255),  'bg': (14, 5, 28)},
-    'ILLUSION': {'neon': (225, 60, 255),  'sub': (120, 90, 255),  'bg': (14, 6, 30)},
-    'FIRE':     {'neon': (255, 85, 20),   'sub': (255, 200, 30),  'bg': (24, 8, 6)},
-    'WATER':    {'neon': (0, 215, 255),   'sub': (0, 130, 255),   'bg': (6, 16, 30)},
-    'EARTH':    {'neon': (0, 255, 135),   'sub': (210, 175, 40),  'bg': (8, 20, 10)},
-    'WIND':     {'neon': (20, 255, 200),  'sub': (130, 255, 150), 'bg': (6, 22, 18)},
-    'DIVINE':   {'neon': (255, 215, 0),   'sub': (255, 130, 0),   'bg': (24, 18, 6)},
-    'MAGIC':    {'neon': (0, 255, 215),   'sub': (70, 160, 255),  'bg': (6, 16, 28)},
-    'TRAP':     {'neon': (255, 20, 100),  'sub': (255, 130, 0),   'bg': (26, 6, 16)},
-    'RITUAL':   {'neon': (255, 205, 30),  'sub': (170, 50, 255),  'bg': (20, 8, 30)},
-    'EQUIP':    {'neon': (140, 120, 255), 'sub': (0, 230, 255),   'bg': (14, 10, 28)},
-}
-
-CYAN = (0, 214, 255)
-YELLOW = (255, 214, 40)
-RED = (255, 64, 80)
-GREEN = (50, 255, 130)
-
-
-# ─────────────────────────────────────────────────────────────
-# Tiện ích màu / hình
-# ─────────────────────────────────────────────────────────────
-def mix(a, b, t):
-    return tuple(int(a[i] * (1 - t) + b[i] * t) for i in range(3))
-
-
-def rgba(c, a=255):
-    return (int(c[0]), int(c[1]), int(c[2]), int(a))
-
-
-def chamfer(x0, y0, x1, y1, c):
-    """Hình chữ nhật vát góc. c = số hoặc (tl, tr, br, bl)."""
-    tl, tr, br, bl = c if isinstance(c, (tuple, list)) else (c, c, c, c)
-    return [(x0 + tl, y0), (x1 - tr, y0), (x1, y0 + tr), (x1, y1 - br),
-            (x1 - br, y1), (x0 + bl, y1), (x0, y1 - bl), (x0, y0 + tl)]
-
-
-# ─────────────────────────────────────────────────────────────
-# Font
-# ─────────────────────────────────────────────────────────────
 DISPLAY_CANDIDATES = [
     FONT_DIR / 'Orbitron-Bold.ttf',
     FONT_DIR / 'Rajdhani-Bold.ttf',
@@ -110,13 +56,11 @@ EMOJI_CANDIDATES = [
     '/usr/share/fonts/truetype/noto/NotoColorEmoji.ttf',
 ]
 
-
 def _first_existing(paths):
     for p in paths:
         if os.path.exists(str(p)):
             return str(p)
     return None
-
 
 class FontBank:
     def __init__(self):
@@ -124,7 +68,7 @@ class FontBank:
         self.emoji_path = _first_existing(EMOJI_CANDIDATES)
         self.emoji_native = 128
         if self.emoji_path and 'NotoColorEmoji' in self.emoji_path:
-            self.emoji_native = 109   # Noto bitmap emoji chỉ có 1 cỡ
+            self.emoji_native = 109
         elif self.emoji_path and 'Apple' in self.emoji_path:
             self.emoji_native = 160
         self._cache = {}
@@ -143,134 +87,18 @@ class FontBank:
             self._cache[px] = f
         return f
 
+def mix(a, b, t):
+    return tuple(int(a[i] * (1 - t) + b[i] * t) for i in range(3))
 
-# ─────────────────────────────────────────────────────────────
-# Canvas: supersampling + glow cộng sáng (screen)
-# ─────────────────────────────────────────────────────────────
-class Pen:
-    """Vẽ theo toạ độ thiết kế 1000x1000."""
-    def __init__(self, cv, d):
-        self.cv, self.d, self.k = cv, d, cv.k
+def rgba(c, a=255):
+    return (int(c[0]), int(c[1]), int(c[2]), int(a))
 
-    def _p(self, pts):
-        return [(x * self.k, y * self.k) for x, y in pts]
+def chamfer(x0, y0, x1, y1, c):
+    tl, tr, br, bl = c if isinstance(c, (tuple, list)) else (c, c, c, c)
+    return [(x0 + tl, y0), (x1 - tr, y0), (x1, y0 + tr), (x1, y1 - br),
+            (x1 - br, y1), (x0 + bl, y1), (x0, y1 - bl), (x0, y0 + tl)]
 
-    def w(self, v):
-        return max(1, int(round(v * self.k)))
-
-    def line(self, pts, fill, width=1):
-        self.d.line(self._p(pts), fill=fill, width=self.w(width), joint='curve')
-
-    def rect(self, x0, y0, x1, y1, fill=None, outline=None, width=1):
-        self.d.rectangle([x0 * self.k, y0 * self.k, x1 * self.k, y1 * self.k],
-                         fill=fill, outline=outline, width=self.w(width))
-
-    def poly(self, pts, fill=None, outline=None, width=1):
-        P = self._p(pts)
-        if fill:
-            self.d.polygon(P, fill=fill)
-        if outline:
-            self.d.line(P + [P[0]], fill=outline, width=self.w(width), joint='curve')
-
-    def ellipse(self, cx, cy, r, fill=None, outline=None, width=1):
-        self.d.ellipse([(cx - r) * self.k, (cy - r) * self.k, (cx + r) * self.k, (cy + r) * self.k],
-                       fill=fill, outline=outline, width=self.w(width))
-
-    def arc(self, cx, cy, r, a0, a1, fill, width=1):
-        self.d.arc([(cx - r) * self.k, (cy - r) * self.k, (cx + r) * self.k, (cy + r) * self.k],
-                   a0, a1, fill=fill, width=self.w(width))
-
-    def pie(self, cx, cy, rx, ry, a0, a1, fill):
-        self.d.pieslice([(cx - rx) * self.k, (cy - ry) * self.k, (cx + rx) * self.k, (cy + ry) * self.k],
-                        a0, a1, fill=fill)
-
-    def sparkle(self, cx, cy, r, fill):
-        t = 0.30
-        pts = [(cx, cy - r), (cx + r * t, cy - r * t), (cx + r, cy), (cx + r * t, cy + r * t),
-               (cx, cy + r), (cx - r * t, cy + r * t), (cx - r, cy), (cx - r * t, cy - r * t)]
-        self.poly(pts, fill=fill)
-
-    def text(self, x, y, s, font, fill, tracking=0.0, align='l'):
-        """Chữ có letter-spacing. y = giữa dòng."""
-        trk = tracking * self.k
-        widths = [font.getlength(ch) for ch in s]
-        total = sum(widths) + trk * max(0, len(s) - 1)
-        cx = x * self.k
-        if align == 'r':
-            cx -= total
-        elif align == 'c':
-            cx -= total / 2
-        for ch, wd in zip(s, widths):
-            self.d.text((cx, y * self.k), ch, font=font, fill=fill, anchor='lm')
-            cx += wd + trk
-
-
-def text_width(font, s, tracking_px):
-    return sum(font.getlength(ch) for ch in s) + tracking_px * max(0, len(s) - 1)
-
-
-class Canvas:
-    def __init__(self, size, ss, bg):
-        self.out = int(size)
-        self.px = int(size * ss)
-        self.k = self.px / D
-        self.img = Image.new('RGB', (self.px, self.px), bg)
-
-    def new_layer(self, rgb=(0, 0, 0)):
-        return Image.new('RGBA', (self.px, self.px), rgba(rgb, 0))
-
-    def pen_layer(self, rgb=(0, 0, 0)):
-        ov = self.new_layer(rgb)
-        return ov, Pen(self, ImageDraw.Draw(ov))
-
-    def commit(self, ov, glow=0.0, gain=1.0, mask=None, crisp=True):
-        if mask is not None:
-            ov.putalpha(ImageChops.multiply(ov.getchannel('A'), mask))
-        if glow > 0:
-            black = Image.new('RGB', ov.size, (0, 0, 0))
-            black.paste(ov.convert('RGB'), (0, 0), ov.getchannel('A'))
-            half = (self.px // 2, self.px // 2)
-            small = black.resize(half, Image.BILINEAR).filter(ImageFilter.GaussianBlur(glow * self.k / 2))
-            big = small.resize(self.img.size, Image.BILINEAR)
-            if gain != 1.0:
-                big = big.point(lambda v: min(255, int(v * gain)))
-            self.img = ImageChops.screen(self.img, big)
-        if crisp:
-            self.img.paste(ov.convert('RGB'), (0, 0), ov.getchannel('A'))
-
-    @contextmanager
-    def fx(self, glow=0.0, gain=1.0, mask=None, crisp=True, rgb=(0, 0, 0)):
-        ov, pen = self.pen_layer(rgb)
-        yield pen
-        self.commit(ov, glow, gain, mask, crisp)
-
-    def radial(self, cx, cy, R, color, a_max, power=1.5, steps=56, soften=4, mask=None):
-        ov, pen = self.pen_layer(color)
-        for i in range(steps):
-            t = i / steps
-            pen.ellipse(cx, cy, R * (1 - t), fill=rgba(color, a_max * (t ** power)))
-        ov = ov.filter(ImageFilter.GaussianBlur(soften * self.k))
-        self.commit(ov, mask=mask)
-
-    def poly_mask(self, pts, feather=0.0):
-        m = Image.new('L', (self.px, self.px), 0)
-        ImageDraw.Draw(m).polygon([(x * self.k, y * self.k) for x, y in pts], fill=255)
-        if feather:
-            m = m.filter(ImageFilter.GaussianBlur(feather * self.k))
-        return m
-
-    def circle_mask(self, cx, cy, r, feather=0.0):
-        m = Image.new('L', (self.px, self.px), 0)
-        ImageDraw.Draw(m).ellipse([(cx - r) * self.k, (cy - r) * self.k, (cx + r) * self.k, (cy + r) * self.k], fill=255)
-        if feather:
-            m = m.filter(ImageFilter.GaussianBlur(feather * self.k))
-        return m
-
-
-# ─────────────────────────────────────────────────────────────
-# Sprite pixel-art từ emoji icon (giống nhân vật pixel trong ảnh mẫu)
-# ─────────────────────────────────────────────────────────────
-def make_sprite(bank, icon, fallback, target_px, tint, pix=30):
+def make_sprite(bank, icon, fallback, target_px, tint, pix=72):
     tmp = None
     if bank.emoji_path and icon:
         try:
@@ -294,40 +122,33 @@ def make_sprite(bank, icon, fallback, target_px, tint, pix=30):
     sq = Image.new('RGBA', (side, side), (0, 0, 0, 0))
     sq.paste(tmp, ((side - tmp.width) // 2, (side - tmp.height) // 2))
 
-    low = sq.resize((pix, pix), Image.BOX)
+    low = sq.resize((pix, pix), Image.Resampling.BILINEAR if pix >= 64 else Image.Resampling.BOX)
     r, g, b, a = low.split()
-    a = a.point(lambda v: 255 if v > 96 else 0)
-    rgb = Image.merge('RGB', (r, g, b)).point(lambda v: min(255, (v // 40) * 40 + 20))  # posterize
-    low = Image.merge('RGBA', (*rgb.split(), a))
+    a = a.point(lambda v: 255 if v > 64 else 0)
+    low = Image.merge('RGBA', (r, g, b, a))
 
     pad = 2
     base = Image.new('RGBA', (pix + 2 * pad, pix + 2 * pad), (0, 0, 0, 0))
     base.paste(low, (pad, pad))
-    dil = base.getchannel('A').filter(ImageFilter.MaxFilter(3))   # viền đen 1 pixel
+    dil = base.getchannel('A').filter(ImageFilter.MaxFilter(3))
     outline = Image.new('RGBA', base.size, (0, 0, 0, 255))
     outline.putalpha(dil)
     spr = Image.alpha_composite(outline, base)
 
     scale = max(1, int(target_px // spr.width))
-    spr = spr.resize((spr.width * scale, spr.height * scale), Image.NEAREST)
+    spr = spr.resize((spr.width * scale, spr.height * scale), Image.Resampling.LANCZOS if scale > 1 else Image.Resampling.NEAREST)
 
-    # scanline ngang như ảnh mẫu
     step = max(2, scale // 2)
     stripes = Image.new('RGBA', spr.size, (0, 0, 0, 0))
     sd = ImageDraw.Draw(stripes)
     for y in range(0, spr.height, step * 2):
-        sd.rectangle([0, y, spr.width, y + step - 1], fill=(0, 0, 0, 70))
+        sd.rectangle([0, y, spr.width, y + step - 1], fill=(0, 0, 0, 50))
     alpha = spr.getchannel('A')
     spr = Image.alpha_composite(spr, stripes)
     spr.putalpha(alpha)
     return spr
 
-
-# ─────────────────────────────────────────────────────────────
-# Database
-# ─────────────────────────────────────────────────────────────
 def load_canonical_database():
-    """Load and merge cards_v.json with cards_full.js metadata."""
     if DB_CACHE.exists():
         try:
             with open(DB_CACHE, 'r', encoding='utf-8') as f:
@@ -337,7 +158,6 @@ def load_canonical_database():
         except Exception:
             pass
 
-    print("Building canonical cards database from fmdata/cards_v.json...")
     import subprocess
     cmd = [
         'node', '-e',
@@ -405,327 +225,291 @@ def load_canonical_database():
     with open(DB_CACHE, 'r', encoding='utf-8') as f:
         return json.load(f)
 
-
 # ─────────────────────────────────────────────────────────────
-# Vẽ icon vector nhỏ
-# ─────────────────────────────────────────────────────────────
-def icon_person(p, cx, cy, col):
-    p.ellipse(cx, cy - 7, 6.5, fill=col)
-    p.pie(cx, cy + 14, 12, 12, 180, 360, col)
-
-
-def icon_cube(p, cx, cy, r, col):
-    pts = [(cx + r * math.cos(math.radians(a)), cy + r * math.sin(math.radians(a)))
-           for a in (-90, -30, 30, 90, 150, 210)]
-    p.poly(pts, fill=rgba(col, 235))
-    for a in (-90, 30, 150):
-        p.line([(cx, cy), (cx + r * math.cos(math.radians(a)), cy + r * math.sin(math.radians(a)))],
-               fill=(255, 255, 255, 230), width=1.6)
-
-
-def icon_swords(p, x, y, col):
-    p.line([(x - 13, y + 15), (x + 13, y - 15)], fill=col, width=4.5)
-    p.line([(x + 13, y + 15), (x - 13, y - 15)], fill=col, width=4.5)
-    p.line([(x - 17, y + 8), (x - 6, y + 18)], fill=col, width=3)
-    p.line([(x + 17, y + 8), (x + 6, y + 18)], fill=col, width=3)
-
-
-def icon_shield(p, x, y, col):
-    pts = [(x - 15, y - 14), (x, y - 20), (x + 15, y - 14), (x + 15, y + 2), (x, y + 20), (x - 15, y + 2)]
-    p.poly(pts, fill=rgba(col, 235))
-    p.poly([(x, y - 20), (x + 15, y - 14), (x + 15, y + 2), (x, y + 20)], fill=rgba(mix(col, (255, 255, 255), 0.35), 200))
-
-
-def fit_font(bank, cv, text, max_w, size, min_size, tracking=0.0):
-    """Thu nhỏ font, nếu vẫn dài thì cắt chữ + '.'."""
-    s = size
-    while s > min_size:
-        f = bank.display(s * cv.k)
-        if text_width(f, text, tracking * cv.k) <= max_w * cv.k:
-            return f, text
-        s -= 1
-    f = bank.display(min_size * cv.k)
-    while len(text) > 3 and text_width(f, text, tracking * cv.k) > max_w * cv.k:
-        text = text[:-2].rstrip() + '.'
-    return f, text
-
-
-# ─────────────────────────────────────────────────────────────
-# Render 1 lá bài
+# Cyberpunk Holographic Legendary Card renderer (portrait 5:7)
 # ─────────────────────────────────────────────────────────────
 def generate_card_image(card, out_path, bank, size=480, ss=2, show_log=True):
-    cid = card['id']
-    name = (card.get('name') or f'Card #{cid}').upper()
-    cat = card.get('cat', 'MONSTER')
-    race = (card.get('race') or '').upper()
-    attr = card.get('attr', 'LIGHT')
-    level = int(card.get('level') or 0)
+    cid = int(card.get('id') or 0)
+    name = str(card.get('name') or f'Card #{cid}').strip()
+    cat = str(card.get('cat') or 'MONSTER').upper()
+    race = str(card.get('race') or cat).upper()
+    attr = str(card.get('attr') or 'LIGHT').upper()
+    level = max(0, int(card.get('level') or 0))
     atk = int(card.get('atk') or 0)
     dfn = int(card.get('def') or 0)
-    stars = [s for s in (card.get('starA'), card.get('starB')) if s]
     code = str(card.get('code') or '00000000')
-    desc = card.get('desc') or ''
-    icon = (card.get('icon') or '✨').strip().split()[0][:8] if card.get('icon') else '✨'
-    subtype = (card.get('subtype') or '').upper()
+    desc = str(card.get('desc') or '').strip()
+    icon = (str(card.get('icon') or '✨').strip().split() or ['✨'])[0][:8]
+    subtype = str(card.get('subtype') or '').upper()
     is_mon = (cat == 'MONSTER')
 
-    pal = PALETTES.get(cat if cat in PALETTES else attr, PALETTES['LIGHT'])
-    neon, sub, bg = pal['neon'], pal['sub'], pal['bg']
-    lens = mix(sub, (30, 90, 255), 0.55)
-    rim = mix(neon, (255, 255, 255), 0.35)
-
-    cv = Canvas(size, ss, mix(bg, (0, 0, 0), 0.45))
+    # Portrait 5:7 design space: 1000 x 1400. Output width follows size.
+    W, H = 1000, 1400
+    scale = max(1, int(ss))
+    out_w = int(size)
+    out_h = int(round(size * H / W))
+    k = (out_w * scale) / W
+    CW, CH = int(W * k), int(H * k)
     rng = random.Random(cid * 52919 + 71)
-    k = cv.k
-    CX, CY = 500, 451   # tâm lens
 
-    # ── 1. Nền
-    cv.radial(500, 430, 720, mix(bg, lens, 0.35), 150, power=1.3, soften=10)
+    palettes = {
+        'LIGHT':    ((0, 224, 255), (255, 213, 92), (5, 15, 34)),
+        'DARK':     ((238, 55, 255), (125, 75, 255), (15, 5, 30)),
+        'WATER':    ((0, 220, 255), (35, 115, 255), (4, 14, 35)),
+        'FIRE':     ((255, 90, 28), (255, 205, 70), (30, 8, 5)),
+        'EARTH':    ((65, 255, 170), (213, 174, 70), (7, 22, 18)),
+        'WIND':     ((60, 255, 215), (160, 255, 230), (5, 22, 27)),
+        'DIVINE':   ((255, 220, 75), (255, 135, 35), (26, 17, 5)),
+        'ILLUSION': ((218, 75, 255), (100, 120, 255), (17, 7, 32)),
+        'MAGIC':    ((0, 245, 215), (70, 160, 255), (6, 16, 28)),
+        'TRAP':     ((255, 40, 100), (255, 140, 0), (26, 6, 16)),
+        'RITUAL':   ((255, 210, 30), (170, 60, 255), (20, 8, 30)),
+        'EQUIP':    ((150, 125, 255), (0, 230, 255), (14, 10, 28))
+    }
+    pal_key = cat if cat in palettes else attr
+    neon, accent, bg = palettes.get(pal_key, palettes['LIGHT'])
+    gold = (226, 185, 82)
+    pale_gold = (255, 232, 157)
+    cyan = (76, 224, 255)
 
-    # ── 2. Panel viewport + lens
-    panel_pts = chamfer(28, 148, 972, 728, (34, 34, 0, 0))
-    panel_mask = cv.poly_mask(panel_pts)
-    with cv.fx() as p:
-        p.poly(panel_pts, fill=(6, 8, 26, 120))
-    cv.radial(CX, CY, 400, lens, 175, power=1.1, soften=6, mask=panel_mask)
+    im = Image.new('RGB', (CW, CH), bg)
+    d = ImageDraw.Draw(im)
 
-    lens_mask = ImageChops.multiply(cv.circle_mask(CX, CY, 392, feather=5), panel_mask)
-    ov, p = cv.pen_layer(lens)
-    for x in range(0, 1001, 24):
-        p.line([(x, 0), (x, 1000)], fill=rgba(mix(lens, (255, 255, 255), 0.3), 55), width=1)
-    for y in range(0, 1001, 24):
-        p.line([(0, y), (1000, y)], fill=rgba(mix(lens, (255, 255, 255), 0.3), 55), width=1)
-    cv.commit(ov, mask=lens_mask)
+    def xy(v):
+        return int(round(v * k))
 
-    with cv.fx(glow=3, mask=panel_mask) as p:
-        p.arc(CX, CY, 400, 0, 360, rgba(lens, 150), 2)
-    with cv.fx(glow=6, gain=1.2) as p:
-        p.poly(panel_pts, outline=rgba(mix(sub, (90, 90, 255), 0.5), 200), width=2)
+    def box(coords):
+        return tuple(xy(v) for v in coords)
 
-    # ── 3. Mạch điện 2 bên + đường ngang
-    with cv.fx(glow=4) as p:
-        for sx in (1, -1):
-            X = (lambda x: x) if sx == 1 else (lambda x: 1000 - x)
-            p.line([(X(80), 226), (X(98), 244), (X(98), 340)], fill=rgba(neon, 150), width=2)
-            p.ellipse(X(98), 349, 8, fill=rgba(neon, 255))
-            p.ellipse(X(46), 533, 3.5, fill=rgba(neon, 230))
-            p.line([(X(44), 560), (X(60), 576), (X(60), 700)], fill=rgba(lens, 150), width=2)
-        p.line([(75, 642), (925, 642)], fill=rgba(sub, 95), width=1.5)
-        p.ellipse(75, 642, 3.5, fill=rgba(sub, 220))
-        p.ellipse(925, 642, 3.5, fill=rgba(sub, 220))
+    def font(px, bold=True):
+        return bank.display(max(7, xy(px)))
 
-    # ── 4. Bụi dữ liệu
-    with cv.fx(glow=2) as p:
-        for _ in range(34):
-            a = rng.uniform(0, math.tau)
-            r = rng.uniform(60, 370)
-            x, y = CX + r * math.cos(a), CY + r * math.sin(a)
-            if 160 < y < 710:
-                col = rgba(rim, rng.randint(60, 190))
-                p.rect(x, y, x + rng.choice((2, 3, 4)), y + 2, fill=col)
+    def fit_text(text, max_width, px, min_px=18):
+        s = px
+        while s > min_px:
+            f = font(s)
+            if d.textbbox((0, 0), text, font=f)[2] <= xy(max_width):
+                return f
+            s -= 1
+        return font(min_px)
 
-    # ── 5. Vòng HUD
-    cv.radial(CX, CY, 230, neon, 105, power=2.0, soften=8)
-    with cv.fx(glow=9, gain=1.4) as p:
-        for a0 in range(-90, 270, 20):                       # vòng dày chia đoạn
-            p.arc(CX, CY, 211, a0 + 2, a0 + 15, rgba(rim, 255), 10)
-    with cv.fx(glow=5) as p:
-        p.arc(CX, CY, 193, 0, 360, rgba(neon, 140), 2)
-        for a0 in range(0, 360, 7):                          # vòng đứt nét ngoài
-            p.arc(CX, CY, 238, a0, a0 + 3.5, rgba(neon, 190), 2.5)
-        for a0 in (20, 110, 200, 290):                       # cung tím ngoài cùng
-            p.arc(CX, CY, 264, a0, a0 + 55, rgba(sub, 130), 2)
-            for t in range(6):
-                p.arc(CX, CY, 276, a0 + 8 + t * 7, a0 + 11 + t * 7, rgba(sub, 150), 2)
-        for ang in (-60, -30, 30, 60, 120, 150, 210, 240):   # tick la bàn
-            rr = math.radians(ang)
-            p.line([(CX + 214 * math.cos(rr), CY + 214 * math.sin(rr)),
-                    (CX + 252 * math.cos(rr), CY + 252 * math.sin(rr))], fill=rgba(rim, 235), width=3)
+    def glow_rounded(rect, radius, outline, width=3, blur=12, alpha=170):
+        layer = Image.new('RGBA', im.size, (0, 0, 0, 0))
+        ld = ImageDraw.Draw(layer)
+        ld.rounded_rectangle(box(rect), radius=xy(radius),
+                             outline=(*outline, alpha), width=max(1, xy(width)))
+        blurred = layer.filter(ImageFilter.GaussianBlur(xy(blur)))
+        im.paste(ImageChops.screen(im, blurred.convert('RGB')))
+        im.paste(layer.convert('RGB'), (0, 0), layer.getchannel('A'))
 
-    # ── 6. Crosshair
-    with cv.fx(glow=7, gain=1.3) as p:
-        c = rgba(neon, 255)
-        for i in range(4):                                   # trên/dưới: thanh đứt nét
-            y0 = CY - 286 + i * 26
-            p.line([(CX, y0), (CX, y0 + 17)], fill=c, width=5)
-            y1 = CY + 286 - i * 26
-            p.line([(CX, y1), (CX, y1 - 17)], fill=c, width=5)
-        p.line([(CX - 286, CY), (CX - 205, CY)], fill=c, width=4)
-        p.line([(CX + 205, CY), (CX + 286, CY)], fill=c, width=4)
-        p.line([(CX - 340, CY), (CX - 296, CY)], fill=rgba(neon, 120), width=2)
-        p.line([(CX + 296, CY), (CX + 340, CY)], fill=rgba(neon, 120), width=2)
+    # 1. Deep navy / cyberpunk background gradient + subtle radial light
+    for y in range(CH):
+        t = y / max(1, CH - 1)
+        c = tuple(int(bg[i] * (1 - t * .42) + (2, 8, 24)[i] * (t * .42)) for i in range(3))
+        d.line((0, y, CW, y), fill=c)
 
-    # ── 7. Sprite pixel-art
-    spr = make_sprite(bank, icon, name, int(250 * k), neon)
-    sx = int(CX * k - spr.width / 2)
-    sy = int(CY * k - spr.height / 2 - 4 * k)
-    sil = cv.new_layer(neon)
-    alpha = Image.new('L', cv.img.size, 0)
-    alpha.paste(spr.getchannel('A'), (sx, sy))
-    sil.putalpha(alpha.point(lambda v: int(v * 0.85)))
-    cv.commit(sil, glow=22, gain=1.6, crisp=False)
-    cv.img.paste(spr.convert('RGB'), (sx, sy), spr.getchannel('A'))
+    # Soft radial aura behind the artwork
+    aura = Image.new('RGBA', im.size, (0, 0, 0, 0))
+    ad = ImageDraw.Draw(aura)
+    cx, cy = xy(500), xy(600)
+    for r in range(420, 20, -12):
+        alpha = int(2 + 18 * (1 - r / 420))
+        ad.ellipse((cx-xy(r), cy-xy(r), cx+xy(r), cy+xy(r)), fill=(*neon, alpha))
+    aura = aura.filter(ImageFilter.GaussianBlur(xy(30)))
+    im.paste(ImageChops.screen(im, aura.convert('RGB')))
 
-    with cv.fx(glow=3) as p:                                 # vạch scanner chấm
-        x = CX + 178
-        p.poly([(x, 355), (x + 6, 361), (x, 367), (x - 6, 361)], fill=(255, 255, 255, 255))
-        for i in range(14):
-            p.rect(x - 5, 376 + i * 12.5, x + 5, 376 + i * 12.5 + 7, fill=(255, 255, 255, 235))
+    # Fine digital circuit traces in the background
+    circuit = Image.new('RGBA', im.size, (0, 0, 0, 0))
+    cd = ImageDraw.Draw(circuit)
+    for side in (0, 1):
+        x = 38 if side == 0 else 962
+        sign = 1 if side == 0 else -1
+        for yy in (300, 430, 850, 960):
+            pts = [(xy(x), xy(yy)), (xy(x + sign*22), xy(yy+18)), (xy(x + sign*22), xy(yy+78))]
+            cd.line(pts, fill=(*neon, 105), width=xy(2))
+            cd.ellipse((xy(x-3), xy(yy-3), xy(x+3), xy(yy+3)), fill=(*pale_gold, 170))
+    im.paste(circuit.convert('RGB'), (0, 0), circuit.getchannel('A'))
 
-    # ── 8. Header
-    with cv.fx(glow=7, gain=1.3) as p:
-        p.poly(chamfer(24, 18, 977, 114, 22), outline=rgba(neon, 255), width=4.5)
-        p.line([(180, 118), (820, 118)], fill=rgba(neon, 230), width=2.5)
-    with cv.fx(glow=3) as p:
-        p.poly(chamfer(35, 28, 966, 104, 14), outline=rgba(mix(CYAN, sub, 0.4), 170), width=1.8)
-        p.poly([(44, 36), (238, 36), (260, 66), (238, 96), (44, 96)], fill=(8, 12, 32, 210), outline=rgba(CYAN, 90), width=1.2)
-        p.line([(715, 31), (745, 22), (910, 22), (925, 31)], fill=rgba(CYAN, 200), width=3)
+    # 2. Outer card body and layered metallic frame
+    d = ImageDraw.Draw(im)
+    d.rounded_rectangle(box((15, 15, 985, 1385)), radius=xy(34),
+                        fill=(8, 13, 27), outline=(80, 92, 112), width=xy(8))
+    d.rounded_rectangle(box((28, 28, 972, 1372)), radius=xy(27),
+                        outline=gold, width=xy(13))
+    d.rounded_rectangle(box((43, 43, 957, 1357)), radius=xy(20),
+                        outline=pale_gold, width=xy(3))
+    d.rounded_rectangle(box((53, 53, 947, 1347)), radius=xy(16),
+                        outline=(94, 117, 145), width=xy(2))
 
-    f_id = bank.display(46 * k)
-    with cv.fx(glow=4) as p:
-        p.text(62, 67, f'FM-{cid:03d}', f_id, rgba(YELLOW), tracking=1, align='l')
+    # 3. Gold title plate
+    d.rounded_rectangle(box((76, 76, 790, 188)), radius=xy(12),
+                        fill=(32, 36, 43), outline=gold, width=xy(5))
+    d.rounded_rectangle(box((88, 88, 778, 176)), radius=xy(8),
+                        fill=(13, 24, 40), outline=(127, 103, 55), width=xy(2))
+    title = name.upper()
+    title_font = fit_text(title, 650, 48, 22)
+    d.text((xy(112), xy(132)), title, font=title_font, fill=(255, 239, 184),
+           anchor='lm', stroke_width=max(0, xy(1)), stroke_fill=(89, 66, 32))
 
-    num = int(code) if code.isdigit() else 0
-    frac = max(0.04, min(1.0, num / 99999999.0))
-    f_num = bank.display(33 * k)
-    with cv.fx(glow=3) as p:
-        p.text(300, 57, f'{num:08d} / 99999999', f_num, (214, 236, 255, 255), tracking=1)
-        p.rect(300, 82, 690, 90, fill=(20, 40, 90, 170), outline=rgba(CYAN, 90), width=1)
-        n = 48
-        for i in range(n):
-            if i / n > frac:
-                break
-            col = mix((0, 120, 255), (230, 250, 255), i / n)
-            p.rect(300 + i * 390 / n, 82, 300 + (i + 1) * 390 / n + 0.6, 90, fill=rgba(col, 255))
-    f_s = bank.display(19 * k)
-    f_m = bank.display(25 * k)
-    with cv.fx(glow=5, gain=1.2) as p:
-        p.line([(812, 40), (802, 40), (802, 94), (812, 94)], fill=rgba(neon, 255), width=3)
-        p.text(822, 56, 'ATTR' if is_mon else 'CLASS', f_s, rgba(neon, 255), tracking=2)
-        p.text(822, 82, (attr if is_mon else cat), f_m, rgba(neon, 255), tracking=2)
-        p.sparkle(940, 52, 10, rgba(neon, 255))
-        p.sparkle(940, 82, 10, rgba(neon, 255))
+    # 4. Attribute orb on title row
+    orb_x, orb_y, orb_r = 865, 132, 43
+    orb = Image.new('RGBA', im.size, (0, 0, 0, 0))
+    od = ImageDraw.Draw(orb)
+    od.ellipse(box((orb_x-orb_r, orb_y-orb_r, orb_x+orb_r, orb_y+orb_r)),
+               fill=(*neon, 210), outline=(*pale_gold, 255), width=xy(5))
+    orb = orb.filter(ImageFilter.GaussianBlur(xy(10)))
+    im.paste(ImageChops.screen(im, orb.convert('RGB')))
+    d = ImageDraw.Draw(im)
+    d.ellipse(box((orb_x-orb_r, orb_y-orb_r, orb_x+orb_r, orb_y+orb_r)),
+              fill=neon, outline=pale_gold, width=xy(5))
+    d.ellipse(box((orb_x-25, orb_y-25, orb_x+25, orb_y+25)),
+              fill=accent, outline=(255, 248, 210), width=xy(3))
+    d.ellipse(box((orb_x-13, orb_y-13, orb_x+13, orb_y+13)), fill=(255, 248, 215))
 
-    # ── 9. Tab + LV + sparkles
-    f_tab = bank.display(19 * k)
-    tabs = [
-        (47, 'CHARACTER', is_mon, icon_person),
-        (247, 'ITEM', not is_mon, None),
+    # 5. Level stars
+    if is_mon:
+        star_count = min(12, max(0, level))
+        star_y = 226
+        for i in range(star_count):
+            sx = 104 + i * 72
+            d.ellipse(box((sx-28, star_y-28, sx+28, star_y+28)),
+                      fill=(118, 35, 18), outline=(255, 211, 88), width=xy(4))
+            pts = []
+            for j in range(10):
+                a = -math.pi/2 + j*math.pi/5
+                rr = 20 if j % 2 == 0 else 9
+                pts.append((xy(sx + math.cos(a)*rr), xy(star_y + math.sin(a)*rr)))
+            d.polygon(pts, fill=(255, 236, 132), outline=(255, 255, 220))
+    else:
+        d.text((xy(110), xy(226)), subtype or cat, font=font(28),
+               fill=(*neon,), anchor='lm')
+
+    # 6. Artwork window: dark glass, bevel, cyan holographic rim
+    art_rect = (88, 275, 912, 1000)
+    glow_rounded(art_rect, 18, neon, 5, 18, 190)
+    d = ImageDraw.Draw(im)
+    d.rounded_rectangle(box(art_rect), radius=xy(18), fill=(4, 12, 29),
+                        outline=(181, 207, 228), width=xy(7))
+    inner = (105, 292, 895, 983)
+    d.rounded_rectangle(box(inner), radius=xy(12), fill=(5, 17, 39),
+                        outline=(28, 115, 164), width=xy(3))
+
+    # Check for dedicated artwork
+    art_candidates = [
+        ASSETS_DIR / 'art' / f'{cid}.png',
+        PROJECT_DIR / 'assets' / 'card_art' / f'{cid}.png',
+        ASSETS_DIR / f'{cid}_art.png',
     ]
-    for x0, label, active, ic in tabs:
-        x1 = x0 + (187 if label == 'CHARACTER' else 170)
-        shape = chamfer(x0, 122, x1, 184, (0, 12, 0, 12))
-        edge = rgba(CYAN, 255) if active else rgba(mix(CYAN, (60, 60, 160), 0.6), 190)
-        with cv.fx(glow=6 if active else 0, gain=1.2) as p:
-            p.poly(shape, fill=(10, 30, 75, 230) if active else (12, 16, 42, 220), outline=edge, width=3 if active else 1.8)
-            icol = rgba(CYAN, 255) if active else rgba((60, 130, 255), 235)
-            if ic:
-                icon_person(p, x0 + 33, 153, icol)
-            else:
-                icon_cube(p, x0 + 33, 153, 17, (50, 130, 255))
-            tcol = (235, 248, 255, 255) if active else (190, 205, 235, 255)
-            p.text(x0 + 66, 143, label, f_tab, tcol, tracking=1)
-            p.text(x0 + 66, 165, 'CARD', f_tab, tcol, tracking=1)
-
-    if is_mon:
-        f_lv = bank.display(31 * k)
-        with cv.fx(glow=4) as p:
-            p.text(596, 141, f'LV. {level}', f_lv, rgba(YELLOW), tracking=0)
+    art_path = next((p for p in art_candidates if p.exists()), None)
+    art_box = box((112, 299, 888, 976))
+    aw, ah = art_box[2] - art_box[0], art_box[3] - art_box[1]
+    if art_path:
+        art = Image.open(art_path).convert('RGB')
+        ratio = max(aw / art.width, ah / art.height)
+        nw, nh = int(art.width * ratio), int(art.height * ratio)
+        art = art.resize((nw, nh), Image.Resampling.LANCZOS)
+        left, top = max(0, (nw-aw)//2), max(0, (nh-ah)//2)
+        art = art.crop((left, top, left+aw, top+ah))
+        art = ImageEnhance.Contrast(art).enhance(1.12)
+        art = ImageEnhance.Color(art).enhance(1.18)
+        tint = Image.new('RGB', art.size, (15, 115, 180))
+        art = Image.blend(art, tint, 0.13)
+        im.paste(art, (art_box[0], art_box[1]))
     else:
-        lab = subtype or cat
-        f_lv, lab = fit_font(bank, cv, lab, 108, 28, 14, 1)
-        with cv.fx(glow=4) as p:
-            p.text(596, 141, lab, f_lv, rgba(YELLOW), tracking=1)
-    with cv.fx(glow=5) as p:
-        p.poly(chamfer(716, 122, 884, 160, 8), fill=(45, 32, 0, 170), outline=rgba(YELLOW, 255), width=2)
-        if is_mon:
-            for i in range(8):
-                on = i < min(level, 8)
-                p.sparkle(734 + i * 19, 141, 8.5, rgba(YELLOW, 255 if on else 60))
+        spr = make_sprite(bank, icon, name, int(min(aw, ah) * 0.72), neon, pix=72)
+        spr = spr.convert('RGBA')
+        spr.thumbnail((int(aw*.78), int(ah*.78)), Image.Resampling.NEAREST)
+        sx = art_box[0] + (aw - spr.width)//2
+        sy = art_box[1] + (ah - spr.height)//2
+        halo = Image.new('RGBA', im.size, (0, 0, 0, 0))
+        hd = ImageDraw.Draw(halo)
+        hd.ellipse((sx-xy(55), sy-xy(55), sx+spr.width+xy(55), sy+spr.height+xy(55)),
+                   fill=(*neon, 65))
+        halo = halo.filter(ImageFilter.GaussianBlur(xy(42)))
+        im.paste(ImageChops.screen(im, halo.convert('RGB')))
+        im.paste(spr.convert('RGB'), (sx, sy), spr.getchannel('A'))
+
+    # Holographic overlays: radial rings, scan lines, corner brackets
+    overlay = Image.new('RGBA', im.size, (0, 0, 0, 0))
+    od = ImageDraw.Draw(overlay)
+    for r in (250, 315, 380):
+        od.ellipse(box((500-r, 640-r, 500+r, 640+r)),
+                   outline=(*cyan, 55), width=xy(2))
+    for y in range(305, 976, 9):
+        od.line((xy(112), xy(y), xy(888), xy(y)), fill=(135, 225, 255, 16), width=xy(1))
+    for x, y, sx, sy in ((112,299,1,1),(888,299,-1,1),(112,976,1,-1),(888,976,-1,-1)):
+        od.line((xy(x),xy(y),xy(x+sx*45),xy(y)), fill=(*pale_gold,170), width=xy(4))
+        od.line((xy(x),xy(y),xy(x),xy(y+sy*45)), fill=(*pale_gold,170), width=xy(4))
+    im.paste(overlay.convert('RGB'), (0, 0), overlay.getchannel('A'))
+
+    # 7. Description panel and stats block
+    d = ImageDraw.Draw(im)
+    d.rounded_rectangle(box((88, 1025, 565, 1184)), radius=xy(12),
+                        fill=(24, 30, 37), outline=(222, 157, 54), width=xy(7))
+    d.rounded_rectangle(box((101, 1038, 552, 1171)), radius=xy(7),
+                        fill=(12, 22, 37), outline=(117, 91, 48), width=xy(2))
+    desc_text = desc if desc else f'{race} / {cat} CARD'
+    max_chars = 43
+    words, lines, line = desc_text.split(), [], ''
+    for word in words:
+        candidate = (line + ' ' + word).strip()
+        if len(candidate) > max_chars and line:
+            lines.append(line)
+            line = word
         else:
-            p.text(800, 141, 'ARMED', bank.display(19 * k), rgba(GREEN), tracking=2, align='c')
+            line = candidate
+    if line:
+        lines.append(line)
+    desc_font = font(19)
+    for i, line_str in enumerate(lines[:5]):
+        d.text((xy(120), xy(1060 + i*23)), line_str, font=desc_font,
+               fill=(224, 214, 177), anchor='lm')
 
-    # ── 10. Guardian Star chip + log
-    if is_mon and stars:
-        f_gs = bank.display(17 * k)
-        slots = [(62, stars[0])] + ([(808, stars[1])] if len(stars) > 1 else [])
-        for x0, s in slots:
-            with cv.fx(glow=4) as p:
-                p.poly(chamfer(x0, 672, x0 + 130, 706, 7), fill=(10, 14, 38, 220), outline=rgba(sub, 190), width=1.6)
-                p.sparkle(x0 + 15, 689, 7.5, rgba(YELLOW))
-                p.text(x0 + 30, 689, s.upper(), f_gs, (225, 235, 255, 255), tracking=1)
-    if show_log and desc:
-        f_log, txt = fit_font(bank, cv, '// LOG: ' + desc, 560, 13, 11)
-        with cv.fx() as p:
-            p.text(500, 706, txt, f_log, (125, 175, 205, 205), align='c')
+    # 8. ATK / DEF panel with illuminated dividers
+    d.rounded_rectangle(box((592, 1025, 912, 1184)), radius=xy(12),
+                        fill=(42, 36, 20), outline=(225, 190, 92), width=xy(5))
+    d.rounded_rectangle(box((606, 1039, 898, 1170)), radius=xy(7),
+                        fill=(17, 28, 43), outline=(114, 105, 69), width=xy(2))
+    d.line((xy(620), xy(1104), xy(884), xy(1104)), fill=(125, 171, 194), width=xy(2))
+    stat_font = font(39)
+    d.text((xy(630), xy(1070)), f'ATK  {atk:04d}', font=stat_font,
+           fill=(255, 105, 92), anchor='lm', stroke_width=xy(1), stroke_fill=(80, 15, 25))
+    d.text((xy(630), xy(1138)), f'DEF  {dfn:04d}', font=stat_font,
+           fill=(89, 220, 255), anchor='lm', stroke_width=xy(1), stroke_fill=(5, 48, 80))
 
-    # ── 11. Footer
-    foot = [(24, 762), (54, 732), (300, 732), (328, 722), (672, 722), (700, 732), (946, 732),
-            (977, 762), (977, 960), (947, 990), (54, 990), (24, 960)]
-    with cv.fx(glow=8, gain=1.3) as p:
-        p.poly(foot, fill=(5, 7, 22, 245), outline=rgba(neon, 255), width=4.5)
-    with cv.fx(glow=3) as p:
-        p.poly(chamfer(37, 752, 964, 978, 20), outline=rgba(mix(neon, sub, 0.5), 200), width=2)
-        for i in range(4):
-            p.line([(40 + i * 8, 972), (52 + i * 8, 984)], fill=rgba(neon, 220), width=2)
-            p.line([(960 - i * 8, 972), (948 - i * 8, 984)], fill=rgba(neon, 220), width=2)
+    # 9. Footer metadata strip
+    d.rounded_rectangle(box((88, 1210, 912, 1318)), radius=xy(10),
+                        fill=(8, 15, 29), outline=gold, width=xy(3))
+    type_label = f'{race}  |  {attr}'
+    d.text((xy(112), xy(1245)), type_label[:48], font=font(22),
+           fill=(220, 229, 239), anchor='lm')
+    d.text((xy(112), xy(1285)), f'FM-{cid:03d}   •   CODE {code}',
+           font=font(18), fill=(120, 190, 218), anchor='lm')
+    d.text((xy(888), xy(1280)), 'LEGENDARY', font=font(20),
+           fill=(*pale_gold,), anchor='rm')
 
-    race_tag = f'[{race}]' if race else f'[{cat}]'
-    f_tag, race_tag = fit_font(bank, cv, race_tag, 330, 34, 16, 2)
-    tag_w = text_width(f_tag, race_tag, 2 * k) / k
-    f_name, nm = fit_font(bank, cv, name, 850 - tag_w - 74, 44, 20, 2)
-    with cv.fx(glow=4) as p:
-        p.text(74, 786, nm, f_name, (245, 250, 255, 255), tracking=2)
-    with cv.fx(glow=5, gain=1.2) as p:
-        p.text(923, 786, race_tag, f_tag, rgba(neon, 255), tracking=2, align='r')
-    with cv.fx(glow=3) as p:
-        n = 60
-        for i in range(n):
-            col = mix(CYAN, neon, i / n)
-            p.line([(63 + i * 874 / n, 820), (63 + (i + 1) * 874 / n + 1, 820)], fill=rgba(col, 255), width=2.5)
+    # Tiny gold corner screws and controlled CRT finish
+    d = ImageDraw.Draw(im)
+    for x in (62, 938):
+        for y in (62, 1338):
+            d.ellipse(box((x-7, y-7, x+7, y+7)), fill=(37, 43, 53),
+                      outline=pale_gold, width=xy(2))
+            d.line((xy(x-3),xy(y),xy(x+3),xy(y)), fill=(180,160,110), width=xy(1))
 
-    f_stat = bank.display(40 * k)
-    if is_mon:
-        with cv.fx(glow=6, gain=1.2) as p:
-            p.poly(chamfer(63, 842, 318, 904, 9), fill=(64, 6, 14, 215), outline=rgba(RED, 255), width=2.5)
-            icon_swords(p, 98, 873, rgba(mix(RED, (255, 255, 255), 0.25)))
-            p.text(145, 873, f'{atk}', f_stat, rgba(RED), tracking=1)
-        with cv.fx(glow=6, gain=1.2) as p:
-            p.poly(chamfer(343, 842, 619, 904, 9), fill=(6, 28, 66, 215), outline=rgba(CYAN, 255), width=2.5)
-            icon_shield(p, 378, 873, CYAN)
-            p.text(424, 873, f'{dfn}', f_stat, rgba(CYAN), tracking=1)
-    else:
-        fn = f'SYS: {subtype or cat}'
-        f_fn, fn = fit_font(bank, cv, fn, 340, 30, 16, 2)
-        with cv.fx(glow=6, gain=1.2) as p:
-            p.poly(chamfer(63, 842, 460, 904, 9), fill=(6, 40, 30, 215), outline=rgba(GREEN, 255), width=2.5)
-            p.text(88, 873, fn, f_fn, rgba(GREEN), tracking=2)
-
-    # dot-matrix (sinh từ mã PS1 thật)
-    bits = int(code) if code.isdigit() else 0
-    with cv.fx(glow=2) as p:
-        for r in range(6):
-            for c in range(9):
-                lit = ((bits >> ((r * 9 + c) % 27)) & 1) or (rng.random() < 0.35)
-                p.ellipse(772 + c * 8.8, 852 + r * 10.4, 2.5,
-                          fill=rgba((150, 190, 240), 230 if lit else 85))
-
-    # ── 12. Scanline CRT + lưu
-    out = cv.img.resize((cv.out, cv.out), Image.LANCZOS).convert('RGBA')
-    scan = Image.new('RGBA', out.size, (0, 0, 0, 0))
+    scan = Image.new('RGBA', im.size, (0, 0, 0, 0))
     sd = ImageDraw.Draw(scan)
-    step = max(2, round(cv.out / 160))
-    for y in range(0, cv.out, step):
-        sd.line([(0, y), (cv.out, y)], fill=(0, 0, 0, 22), width=1)
-    out = Image.alpha_composite(out, scan).convert('RGB')
-    out.save(out_path, 'PNG', optimize=True)
+    for y in range(0, CH, max(2, xy(5))):
+        sd.line((0, y, CW, y), fill=(0, 8, 20, 15), width=1)
+    im = Image.alpha_composite(im.convert('RGBA'), scan)
 
+    im = im.convert('RGB').resize((out_w, out_h), Image.Resampling.LANCZOS)
+    Path(out_path).parent.mkdir(parents=True, exist_ok=True)
+    im.save(out_path, 'PNG', optimize=True)
 
 # ─────────────────────────────────────────────────────────────
-# Chạy hàng loạt
+# Multiprocess worker & main
 # ─────────────────────────────────────────────────────────────
 _BANK = None
-
 
 def _worker(job):
     global _BANK
@@ -735,23 +519,22 @@ def _worker(job):
     generate_card_image(card, out_file, _BANK, size, ss, log)
     return card['id']
 
-
 def main():
-    ap = argparse.ArgumentParser(description='Cyberpunk HUD card art generator')
-    ap.add_argument('--size', type=int, default=480, help='kích thước ảnh xuất ra (px), mặc định 480')
-    ap.add_argument('--ss', type=int, default=2, help='supersampling (1=nhanh, 2=đẹp, 3=rất mượt)')
+    ap = argparse.ArgumentParser(description='Cyberpunk Holographic Legendary Card generator')
+    ap.add_argument('--size', type=int, default=480, help='kích thước chiều ngang (px), mặc định 480')
+    ap.add_argument('--ss', type=int, default=2, help='supersampling (1=nhanh, 2=đẹp)')
     ap.add_argument('--only', type=str, default='', help='chỉ render các id, vd: 1,2,3')
     ap.add_argument('--out', type=str, default='', help='thư mục xuất (mặc định assets/cards)')
-    ap.add_argument('--workers', type=int, default=max(1, min(4, (os.cpu_count() or 2) - 1)))
-    ap.add_argument('--no-log', action='store_true', help='không vẽ dòng // LOG: mô tả')
+    ap.add_argument('--workers', type=int, default=max(1, min(5, (os.cpu_count() or 2) - 1)))
+    ap.add_argument('--no-log', action='store_true', help='không vẽ log')
     args = ap.parse_args()
 
     out_dir = Path(args.out) if args.out else ASSETS_DIR
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    print("=" * 65)
-    print(" Yu-Gi-Oh! Forbidden Memories — Cyberpunk 3.0 HUD Card Generator")
-    print("=" * 65)
+    print("=" * 68)
+    print(" Yu-Gi-Oh! Forbidden Memories — Cyberpunk Holographic Legendary Cards")
+    print("=" * 68)
 
     cards = load_canonical_database()
     if args.only:
@@ -761,7 +544,7 @@ def main():
     bank = FontBank()
     print(f"Font hiển thị : {bank.display_path or '(mặc định PIL)'}")
     print(f"Font emoji    : {bank.emoji_path or '(không có -> dùng chữ cái đầu)'}")
-    print(f"Cards: {len(cards)} | {args.size}px (ss x{args.ss}) | workers: {args.workers}")
+    print(f"Cards: {len(cards)} | {args.size}x{int(round(args.size*14/10))}px (ss x{args.ss}) | workers: {args.workers}")
 
     jobs = [(c, out_dir / f"{c['id']}.png", args.size, args.ss, not args.no_log) for c in cards]
     t0 = time.time()
@@ -777,10 +560,9 @@ def main():
             if i % 50 == 0 or i == total:
                 print(f"  [{i:3d}/{total}] {time.time() - t0:.1f}s")
 
-    print("=" * 65)
+    print("=" * 68)
     print(f"XONG: {total} ảnh trong {time.time() - t0:.1f}s -> {out_dir}")
-    print("=" * 65)
-
+    print("=" * 68)
 
 if __name__ == '__main__':
     main()
